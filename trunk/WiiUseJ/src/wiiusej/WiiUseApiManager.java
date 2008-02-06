@@ -338,32 +338,32 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * 
-	 * @param listener
+	 * Add WiiUseApiListener to the listeners list.
+	 * @param listener a WiiUseApiListener
 	 */
 	public void addWiiUseApiListener(WiiUseApiListener listener) {
 		listeners.add(WiiUseApiListener.class, listener);
 	}
 
 	/**
-	 * 
-	 * @param listener
+	 * Remove WiiUseApiListener from the listeners list.
+	 * @param listener a WiiUseApiListener
 	 */
 	public void removeWiiUseApiListener(WiiUseApiListener listener) {
 		listeners.remove(WiiUseApiListener.class, listener);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Get the list of WiiUseApiListeners.
+	 * @return the list of WiiUseApiListeners.
 	 */
 	public WiiUseApiListener[] getWiiUseApiListeners() {
 		return listeners.getListeners(WiiUseApiListener.class);
 	}
 
 	/**
-	 * 
-	 * @param evt
+	 * Notify WiiUseApiListeners that an event occured.
+	 * @param evt WiimoteEvent occured
 	 */
 	public void notifyWiiUseApiListener(WiiMoteEvent evt) {
 		for (WiiUseApiListener listener : getWiiUseApiListeners()) {

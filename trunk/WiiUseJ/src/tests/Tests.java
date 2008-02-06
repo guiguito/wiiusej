@@ -9,9 +9,10 @@ import wiiusej.WiiUseApiListener;
 import wiiusej.WiiUseApiManager;
 
 /**
- * This class used to test this API. 
+ * This class used to test this API.
+ * 
  * @author gduche
- *
+ * 
  */
 public class Tests implements WiiUseApiListener {
 
@@ -35,12 +36,12 @@ public class Tests implements WiiUseApiListener {
 
 	@Override
 	public void wiimoteEvent(WiiMoteEvent e) {
-		
-		/* leave if nothing is connected */ 
+
+		/* leave if nothing is connected */
 		if (WiiUseApiManager.getInstance().getNbConnectedWiimotes() == 0) {
 			WiiUseApiManager.getInstance().shutdown();
 		}
-		
+
 		if (dump == DISPLAY_EACH_VALUE) {
 			if (e.isConnected()) {
 				// System.out.println("*********** WIIMOTE ID : "+
@@ -167,7 +168,7 @@ public class Tests implements WiiUseApiListener {
 				}
 
 				/* get status */
-				if (e.isButtonMinusJustPressed()&&e.isButtonPlusJustPressed()) {
+				if (e.isButtonMinusJustPressed() && e.isButtonPlusJustPressed()) {
 					WiiUseApiManager.getInstance().getStatus(1);
 				}
 
@@ -192,13 +193,13 @@ public class Tests implements WiiUseApiListener {
 				}
 
 				/* Activate Motion sensing */
-				if (e.isButtonPlusJustPressed()){
+				if (e.isButtonPlusJustPressed()) {
 					System.out.println("Motion sensing Activated");
-					WiiUseApiManager.getInstance().activateMotionSensing(1);					
+					WiiUseApiManager.getInstance().activateMotionSensing(1);
 				}
-				if (e.isButtonMinusJustPressed()){
+				if (e.isButtonMinusJustPressed()) {
 					System.out.println("Motion sensing Deactivated");
-					WiiUseApiManager.getInstance().deactivateMotionSensing(1);					
+					WiiUseApiManager.getInstance().deactivateMotionSensing(1);
 				}
 
 				/* display status */
@@ -206,7 +207,16 @@ public class Tests implements WiiUseApiListener {
 					System.out
 							.println("battery level : " + e.getBatteryLevel());
 					System.out.println("= --- Leds : " + e.getLeds() + "\n");
-					System.out.println("= --- Rumble : " + e.isRumbleActive() + "\n");
+					System.out.println("= --- Rumble : " + e.isRumbleActive()
+							+ "\n");
+					System.out.println("= --- Continous : "
+							+ e.isContinuousActive() + "\n");
+					System.out.println("= --- Smoothing : "
+							+ e.isSmoothingActive() + "\n");
+					System.out.println("= --- Speaker : "
+							+ e.isSpeakerEnabled() + "\n");
+					System.out.println("= --- Attachment : "
+							+ e.isThereAttachment() + "\n");
 				}
 
 				/* display ir points */
@@ -219,21 +229,22 @@ public class Tests implements WiiUseApiListener {
 					}
 					System.out.println("");
 				}
-				
+
 				/* display motion sensing */
-				if (e.isMotionSensingActive()){
-					System.out.println("Motion Sensing :"+e.getOrientation()+" , "+e.getGforce());
+				if (e.isMotionSensingActive()) {
+					System.out.println("Motion Sensing :" + e.getOrientation()
+							+ " , " + e.getGforce());
 				}
-				
+
 				/* leave test */
 				if (e.isButtonHomeJustPressed()) {
 					System.out.println("LEAVING TEST");
-					WiiUseApiManager.getInstance().closeConnection(1);					
+					WiiUseApiManager.getInstance().closeConnection(1);
 				}
 			} else {
 				System.out.println(" WIIMOTE ID   : " + e.getWiimoteId()
 						+ "  DISCONNECTED !!!!!");
-				WiiUseApiManager.getInstance().closeConnection(1);				
+				WiiUseApiManager.getInstance().closeConnection(1);
 			}
 		} else if (dump == DUMP) {
 			System.out.println(e);
@@ -250,7 +261,7 @@ public class Tests implements WiiUseApiListener {
 				WiiUseApiManager.getInstance().deactivateMotionSensing(1);
 				WiiUseApiManager.getInstance().deactivateRumble(1);
 			}
-			
+
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
@@ -296,13 +307,13 @@ public class Tests implements WiiUseApiListener {
 				int mousey = (int) Math.round(((double) y1 / 768.0) * 1024.0);
 				robot.mouseMove(mousex, mousey);
 			}
-			
+
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);				
+				WiiUseApiManager.getInstance().closeConnection(1);
 			}
-		}else if(dump == ORIENT_THRESH_CONT){
+		} else if (dump == ORIENT_THRESH_CONT) {
 			WiiUseApiManager.getInstance().activateMotionSensing(1);
 			if (e.isButtonOneJustPressed()) {
 				System.out.println("Continous activated");
@@ -326,35 +337,39 @@ public class Tests implements WiiUseApiListener {
 			}
 			if (e.isButtonMinusJustPressed()) {
 				System.out.println("Threshold orientation 0.5 degrees");
-				WiiUseApiManager.getInstance().setOrientationThreshold(1, (float)0.5);
+				WiiUseApiManager.getInstance().setOrientationThreshold(1,
+						(float) 0.5);
 			}
 			System.out.println(e);
-			
-			
+
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);				
+				WiiUseApiManager.getInstance().closeConnection(1);
 			}
-		}else if(dump == TEST_LEDS){
+		} else if (dump == TEST_LEDS) {
 			WiiUseApiManager.getInstance().activateMotionSensing(1);
-			if (e.isButtonUpJustPressed()) {				
-				WiiUseApiManager.getInstance().setLeds(1, true, false, false, false);
+			if (e.isButtonUpJustPressed()) {
+				WiiUseApiManager.getInstance().setLeds(1, true, false, false,
+						false);
 			}
-			if (e.isButtonDownJustPressed()) {				
-				WiiUseApiManager.getInstance().setLeds(1, false, true, false, false);
+			if (e.isButtonDownJustPressed()) {
+				WiiUseApiManager.getInstance().setLeds(1, false, true, false,
+						false);
 			}
-			if (e.isButtonLeftJustPressed()) {				
-				WiiUseApiManager.getInstance().setLeds(1, false, false, true, false);
+			if (e.isButtonLeftJustPressed()) {
+				WiiUseApiManager.getInstance().setLeds(1, false, false, true,
+						false);
 			}
-			if (e.isButtonRightJustPressed()) {				
-				WiiUseApiManager.getInstance().setLeds(1, false, false, false, true);
+			if (e.isButtonRightJustPressed()) {
+				WiiUseApiManager.getInstance().setLeds(1, false, false, false,
+						true);
 			}
-	
+
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);				
+				WiiUseApiManager.getInstance().closeConnection(1);
 			}
 		}
 	}
@@ -369,8 +384,8 @@ public class Tests implements WiiUseApiListener {
 		manager.loadLibrary();
 		manager.connectWiimotes();
 		manager.start();
-//		java.util.Timer timer = new java.util.Timer();
-//		timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
+		// java.util.Timer timer = new java.util.Timer();
+		// timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
 
 	}
 
