@@ -1,5 +1,6 @@
 package wiiusej;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -17,18 +18,52 @@ public class WiiUseApiManager extends Thread {
 
 	private final EventListenerList listeners = new EventListenerList();
 
+	private Wiimote[] wiimotes;
+	
 	private WiiUseApi wiiuse = WiiUseApi.getInstance();
 
 	private boolean loaded = false;
 
-	private int connected = 0;
+	private int connected = -1;
 
 	private AtomicBoolean running = new AtomicBoolean(false);
 
-	private ConcurrentLinkedQueue<WiiUseApiRequest> requests = new ConcurrentLinkedQueue<WiiUseApiRequest>();
+	private ConcurrentLinkedQueue<WiiUseApiRequest> requests = new ConcurrentLinkedQueue<WiiUseApiRequest>();		
 
 	public static WiiUseApiManager getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * Get wiimotes.
+	 * Load library if necessary.
+	 * Connect to wiimotes if necessary.
+	 * Start polling if necessary.
+	 * Return an array with the connected wiimotes.
+	 * @return an array with connected wiimotes or NULL.
+	 */
+	public static Wiimote[] getWiimotes() {
+		WiiUseApiManager manager = getInstance();
+		if (!manager.loaded){
+			manager.loadLibrary();
+		}
+		if (manager.connected<0){			
+			int nbWiimotes = manager.connectWiimotes();
+			manager.wiimotes = new Wiimote[nbWiimotes];
+			for (int i=0; i<nbWiimotes; i++){
+				Wiimote wim = new Wiimote(i,manager);
+				manager.wiimotes[i] = wim;
+				manager.addWiiUseApiListener(wim);				
+			}					
+		}
+		
+		if (manager.connected == 0){
+			return new Wiimote[0];
+		}
+		
+		if (!manager.isAlive()) manager.start();
+		
+		return manager.wiimotes;		
 	}
 
 	/**
@@ -53,15 +88,15 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Connect wiimote and get the nu ber of wiimotes connected. Supposed to be
+	 * Connect wiimote and get the number of wiimotes connected. Supposed to be
 	 * used once.
 	 * 
 	 * @return 0 if nothing connected or the number of wiimotes connected.
 	 */
 	public int connectWiimotes() {
-		if (loaded) {
+		if (connected < 0 && loaded) {
 			connected = wiiuse.doConnections();
-			System.out.println(connected + " wiimote(s) connected !!!");
+			// System.out.println(connected + " wiimote(s) connected !!!");
 			return connected;
 		} else {// library not loaded, no wiimotes connected
 			return 0;
@@ -93,11 +128,12 @@ public class WiiUseApiManager extends Thread {
 	 */
 	public void shutdown() {
 		running.set(false);
+		loaded = false;
 		wiiuse.shutdownApi();
 	}
 
 	/**
-	 * Activate the rumble for the wiimotes with the given id.
+	 * Activate the rumble for the wiimote with the given id.
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -108,7 +144,7 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Deactivate the rumble for the wiimotes with the given id.
+	 * Deactivate the rumble for the wiimote with the given id.
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -119,7 +155,7 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Activate IR Tracking for the wiimotes with the given id.
+	 * Activate IR Tracking for the wiimote with the given id.
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -130,7 +166,7 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Deactivate IR Tracking for the wiimotes with the given id.
+	 * Deactivate IR Tracking for the wiimote with the given id.
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -141,7 +177,7 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Activate IR Tracking of the wiimotes with the given id.
+	 * Activate motion sensing for the wiimote with the given id.
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -152,7 +188,7 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Deactivate IR Tracking of the wiimotes with the given id.
+	 * Deactivate motion sensing for the wiimoter with the given id.
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -258,12 +294,14 @@ public class WiiUseApiManager extends Thread {
 			WiiMoteEvent evt = new WiiMoteEvent();
 
 			// Start polling and tell the observers when there Wiimote events
-			while (running.get()) {				
+			while (running.get()) {
 				WiiUseApiRequest req = requests.poll();
 				if (req != null) {// there is a request for the wiiuse api
 					int id = req.getId();
 					if (req.getRequestType() == WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST) {
-						/* Close connections requests */
+						/* Close connections requests */						
+						removeWiiUseApiListener(wiimotes[id]);
+						wiimotes[id]=null;
 						wiiuse.closeConnection(id);
 						connected--;
 					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_STATUS_REQUEST) {
@@ -316,30 +354,43 @@ public class WiiUseApiManager extends Thread {
 				/* Polling */
 				wiiuse.specialPoll(evt);
 
-				if (evt.getWiimoteId() != -1) {// there is an event notify
-					// observers
-					notifyWiiUseApiListener(evt);
+				if (evt.getWiimoteId() != -1) {//event filled
+					if (!evt.isConnected()) {// check if it was a
+						// disconnection
+						connected--;						
+						removeWiiUseApiListener(wiimotes[evt.getWiimoteId()]);
+						wiimotes[evt.getWiimoteId()]=null;
+						System.out.println("Wiimote " + evt.getWiimoteId()
+								+ " disconnected !");
+					} else {//there is an event notify observers
+						// not a disconnection notify listeners
+						notifyWiiUseApiListener(evt);
+						// create a new event to be filled
+						evt = new WiiMoteEvent();
+					}					
 				}
-				if (evt.getWiimoteId() != -1) {// create a new event when the last event created was filled
-					if (!evt.isConnected()){//check if it was a disconnection
-						connected --;
-						if (connected == 0){
-							System.out.println("No more wiimotes connected !!!");
-						}
-					}
-					evt = new WiiMoteEvent();
-				}								
+				if (connected == 0) {// stop this thread if there is
+					//no more wiimotes connected.
+					System.out.println("No more wiimotes connected !!!");					
+					shutdown();
+				}
 			}
-
 		} else {
-			System.out.println("No polling possible !!!");
+			if (!loaded) {
+				System.out.println("Library not Loaded !");
+			}
+			if (connected <= 0) {
+				System.out.println("No wiimotes connected !");
+			}
 		}
 
 	}
 
 	/**
 	 * Add WiiUseApiListener to the listeners list.
-	 * @param listener a WiiUseApiListener
+	 * 
+	 * @param listener
+	 *            a WiiUseApiListener
 	 */
 	public void addWiiUseApiListener(WiiUseApiListener listener) {
 		listeners.add(WiiUseApiListener.class, listener);
@@ -347,7 +398,9 @@ public class WiiUseApiManager extends Thread {
 
 	/**
 	 * Remove WiiUseApiListener from the listeners list.
-	 * @param listener a WiiUseApiListener
+	 * 
+	 * @param listener
+	 *            a WiiUseApiListener
 	 */
 	public void removeWiiUseApiListener(WiiUseApiListener listener) {
 		listeners.remove(WiiUseApiListener.class, listener);
@@ -355,6 +408,7 @@ public class WiiUseApiManager extends Thread {
 
 	/**
 	 * Get the list of WiiUseApiListeners.
+	 * 
 	 * @return the list of WiiUseApiListeners.
 	 */
 	public WiiUseApiListener[] getWiiUseApiListeners() {
@@ -363,9 +417,11 @@ public class WiiUseApiManager extends Thread {
 
 	/**
 	 * Notify WiiUseApiListeners that an event occured.
-	 * @param evt WiimoteEvent occured
+	 * 
+	 * @param evt
+	 *            WiimoteEvent occured
 	 */
-	public void notifyWiiUseApiListener(WiiMoteEvent evt) {
+	private void notifyWiiUseApiListener(WiiMoteEvent evt) {
 		for (WiiUseApiListener listener : getWiiUseApiListeners()) {
 			listener.wiimoteEvent(evt);
 		}
