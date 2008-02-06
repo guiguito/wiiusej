@@ -7,6 +7,8 @@ import wiiusej.Point2DInteger;
 import wiiusej.WiiMoteEvent;
 import wiiusej.WiiUseApiListener;
 import wiiusej.WiiUseApiManager;
+import wiiusej.Wiimote;
+import wiiusej.WiimoteListener;
 
 /**
  * This class used to test this API.
@@ -14,7 +16,7 @@ import wiiusej.WiiUseApiManager;
  * @author gduche
  * 
  */
-public class Tests implements WiiUseApiListener {
+public class Tests implements WiimoteListener {
 
 	Robot robot;
 
@@ -23,10 +25,14 @@ public class Tests implements WiiUseApiListener {
 	private static int MOVE_MOUSE = 3;
 	private static int ORIENT_THRESH_CONT = 4;
 	private static int TEST_LEDS = 5;
+	
+	private Wiimote wiimote;
 
-	int dump = ORIENT_THRESH_CONT;
+	int dump = DUMP;
 
-	public Tests() {
+	public Tests(Wiimote wim) {
+		wiimote = wim;
+		wiimote.addWiiMoteEventListeners(this);
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
@@ -36,11 +42,6 @@ public class Tests implements WiiUseApiListener {
 
 	@Override
 	public void wiimoteEvent(WiiMoteEvent e) {
-
-		/* leave if nothing is connected */
-		if (WiiUseApiManager.getInstance().getNbConnectedWiimotes() == 0) {
-			WiiUseApiManager.getInstance().shutdown();
-		}
 
 		if (dump == DISPLAY_EACH_VALUE) {
 			if (e.isConnected()) {
@@ -169,37 +170,37 @@ public class Tests implements WiiUseApiListener {
 
 				/* get status */
 				if (e.isButtonMinusJustPressed() && e.isButtonPlusJustPressed()) {
-					WiiUseApiManager.getInstance().getStatus(1);
+					wiimote.getStatus();
 				}
 
 				/* Activate rumble */
 				if (e.isButtonOneJustPressed()) {
 					System.out.println("Rumble Activated");
-					WiiUseApiManager.getInstance().activateRumble(1);
+					wiimote.activateRumble();
 				}
 				if (e.isButtonTwoJustPressed()) {
 					System.out.println("Rumble Deactivated");
-					WiiUseApiManager.getInstance().deactivateRumble(1);
+					wiimote.deactivateRumble();
 				}
 
 				/* Activate IR Tracking */
 				if (e.isButtonAJustPressed()) {
 					System.out.println("IR Activated");
-					WiiUseApiManager.getInstance().activateIRTRacking(1);
+					wiimote.activateIRTRacking();
 				}
 				if (e.isButtonBJustPressed()) {
 					System.out.println("IR Deactivated");
-					WiiUseApiManager.getInstance().deactivateIRTRacking(1);
+					wiimote.deactivateIRTRacking();
 				}
 
 				/* Activate Motion sensing */
 				if (e.isButtonPlusJustPressed()) {
 					System.out.println("Motion sensing Activated");
-					WiiUseApiManager.getInstance().activateMotionSensing(1);
+					wiimote.activateMotionSensing();
 				}
 				if (e.isButtonMinusJustPressed()) {
 					System.out.println("Motion sensing Deactivated");
-					WiiUseApiManager.getInstance().deactivateMotionSensing(1);
+					wiimote.deactivateMotionSensing();
 				}
 
 				/* display status */
@@ -239,46 +240,43 @@ public class Tests implements WiiUseApiListener {
 				/* leave test */
 				if (e.isButtonHomeJustPressed()) {
 					System.out.println("LEAVING TEST");
-					WiiUseApiManager.getInstance().closeConnection(1);
+					wiimote.disconnect();
 				}
 			} else {
 				System.out.println(" WIIMOTE ID   : " + e.getWiimoteId()
 						+ "  DISCONNECTED !!!!!");
-				WiiUseApiManager.getInstance().closeConnection(1);
+				wiimote.disconnect();
 			}
 		} else if (dump == DUMP) {
 			System.out.println(e);
 			/* Activate all */
 			if (e.isButtonAJustPressed()) {
 				System.out.println("IR Activated");
-				WiiUseApiManager.getInstance().activateIRTRacking(1);
-				WiiUseApiManager.getInstance().activateMotionSensing(1);
-				WiiUseApiManager.getInstance().activateRumble(1);
+				wiimote.activateIRTRacking();
+				wiimote.activateMotionSensing();
+				wiimote.activateRumble();
 			}
 			if (e.isButtonBJustPressed()) {
 				System.out.println("IR Deactivated");
-				WiiUseApiManager.getInstance().deactivateIRTRacking(1);
-				WiiUseApiManager.getInstance().deactivateMotionSensing(1);
-				WiiUseApiManager.getInstance().deactivateRumble(1);
+				wiimote.deactivateIRTRacking();
+				wiimote.deactivateMotionSensing();
+				wiimote.deactivateRumble();
 			}
 
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);
-				if (WiiUseApiManager.getInstance().getNbConnectedWiimotes() == 0) {
-					WiiUseApiManager.getInstance().shutdown();
-				}
+				wiimote.disconnect();
 			}
 		} else if (dump == MOVE_MOUSE) {
 			/* Activate IR Tracking */
 			if (e.isButtonOneJustPressed()) {
 				System.out.println("IR Activated");
-				WiiUseApiManager.getInstance().activateIRTRacking(1);
+				wiimote.activateIRTRacking();
 			}
 			if (e.isButtonTwoJustPressed()) {
 				System.out.println("IR Deactivated");
-				WiiUseApiManager.getInstance().deactivateIRTRacking(1);
+				wiimote.deactivateIRTRacking();
 			}
 
 			/* button A */
@@ -311,65 +309,60 @@ public class Tests implements WiiUseApiListener {
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);
+				wiimote.disconnect();
 			}
 		} else if (dump == ORIENT_THRESH_CONT) {
-			WiiUseApiManager.getInstance().activateMotionSensing(1);
+			wiimote.activateMotionSensing();
 			if (e.isButtonOneJustPressed()) {
 				System.out.println("Continous activated");
-				WiiUseApiManager.getInstance().activateContinuous(1);
+				wiimote.activateContinuous();
 			}
 			if (e.isButtonTwoJustPressed()) {
 				System.out.println("Continous deactivated");
-				WiiUseApiManager.getInstance().deactivateContinuous(1);
+				wiimote.deactivateContinuous();
 			}
 			if (e.isButtonAJustPressed()) {
 				System.out.println("Smoothing activated");
-				WiiUseApiManager.getInstance().activateSmoothing(1);
+				wiimote.activateSmoothing();
 			}
 			if (e.isButtonBJustPressed()) {
 				System.out.println("Smoothing deactivated");
-				WiiUseApiManager.getInstance().deactivateSmoothing(1);
+				wiimote.deactivateSmoothing();
 			}
 			if (e.isButtonPlusJustPressed()) {
 				System.out.println("Threshold orientation 10 degrees");
-				WiiUseApiManager.getInstance().setOrientationThreshold(1, 10);
+				wiimote.setOrientationThreshold(10);
 			}
 			if (e.isButtonMinusJustPressed()) {
 				System.out.println("Threshold orientation 0.5 degrees");
-				WiiUseApiManager.getInstance().setOrientationThreshold(1,
-						(float) 0.5);
+				wiimote.setOrientationThreshold((float) 0.5);
 			}
 			System.out.println(e);
 
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);
+				wiimote.disconnect();
 			}
 		} else if (dump == TEST_LEDS) {
-			WiiUseApiManager.getInstance().activateMotionSensing(1);
+			wiimote.activateMotionSensing();
 			if (e.isButtonUpJustPressed()) {
-				WiiUseApiManager.getInstance().setLeds(1, true, false, false,
-						false);
+				wiimote.setLeds(true, false, false,	false);
 			}
 			if (e.isButtonDownJustPressed()) {
-				WiiUseApiManager.getInstance().setLeds(1, false, true, false,
-						false);
+				wiimote.setLeds(false, true, false,	false);
 			}
 			if (e.isButtonLeftJustPressed()) {
-				WiiUseApiManager.getInstance().setLeds(1, false, false, true,
-						false);
+				wiimote.setLeds(false, false, true, false);
 			}
 			if (e.isButtonRightJustPressed()) {
-				WiiUseApiManager.getInstance().setLeds(1, false, false, false,
-						true);
+				wiimote.setLeds(false, false, false, true);
 			}
 
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
-				WiiUseApiManager.getInstance().closeConnection(1);
+				wiimote.disconnect();
 			}
 		}
 	}
@@ -378,12 +371,10 @@ public class Tests implements WiiUseApiListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Tests tests = new Tests();
-		WiiUseApiManager manager = WiiUseApiManager.getInstance();
-		manager.addWiiUseApiListener(tests);
-		manager.loadLibrary();
-		manager.connectWiimotes();
-		manager.start();
+		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes();		
+		System.out.println(wiimotes[0]);
+		Tests tests = new Tests(wiimotes[0]);		
+				
 		// java.util.Timer timer = new java.util.Timer();
 		// timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
 
