@@ -12,8 +12,8 @@
  *
  *	See below in main() for what they are used for.
  */
-#define WIIMOTE_ID_1		1
-#define WIIMOTE_ID_2		2
+#define WIIMOTE_ID_1		0
+#define WIIMOTE_ID_2		1
 #define WIIMOTE_STATE_RUMBLE			0x08
 #define WIIMOTE_STATE_CONNECTED			0x04
 #define WIIMOTE_IS_SET(wm, s)			((wm->state & (s)) == (s))
@@ -147,7 +147,7 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_closeConnection
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_disconnect(wiimotes[id-1]);
+	wiiuse_disconnect(wiimotes[id]);
 }
 
 /**
@@ -164,7 +164,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_shutdownApi
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateRumble
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_rumble(wiimotes[id-1], 1);
+	wiiuse_rumble(wiimotes[id], 1);
 }
 
 /**
@@ -173,7 +173,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateRumble
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateRumble
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_rumble(wiimotes[id-1], 0);
+	wiiuse_rumble(wiimotes[id], 0);
 }
 
 /**
@@ -182,7 +182,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateRumble
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateIRTracking
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir(wiimotes[id-1], 1);
+	wiiuse_set_ir(wiimotes[id], 1);
 }
 
 /**
@@ -191,7 +191,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateIRTracking
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateIRTracking
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir(wiimotes[id-1], 0);
+	wiiuse_set_ir(wiimotes[id], 0);
 }
 
 /**
@@ -200,7 +200,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateIRTracking
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateMotionSensing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_motion_sensing(wiimotes[id-1], 1);
+	wiiuse_motion_sensing(wiimotes[id], 1);
 }
 
 /**
@@ -209,7 +209,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateMotionSensing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateMotionSensing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_motion_sensing(wiimotes[id-1], 0);
+	wiiuse_motion_sensing(wiimotes[id], 0);
 }
 
 /**
@@ -229,7 +229,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
 	if (led3) leds |= WIIMOTE_LED_3;
 	if (led4) leds |= WIIMOTE_LED_4;
 
-	wiiuse_set_leds(wiimotes[id-1], leds);
+	wiiuse_set_leds(wiimotes[id], leds);
 }
 
 /**
@@ -239,7 +239,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 (JNIEnv *env, jobject obj, jint id, jfloat thresh) {
-	wiiuse_set_orient_threshold(wiimotes[id-1], thresh);
+	wiiuse_set_orient_threshold(wiimotes[id], thresh);
 }
 
 /**
@@ -249,7 +249,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateSmoothing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], WIIUSE_SMOOTHING, 0);
+	wiiuse_set_flags(wiimotes[id], WIIUSE_SMOOTHING, 0);
 }
 
 /**
@@ -258,7 +258,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateSmoothing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], 0, WIIUSE_SMOOTHING);
+	wiiuse_set_flags(wiimotes[id], 0, WIIUSE_SMOOTHING);
 }
 
 /**
@@ -268,7 +268,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateContinuous
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], WIIUSE_CONTINUOUS, 0);
+	wiiuse_set_flags(wiimotes[id], WIIUSE_CONTINUOUS, 0);
 }
 
 /**
@@ -278,7 +278,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateContinuous
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], 0, WIIUSE_CONTINUOUS);
+	wiiuse_set_flags(wiimotes[id], 0, WIIUSE_CONTINUOUS);
 }
 
 /**
@@ -288,7 +288,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_status(wiimotes[id-1]);
+	wiiuse_status(wiimotes[id]);
 }
 
 /**
@@ -433,9 +433,7 @@ static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
 static void handle_disconnect(wiimote* wm) {
 	
 	/* call java method handling disconnection */
-
 	copy_common_status(wm);
-
 }
 
 /**
