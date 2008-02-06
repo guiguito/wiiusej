@@ -144,31 +144,12 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * Set level battery.
-	 * 
-	 * @param batteryLevel
-	 *            must be between 0 and 1
-	 */
-	void setBatteryLevel(float batteryLevel) {
-		this.batteryLevel = batteryLevel;
-	}
-
-	/**
 	 * Get status of the leds .
 	 * 
 	 * @return a short representing LEDS turned on.
 	 */
 	public short getLeds() {
 		return leds;
-	}
-
-	/**
-	 * Set Status of the leds.
-	 * 
-	 * @param leds
-	 */
-	void setLeds(short leds) {
-		this.leds = leds;
 	}
 
 	/**
@@ -181,20 +162,6 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * Set the flag for the speaker to "enabled"
-	 */
-	void setSpeakerEnabled() {
-		this.isSpeakerEnabled = true;
-	}
-
-	/**
-	 * Set the flag for the speaker to "disabled"
-	 */
-	void setSpeakerDisabled() {
-		this.isSpeakerEnabled = false;
-	}
-
-	/**
 	 * Tell if there is an attachment to the Wiimote
 	 * 
 	 * @return TRUE if it there is one false otherwise
@@ -204,17 +171,25 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * Set the flag for the attachment to true
+	 * Set battery level, leds, speaker state and attachment in one method.
+	 * These method is called (and those variables are filled) only when a
+	 * status has been requested on this wiimote.
+	 * 
+	 * @param batt
+	 *            battery level
+	 * @param led
+	 *            status of leds
+	 * @param speak
+	 *            speakers status
+	 * @param attach
+	 *            attachment status
 	 */
-	void setThereIsAnAttachment() {
-		this.isThereAttachment = true;
-	}
-
-	/**
-	 * Set the flag for the attachment to false
-	 */
-	void setThereIsNoAttachment() {
-		this.isThereAttachment = false;
+	void setBatteryLedsSpeakerAttachment(float batt, short led, boolean speak,
+			boolean attach) {
+		this.batteryLevel = batt;
+		this.leds = led;
+		this.isSpeakerEnabled = speak;
+		this.isThereAttachment = attach;
 	}
 
 	/**
@@ -224,13 +199,6 @@ public class WiiMoteEvent {
 	 */
 	public boolean isRumbleActive() {
 		return isRumbleActive;
-	}
-
-	/**
-	 * Set Rumble flag to Active.
-	 */
-	void setRumbleActive() {
-		this.isRumbleActive = true;
 	}
 
 	/**
@@ -250,36 +218,12 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * Set the orientation threshold.
-	 * 
-	 * @param orientationThreshold
-	 *            the orientationThreshold to set
-	 */
-	void setOrientationThreshold(float orientationThreshold) {
-		this.orientationThreshold = orientationThreshold;
-	}
-
-	/**
 	 * Tell if the CONTINUOUS option is activated.
 	 * 
 	 * @return the isContinuousActive
 	 */
 	public boolean isContinuousActive() {
 		return isContinuousActive;
-	}
-
-	/**
-	 * Set the CONTINUOUS option active.
-	 */
-	void setContinuousActive() {
-		this.isContinuousActive = true;
-	}
-
-	/**
-	 * Set the CONTINUOUS option inactive.
-	 */
-	void setContinuousInactive() {
-		this.isContinuousActive = false;
 	}
 
 	/**
@@ -290,21 +234,7 @@ public class WiiMoteEvent {
 	public boolean isSmoothingActive() {
 		return isSmoothingActive;
 	}
-
-	/**
-	 * Set SMOOTHING option to active.
-	 */
-	void setSmoothingActive() {
-		this.isSmoothingActive = true;
-	}
-
-	/**
-	 * Set SMOOTHING option to inactive.
-	 */
-	void setSmoothingInactive() {
-		this.isSmoothingActive = false;
-	}
-
+	
 	/**
 	 * Get the short storing the buttons just pressed
 	 * 
@@ -312,15 +242,6 @@ public class WiiMoteEvent {
 	 */
 	public short getButtonsJustPressed() {
 		return buttonsJustPressed;
-	}
-
-	/**
-	 * set the short storing the buttons just pressed
-	 * 
-	 * @param buttonsJustPressed
-	 */
-	void setButtonsJustPressed(short buttonsJustPressed) {
-		this.buttonsJustPressed = buttonsJustPressed;
 	}
 
 	/**
@@ -333,15 +254,6 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * set the short storing the buttons just released
-	 * 
-	 * @param buttonsJustReleased
-	 */
-	void setButtonsJustReleased(short buttonsJustReleased) {
-		this.buttonsJustReleased = buttonsJustReleased;
-	}
-
-	/**
 	 * get the short storing the buttons held
 	 * 
 	 * @return the short storing the buttons held
@@ -351,11 +263,16 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * set the short storing the buttons held
+	 * Set all buttons in one method.
 	 * 
+	 * @param buttonsJustPressed
+	 * @param buttonsJustReleased
 	 * @param buttonsHeld
 	 */
-	void setButtonsHeld(short buttonsHeld) {
+	void setAllButtons(short buttonsJustPressed, short buttonsJustReleased,
+			short buttonsHeld) {
+		this.buttonsJustPressed = buttonsJustPressed;
+		this.buttonsJustReleased = buttonsJustReleased;
 		this.buttonsHeld = buttonsHeld;
 	}
 
@@ -366,20 +283,6 @@ public class WiiMoteEvent {
 	 */
 	public boolean isIrActive() {
 		return isIrActive;
-	}
-
-	/**
-	 * Set the value isIrActive to true
-	 */
-	void setIrActive() {
-		this.isIrActive = true;
-	}
-
-	/**
-	 * Set the value isIrActive to true
-	 */
-	void setIrInactive() {
-		this.isIrActive = false;
 	}
 
 	/**
@@ -428,38 +331,45 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * Set the motion sensing flag to active.
+	 * Set status variables always filled during an event.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 * @param connect
+	 *            true if the wiimote is connected
+	 * @param irState
+	 *            true if ir is active
+	 * @param rumbleState
+	 *            true if rumble is active
+	 * @param motionSensingState
+	 *            true if accelerometer is active
+	 * @param orientationThreshold
+	 *            value of the minimum angle between two events with the
+	 *            accelerometer
+	 * @param continuousState
+	 *            true if continuous flag is activated
+	 * @param smoothingState
+	 *            true if smoothing flag is activated
 	 */
-	void setMotionSensingActive() {
-		this.isMotionSensingActive = true;
+	void setPermanentStatus(int id, boolean connect, boolean irState,
+			boolean rumbleState, boolean motionSensingState,
+			float orientationThreshold, boolean continuousState,
+			boolean smoothingState) {
+		wiimoteId = id;
+		connected = connect;
+		isIrActive = irState;
+		isRumbleActive = rumbleState;
+		isMotionSensingActive = motionSensingState;
+		this.orientationThreshold = orientationThreshold;
+		isContinuousActive = continuousState;
+		isSmoothingActive = smoothingState;
 	}
-
-	/**
-	 * Set the motion sensing flag to inactive.
-	 */
-	void setMotionSensingInactive() {
-		this.isMotionSensingActive = false;
-	}
-
+	
 	/**
 	 * @return the orientation
 	 */
 	public Orientation getOrientation() {
 		return orientation;
-	}
-
-	/**
-	 * Set orientation of the wiimote.
-	 * 
-	 * @param r
-	 *            roll
-	 * @param p
-	 *            pitch
-	 * @param y
-	 *            yaw
-	 */
-	void setOrientation(float r, float p, float y) {
-		this.orientation = new Orientation(r, p, y);
 	}
 
 	/**
@@ -472,8 +382,14 @@ public class WiiMoteEvent {
 	}
 
 	/**
-	 * Set the gravity force.
+	 * Set orientation and gravity force.
 	 * 
+	 * @param r
+	 *            roll
+	 * @param p
+	 *            pitch
+	 * @param ya
+	 *            yaw
 	 * @param x
 	 *            gravity force on x axis
 	 * @param y
@@ -481,7 +397,9 @@ public class WiiMoteEvent {
 	 * @param z
 	 *            gravity force on z axis
 	 */
-	void setGforce(float x, float y, float z) {
+	void setOrientationAndGforce(float r, float p, float ya, float x, float y,
+			float z) {
+		this.orientation = new Orientation(r, p, ya);
 		this.gforce = new GForce(x, y, z);
 	}
 
@@ -667,7 +585,7 @@ public class WiiMoteEvent {
 		out += "/*********** WIIMOTE   ID :" + wiimoteId + " ********/\n";
 		out += "--- connected : " + connected + "\n";
 		out += "--- Battery level : " + batteryLevel + "\n";
-		out += "= --- Leds : " + leds + "\n";
+		out += "--- Leds : " + leds + "\n";
 		out += "--- Speaker enabled : " + isSpeakerEnabled + "\n";
 		out += "--- Attachment ? : " + isThereAttachment + "\n";
 		out += "--- Rumble ? : " + isRumbleActive + "\n";
