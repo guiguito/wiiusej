@@ -15,6 +15,7 @@
 #define WIIMOTE_ID_1		1
 #define WIIMOTE_ID_2		2
 #define WIIMOTE_STATE_RUMBLE			0x08
+#define WIIMOTE_STATE_CONNECTED			0x04
 #define WIIMOTE_IS_SET(wm, s)			((wm->state & (s)) == (s))
 #define WIIMOTE_IS_FLAG_SET(wm, s)		((wm->flags & (s)) == (s))
 
@@ -24,7 +25,8 @@ static void handle_event(struct wiimote_t* wm);
 static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
 		int speaker, int ir, int led[4], float battery_level);
 static void handle_disconnect(wiimote* wm);
-static void copy_common_status(struct wiimote_t* wm);
+
+static void copy_common_status(struct wiimote_t* wm);/* function with common code for callbacks */
 
 /********************* VARIABLES DECLARATIONS *****************************/
 
@@ -322,36 +324,13 @@ static void handle_event(struct wiimote_t* wm) {
 	/* fill java class */
 	copy_common_status(wm);
 
-	/* Take care of buttons pressed */
-	if (wm->btns) {
-		/* if a button is just pressed, report it */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setButtonsJustPressed", "(S)V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wm->btns);
+	/* Set all buttons */
+	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setAllButtons", "(SSS)V");
+	if (mid == 0) {
+		return;
 	}
-	if (wm->btns_released) {
-		/* if a button is just released, report it */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setButtonsJustReleased", "(S)V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-				wm->btns_released);
-	}
-	if (wm->btns_held) {
-		/* if a button is held, report it */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setButtonsHeld",
-				"(S)V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-				wm->btns_held);
-	}
+	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wm->btns,
+			wm->btns_released, wm->btns_held);
 
 	/*
 	 *	If IR tracking is enabled then print the coordinates
@@ -381,22 +360,15 @@ static void handle_event(struct wiimote_t* wm) {
 
 	/* Motion Sensing */
 	if (WIIUSE_USING_ACC(wm)) {
-		/* set orientation */
+		/* set orientation and gravity force */
 		cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setOrientation",
-				"(FFF)V");
+		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
+				"setOrientationAndGforce", "(FFFFFF)V");
 		if (mid == 0) {
 			return;
 		}
 		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-				wm->orient.roll, wm->orient.pitch, wm->orient.yaw);
-		/* set gravity force*/
-		cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setGforce", "(FFF)V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
+				wm->orient.roll, wm->orient.pitch, wm->orient.yaw,
 				wm->gforce.x, wm->gforce.y, wm->gforce.z);
 	}
 }
@@ -430,11 +402,6 @@ static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
 	copy_common_status(wm);
 
 	/* LEDS */
-	cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setLeds", "(S)V");
-	if (mid == 0) {
-		return;
-	}
 	if (led[0])
 		leds += 1;
 	if (led[1])
@@ -443,53 +410,15 @@ static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
 		leds += 4;
 	if (led[3])
 		leds += 8;
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, leds);
 
-	/* Battery */
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setBatteryLevel", "(F)V");
+	/* set values for battery, leds, speaker and attachment*/
+	mid = (*globalEnv)->GetMethodID(globalEnv, cls,
+			"setBatteryLedsSpeakerAttachment", "(FSZZ)V");
 	if (mid == 0) {
 		return;
 	}
 	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-			battery_level);
-
-	/* Speaker */
-	if (speaker) {
-		/* set Speaker Enabled */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setSpeakerEnabled",
-				"()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {
-		/* set Speaker Disabled */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setSpeakerDisabled",
-				"()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
-
-	/* Attachment */
-	if (attachment) {
-		/* set there is an attachment */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setThereIsAnAttachment", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {
-		/* set there is no attachment */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setThereIsNoAttachment", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
+			battery_level, leds, speaker, attachment);
 
 }
 
@@ -502,36 +431,16 @@ static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
  *	if the connection is interrupted.
  */
 static void handle_disconnect(wiimote* wm) {
-	//printf("\n\n--- DISCONNECTED [wiimote id %i] ---\n", wm->unid);
-
-	/* Variables Declarations */
-	jclass cls;
-	jmethodID mid;
-
+	
 	/* call java method handling disconnection */
 
-	/* Set wiimote id */
-	cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setWiimoteId", "(I)V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wm->unid);
-
-	/* set the wiimote disconnected */
-	cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setDisconnected", "()V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
+	copy_common_status(wm);
 
 }
 
-
 /**
- * Fills status variables.
- * This function is used in handle_event and handle_ctrl_status.
+ * Fills status variables. This method fills some status variables always filled in a WiiMoteEvent object.
+ * This function is called in every callback function.
  */
 static void copy_common_status(struct wiimote_t* wm) {
 
@@ -539,121 +448,17 @@ static void copy_common_status(struct wiimote_t* wm) {
 	jmethodID mid;
 	jclass cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
 
-	/* Set wiimote id */
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setWiimoteId", "(I)V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wm->unid);
-
-	/* set the wiimote connected */
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setConnected", "()V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-
-	/* IR state */
-	if (WIIUSE_USING_IR(wm)) {
-		/* set IRActive */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setIrActive", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {
-		/* set IRInactive */
-		mid
-				= (*globalEnv)->GetMethodID(globalEnv, cls,
-						"setIrInactive", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
-
-	/* Rumble status */
-	if (WIIMOTE_IS_SET(wm, WIIMOTE_STATE_RUMBLE)) {
-		/* set rumble active */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setRumbleActive",
-				"()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {
-		/* set rumble inactive */
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setRumbleInactive",
-				"()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
-
-	/* Motion sensing status */
-	if (WIIUSE_USING_ACC(wm)) {
-		/* Set motion sensing active*/
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setMotionSensingActive", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {/* motion sensing not activated */
-		/* Set motion sensing inactive*/
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setMotionSensingInactive", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
-
-	/* orientation threshold value */
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setOrientationThreshold",
-			"(F)V");
+	/* set statuses */
+	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setPermanentStatus",
+			"(IZZZZFZZ)V");
 	if (mid == 0) {
 		return;
 	}
 	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-			wm->orient_threshold);
+							wm->unid, WIIMOTE_IS_SET(wm, WIIMOTE_STATE_CONNECTED),
+							WIIUSE_USING_IR(wm), WIIMOTE_IS_SET(wm, WIIMOTE_STATE_RUMBLE),
+							WIIUSE_USING_ACC(wm), wm->orient_threshold,
+							WIIMOTE_IS_FLAG_SET(wm,WIIUSE_CONTINUOUS),
+							WIIMOTE_IS_FLAG_SET(wm,WIIUSE_SMOOTHING));
 
-	/* continuous status */
-	if (WIIMOTE_IS_FLAG_SET(wm,WIIUSE_CONTINUOUS)) {
-		/* Set WIIUSE_CONTINUOUS active*/
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setContinuousActive",
-				"()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {
-		/* Set WIIUSE_CONTINUOUS inactive*/
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setContinuousInactive", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
-
-	/* smoothing status */
-	if (WIIMOTE_IS_FLAG_SET(wm,WIIUSE_SMOOTHING)) {
-		/* Set WIIUSE_SMOOTHING active*/
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setSmoothingActive",
-				"()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	} else {
-		/* Set WIIUSE_SMOOTHING inactive*/
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setSmoothingInactive", "()V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
-	}
 }
