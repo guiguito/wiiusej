@@ -28,7 +28,7 @@ public class Tests implements WiimoteListener {
 	
 	private Wiimote wiimote;
 
-	int dump = DUMP;
+	int dump = DISPLAY_EACH_VALUE;
 
 	public Tests(Wiimote wim) {
 		wiimote = wim;
@@ -372,8 +372,13 @@ public class Tests implements WiimoteListener {
 	 */
 	public static void main(String[] args) {
 		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes();		
-		System.out.println(wiimotes[0]);
-		Tests tests = new Tests(wiimotes[0]);		
+		if (wiimotes.length>0){
+			System.out.println(wiimotes[0]);
+			Tests tests = new Tests(wiimotes[0]);
+		}else{
+			System.out.println("No wiimotes found !!!");
+		}
+				
 				
 		// java.util.Timer timer = new java.util.Timer();
 		// timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
