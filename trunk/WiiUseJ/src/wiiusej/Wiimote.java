@@ -178,8 +178,7 @@ public class Wiimote implements WiiUseApiListener {
 	 * @param evt WiimoteEvent occured
 	 */
 	private void notifyWiiMoteEventListeners(WiiMoteEvent evt) {		
-		for (WiimoteListener listener : getWiiMoteEventListeners()) {
-			System.out.println("test");
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
 			listener.wiimoteEvent(evt);
 		}
 	}
