@@ -1,4 +1,4 @@
-package wiiusej;
+package wiiusej.wiiuseapirequest;
 
 /**
  * Represents a request to set orientation Threshold in Wiiuse API.
@@ -6,9 +6,9 @@ package wiiusej;
  * @author gduche
  *
  */
-public class OrientThresholdRequest extends WiiUseApiRequest {
+public class FloatValueRequest extends WiiUseApiRequest {
 
-	private float thresholhd;
+	private float floatValue;
 
 	/**
 	 * Constructor setting the id of the wiimote concerned.
@@ -16,7 +16,7 @@ public class OrientThresholdRequest extends WiiUseApiRequest {
 	 * @param id
 	 *            the id of the wiimote concerned.
 	 */
-	public OrientThresholdRequest(int id, int type) {
+	public FloatValueRequest(int id, int type) {
 		super(id, type);
 	}
 
@@ -30,23 +30,23 @@ public class OrientThresholdRequest extends WiiUseApiRequest {
 	 * @param th
 	 *            threshold in degrees
 	 */
-	public OrientThresholdRequest(int id, int type, float th) {
+	public FloatValueRequest(int id, int type, float th) {
 		super(id, type);
-		thresholhd = th;
+		floatValue = th;
 	}
 
 	/**
-	 * @return the thresholhd
+	 * @return the float value
 	 */
-	public float getThresholhd() {
-		return thresholhd;
+	public float getFloatValue() {
+		return floatValue;
 	}
 
 	/**
-	 * @param thresholhd the thresholhd to set
+	 * @param val the thresholhd to set
 	 */
-	public void setThresholhd(float thresholhd) {
-		this.thresholhd = thresholhd;
+	public void setFloatValue(float val) {
+		this.floatValue = val;
 	}
 	
 	

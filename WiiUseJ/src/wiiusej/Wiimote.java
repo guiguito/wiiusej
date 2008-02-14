@@ -2,6 +2,13 @@ package wiiusej;
 
 import javax.swing.event.EventListenerList;
 
+import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.StatusEvent;
+import wiiusej.wiiuseapievents.WiiMoteEvent;
+import wiiusej.wiiuseapievents.WiiUseApiEvent;
+import wiiusej.wiiuseapievents.WiiUseApiListener;
+import wiiusej.wiiuseapievents.WiimoteListener;
+
 /**
  * Class that represents a wiimote.
  * You can register as an observer of this wiimote to listen events from it.
@@ -11,7 +18,7 @@ import javax.swing.event.EventListenerList;
  */
 public class Wiimote implements WiiUseApiListener {
 
-	private int id;//wiimote id
+	private int id = -1;//wiimote id
 	
 	private EventListenerList listeners = new EventListenerList();
 	
@@ -140,15 +147,20 @@ public class Wiimote implements WiiUseApiListener {
 	public void getStatus() {
 		manager.getStatus(id);
 	}
-	
-	
-	@Override
-	public void wiimoteEvent(WiiMoteEvent e) {		
-		if (e.getWiimoteId() == id){
-			notifyWiiMoteEventListeners(e);
-		}
-	}
 			
+	@Override
+	public void wiiUseApiEvent(WiiUseApiEvent e) {
+		if (e.getWiimoteId() == id){			
+			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT){
+				notifyWiiMoteEventListeners((WiiMoteEvent)e);
+			}else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT){
+				notifyStatusEventListeners((StatusEvent)e);
+			}else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT){
+				notifyDisconnectionEventListeners((DisconnectionEvent)e);
+			}			
+		}		
+	}	
+	
 	/**
 	 * Add a WiimoteListener to the listeners list.
 	 * @param listener a WiimoteListener
@@ -183,9 +195,29 @@ public class Wiimote implements WiiUseApiListener {
 		}
 	}
 	
+	/**
+	 * Notify WiimoteListener that a status event occured.
+	 * @param evt status event occured
+	 */
+	private void notifyStatusEventListeners(StatusEvent evt) {		
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
+			listener.statusEvent(evt);
+		}
+	}
+	
+	/**
+	 * Notify WiimoteListener that a status event occured.
+	 * @param evt status event occured
+	 */
+	private void notifyDisconnectionEventListeners(DisconnectionEvent evt) {		
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
+			listener.disconnectionEvent(evt);
+		}
+	}
+	
 	@Override
 	public String toString() {		
 		return "Wiimote with ID : "+id;
-	}
+	}	
 
 }

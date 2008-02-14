@@ -1,5 +1,7 @@
 package wiiusej;
 
+import wiiusej.wiiuseapievents.EventsGatherer;
+
 /**
  * Singleton used to manipulate WiiUse Api.
  * @author gduche
@@ -19,23 +21,16 @@ public class WiiUseApi {
 	 */
 	static WiiUseApi getInstance(){
 		return instance;
-	}
-	
-	/**
-	 * Load the library.
-	 * 
-	 * @return 0 if there is an error, 1 if everything is ok.
-	 */
-	native int loadLibrary();
+	}	
 
 	/**
 	 * Try to connect to 2 wiimotes. Make them rumble to show they are
 	 * connected.
-	 * 
+	 * @param nb number of wiimotes to connect
 	 * @return 0 if there is an error otherwise it returns the number of
 	 *         wiimotes connected.
 	 */	
-	native int doConnections();
+	native int doConnections(int nb);
 
 	/**
 	 * Close connection to the wiimote with the given id.
@@ -104,6 +99,26 @@ public class WiiUseApi {
 	native void setOrientThreshold(int id, float angle);
 	
 	/**
+	 * Set how much acceleration must change to generate an event.
+	 * @param id id of the wiimote concerned
+	 * @param value minimum value detected by an event
+	 */
+	native void setAccelThreshold(int id, float value);
+	
+	/**
+	 * Set alpha smoothing parameter for the given id.
+	 * @param id id of the wiimote concerned
+	 * @param value alpha smoothing value
+	 */
+	native void setSmoothAlpha(int id, float value);
+	
+	/**
+	 * Try to resync with the wiimote by starting a new handshake.
+	 * @param id id of the wiimote concerned
+	 */
+	native void reSync(int id);
+	
+	/**
 	 * Make the the accelerometers give smoother results.
 	 * This is set by default.
 	 * @param id the id of the wiimote concerned
@@ -137,26 +152,27 @@ public class WiiUseApi {
 	native void getStatus(int id);	
 	
 	/**
-	 * Get status and values from the wiimotes and send it through callbacks.
+	 * Check for new Events and Get it.
 	 * 
-	 * @param mote The WiimoteEvent object to fill with the datas.
+	 * @param gath the object where we store all the new events.
 	 */
-	native void specialPoll(WiiMoteEvent mote);	   
+	native void specialPoll(EventsGatherer gath);	   
     
 	
 	/* Tests */
 	public static void main(String[] args) {
 
 		/* Test JNI Side */
+		/*
 		WiiUseApi manager = new WiiUseApi();
 
 		int value = manager.loadLibrary();
 		System.out.println("loadLibrary : " + value);
 
 		value = manager.doConnections();
-		System.out.println("doConnections : " + value);
-
-		WiiMoteEvent mote = new WiiMoteEvent();
+		System.out.println("doConnections : " + value);  
+		 WiiMoteEvent mote = new WiiMoteEvent();		
+		 
 
 		manager.getStatus(1);
 		System.out.println("Status : \n" + mote);
@@ -168,6 +184,7 @@ public class WiiUseApi {
 			System.out.println(mote);
 			mote.EmptyIRPoints();
 		}
+		 */
 		// manager.closeConnectionsAndShutDown();
 	}
 

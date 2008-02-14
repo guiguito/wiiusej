@@ -1,4 +1,4 @@
-package wiiusej;
+package wiiusej.wiiuseapirequest;
 
 /**
  * Represents a request we could do to the WiiUse API.
@@ -21,7 +21,8 @@ public class WiiUseApiRequest {
 	public static int WIIUSE_DEACTIVATE_RUMBLE_REQUEST=-7;
 	public static int WIIUSE_LEDS_REQUEST=8;
 	public static int WIIUSE_ORIENT_THRESHOLHD_REQUEST=9;
-
+	public static int WIIUSE_ACCEL_THRESHOLHD_REQUEST=10;
+	public static int WIIUSE_ALPHA_SMOOTHING_REQUEST=11;
 	
 	private int wiimoteId=0;
 	private int requestType=0;
