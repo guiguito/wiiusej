@@ -1,11 +1,11 @@
-package wiiusej;
+package wiiusej.wiiuseapirequest;
 
 /**
  * Represents a request to set leds of the wiimote with WiiUse API.
  * @author gduche
  *
  */
-public class LedsRequest extends wiiusej.WiiUseApiRequest {
+public class LedsRequest extends wiiusej.wiiuseapirequest.WiiUseApiRequest {
 
 	private boolean led1, led2, led3, led4;
 

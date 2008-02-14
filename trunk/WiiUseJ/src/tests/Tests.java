@@ -3,12 +3,15 @@ package tests;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+
 import wiiusej.Point2DInteger;
-import wiiusej.WiiMoteEvent;
-import wiiusej.WiiUseApiListener;
 import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
-import wiiusej.WiimoteListener;
+import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.StatusEvent;
+import wiiusej.wiiuseapievents.WiiMoteEvent;
+import wiiusej.wiiuseapievents.WiiUseApiListener;
+import wiiusej.wiiuseapievents.WiimoteListener;
 
 /**
  * This class used to test this API.
@@ -25,7 +28,7 @@ public class Tests implements WiimoteListener {
 	private static int MOVE_MOUSE = 3;
 	private static int ORIENT_THRESH_CONT = 4;
 	private static int TEST_LEDS = 5;
-	
+
 	private Wiimote wiimote;
 
 	int dump = DISPLAY_EACH_VALUE;
@@ -44,209 +47,187 @@ public class Tests implements WiimoteListener {
 	public void wiimoteEvent(WiiMoteEvent e) {
 
 		if (dump == DISPLAY_EACH_VALUE) {
-			if (e.isConnected()) {
-				// System.out.println("*********** WIIMOTE ID : "+
-				// e.getWiimoteId() + " **************");
-				/* button ONE */
-				if (e.isButtonOneJustPressed()) {
-					System.out.println("button one pressed");
-				}
-				if (e.isButtonOneHeld()) {
-					System.out.println("button one held");
-				}
-				if (e.isButtonOneJustReleased()) {
-					System.out.println("button one released");
-				}
+			// System.out.println("*********** WIIMOTE ID : "+
+			// e.getWiimoteId() + " **************");
+			/* button ONE */
+			if (e.isButtonOneJustPressed()) {
+				System.out.println("button one pressed");
+			}
+			if (e.isButtonOneHeld()) {
+				System.out.println("button one held");
+			}
+			if (e.isButtonOneJustReleased()) {
+				System.out.println("button one released");
+			}
 
-				/* button TWO */
-				if (e.isButtonTwoJustPressed()) {
-					System.out.println("button two pressed");
-				}
-				if (e.isButtonTwoHeld()) {
-					System.out.println("button two held");
-				}
-				if (e.isButtonTwoJustReleased()) {
-					System.out.println("button two released");
-				}
+			/* button TWO */
+			if (e.isButtonTwoJustPressed()) {
+				System.out.println("button two pressed");
+			}
+			if (e.isButtonTwoHeld()) {
+				System.out.println("button two held");
+			}
+			if (e.isButtonTwoJustReleased()) {
+				System.out.println("button two released");
+			}
 
-				/* button A */
-				if (e.isButtonAJustPressed()) {
-					System.out.println("button A pressed");
-				}
-				if (e.isButtonAHeld()) {
-					System.out.println("button A held");
-				}
-				if (e.isButtonAJustReleased()) {
-					System.out.println("button A released");
-				}
+			/* button A */
+			if (e.isButtonAJustPressed()) {
+				System.out.println("button A pressed");
+			}
+			if (e.isButtonAHeld()) {
+				System.out.println("button A held");
+			}
+			if (e.isButtonAJustReleased()) {
+				System.out.println("button A released");
+			}
 
-				/* button B */
-				if (e.isButtonBJustPressed()) {
-					System.out.println("button B pressed");
-				}
-				if (e.isButtonBHeld()) {
-					System.out.println("button B held");
-				}
-				if (e.isButtonBJustReleased()) {
-					System.out.println("button B released");
-				}
+			/* button B */
+			if (e.isButtonBJustPressed()) {
+				System.out.println("button B pressed");
+			}
+			if (e.isButtonBHeld()) {
+				System.out.println("button B held");
+			}
+			if (e.isButtonBJustReleased()) {
+				System.out.println("button B released");
+			}
 
-				/* button LEFT */
-				if (e.isButtonLeftJustPressed()) {
-					System.out.println("button Left pressed");
-				}
-				if (e.isButtonLeftHeld()) {
-					System.out.println("button Left held");
-				}
-				if (e.isButtonLeftJustReleased()) {
-					System.out.println("button Left released");
-				}
+			/* button LEFT */
+			if (e.isButtonLeftJustPressed()) {
+				System.out.println("button Left pressed");
+			}
+			if (e.isButtonLeftHeld()) {
+				System.out.println("button Left held");
+			}
+			if (e.isButtonLeftJustReleased()) {
+				System.out.println("button Left released");
+			}
 
-				/* button RIGHT */
-				if (e.isButtonRightJustPressed()) {
-					System.out.println("button Right pressed");
-				}
-				if (e.isButtonRightHeld()) {
-					System.out.println("button Right held");
-				}
-				if (e.isButtonRightJustReleased()) {
-					System.out.println("button Right released");
-				}
+			/* button RIGHT */
+			if (e.isButtonRightJustPressed()) {
+				System.out.println("button Right pressed");
+			}
+			if (e.isButtonRightHeld()) {
+				System.out.println("button Right held");
+			}
+			if (e.isButtonRightJustReleased()) {
+				System.out.println("button Right released");
+			}
 
-				/* button UP */
-				if (e.isButtonUpJustPressed()) {
-					System.out.println("button UP pressed");
-				}
-				if (e.isButtonUpHeld()) {
-					System.out.println("button UP held");
-				}
-				if (e.isButtonUpJustReleased()) {
-					System.out.println("button UP released");
-				}
+			/* button UP */
+			if (e.isButtonUpJustPressed()) {
+				System.out.println("button UP pressed");
+			}
+			if (e.isButtonUpHeld()) {
+				System.out.println("button UP held");
+			}
+			if (e.isButtonUpJustReleased()) {
+				System.out.println("button UP released");
+			}
 
-				/* button DOWN */
-				if (e.isButtonDownJustPressed()) {
-					System.out.println("button DOWN pressed");
-				}
-				if (e.isButtonDownHeld()) {
-					System.out.println("button DOWN held");
-				}
-				if (e.isButtonDownJustReleased()) {
-					System.out.println("button DOWN released");
-				}
+			/* button DOWN */
+			if (e.isButtonDownJustPressed()) {
+				System.out.println("button DOWN pressed");
+			}
+			if (e.isButtonDownHeld()) {
+				System.out.println("button DOWN held");
+			}
+			if (e.isButtonDownJustReleased()) {
+				System.out.println("button DOWN released");
+			}
 
-				/* button MINUS */
-				if (e.isButtonMinusJustPressed()) {
-					System.out.println("button MINUS pressed");
-				}
-				if (e.isButtonMinusHeld()) {
-					System.out.println("button MINUS held");
-				}
-				if (e.isButtonMinusJustReleased()) {
-					System.out.println("button MINUS released");
-				}
+			/* button MINUS */
+			if (e.isButtonMinusJustPressed()) {
+				System.out.println("button MINUS pressed");
+			}
+			if (e.isButtonMinusHeld()) {
+				System.out.println("button MINUS held");
+			}
+			if (e.isButtonMinusJustReleased()) {
+				System.out.println("button MINUS released");
+			}
 
-				/* button PLUS */
-				if (e.isButtonPlusJustPressed()) {
-					System.out.println("button PLUS pressed");
-				}
-				if (e.isButtonPlusHeld()) {
-					System.out.println("button PLUS held");
-				}
-				if (e.isButtonPlusJustReleased()) {
-					System.out.println("button PLUS released");
-				}
+			/* button PLUS */
+			if (e.isButtonPlusJustPressed()) {
+				System.out.println("button PLUS pressed");
+			}
+			if (e.isButtonPlusHeld()) {
+				System.out.println("button PLUS held");
+			}
+			if (e.isButtonPlusJustReleased()) {
+				System.out.println("button PLUS released");
+			}
 
-				/* button HOME */
-				if (e.isButtonHomeJustPressed()) {
-					System.out.println("button HOME pressed");
-				}
-				if (e.isButtonHomeHeld()) {
-					System.out.println("button HOME held");
-				}
-				if (e.isButtonHomeJustReleased()) {
-					System.out.println("button HOME released");
-				}
+			/* button HOME */
+			if (e.isButtonHomeJustPressed()) {
+				System.out.println("button HOME pressed");
+			}
+			if (e.isButtonHomeHeld()) {
+				System.out.println("button HOME held");
+			}
+			if (e.isButtonHomeJustReleased()) {
+				System.out.println("button HOME released");
+			}
 
-				/* get status */
-				if (e.isButtonMinusJustPressed() && e.isButtonPlusJustPressed()) {
-					wiimote.getStatus();
-				}
+			/* get status */
+			if (e.isButtonMinusJustPressed() && e.isButtonPlusJustPressed()) {
+				wiimote.getStatus();
+			}
 
-				/* Activate rumble */
-				if (e.isButtonOneJustPressed()) {
-					System.out.println("Rumble Activated");
-					wiimote.activateRumble();
-				}
-				if (e.isButtonTwoJustPressed()) {
-					System.out.println("Rumble Deactivated");
-					wiimote.deactivateRumble();
-				}
+			/* Activate rumble */
+			if (e.isButtonOneJustPressed()) {
+				System.out.println("Rumble Activated");
+				wiimote.activateRumble();
+			}
+			if (e.isButtonTwoJustPressed()) {
+				System.out.println("Rumble Deactivated");
+				wiimote.deactivateRumble();
+			}
 
-				/* Activate IR Tracking */
-				if (e.isButtonAJustPressed()) {
-					System.out.println("IR Activated");
-					wiimote.activateIRTRacking();
-				}
-				if (e.isButtonBJustPressed()) {
-					System.out.println("IR Deactivated");
-					wiimote.deactivateIRTRacking();
-				}
+			/* Activate IR Tracking */
+			if (e.isButtonAJustPressed()) {
+				System.out.println("IR Activated");
+				wiimote.activateIRTRacking();
+			}
+			if (e.isButtonBJustPressed()) {
+				System.out.println("IR Deactivated");
+				wiimote.deactivateIRTRacking();
+			}
 
-				/* Activate Motion sensing */
-				if (e.isButtonPlusJustPressed()) {
-					System.out.println("Motion sensing Activated");
-					wiimote.activateMotionSensing();
-				}
-				if (e.isButtonMinusJustPressed()) {
-					System.out.println("Motion sensing Deactivated");
-					wiimote.deactivateMotionSensing();
-				}
+			/* Activate Motion sensing */
+			if (e.isButtonPlusJustPressed()) {
+				System.out.println("Motion sensing Activated");
+				wiimote.activateMotionSensing();
+			}
+			if (e.isButtonMinusJustPressed()) {
+				System.out.println("Motion sensing Deactivated");
+				wiimote.deactivateMotionSensing();
+			}			
 
-				/* display status */
-				if (e.getBatteryLevel() != -1) {
-					System.out
-							.println("battery level : " + e.getBatteryLevel());
-					System.out.println("= --- Leds : " + e.getLeds() + "\n");
-					System.out.println("= --- Rumble : " + e.isRumbleActive()
-							+ "\n");
-					System.out.println("= --- Continous : "
-							+ e.isContinuousActive() + "\n");
-					System.out.println("= --- Smoothing : "
-							+ e.isSmoothingActive() + "\n");
-					System.out.println("= --- Speaker : "
-							+ e.isSpeakerEnabled() + "\n");
-					System.out.println("= --- Attachment : "
-							+ e.isThereAttachment() + "\n");
+			/* display ir points */
+			if (e.isIrActive()) {
+				Point2DInteger[] list = e.getIRPoints();
+				for (int i = 0; i < list.length; i++) {
+					if (list[i] != null)
+						System.out.print("Point :(" + list[i].getX() + ","
+								+ list[i].getY() + ") ");
 				}
+				System.out.println("");
+			}
 
-				/* display ir points */
-				if (e.isIrActive()) {
-					Point2DInteger[] list = e.getIRPoints();
-					for (int i = 0; i < list.length; i++) {
-						if (list[i] != null)
-							System.out.print("Point :(" + list[i].getX() + ","
-									+ list[i].getY() + ") ");
-					}
-					System.out.println("");
-				}
+			/* display motion sensing */
+			if (e.isMotionSensingActive()) {
+				System.out.println("Motion Sensing :" + e.getOrientation()
+						+ " , " + e.getGforce());
+			}
 
-				/* display motion sensing */
-				if (e.isMotionSensingActive()) {
-					System.out.println("Motion Sensing :" + e.getOrientation()
-							+ " , " + e.getGforce());
-				}
-
-				/* leave test */
-				if (e.isButtonHomeJustPressed()) {
-					System.out.println("LEAVING TEST");
-					wiimote.disconnect();
-				}
-			} else {
-				System.out.println(" WIIMOTE ID   : " + e.getWiimoteId()
-						+ "  DISCONNECTED !!!!!");
+			/* leave test */
+			if (e.isButtonHomeJustPressed()) {
+				System.out.println("LEAVING TEST");
 				wiimote.disconnect();
 			}
+
 		} else if (dump == DUMP) {
 			System.out.println(e);
 			/* Activate all */
@@ -337,6 +318,10 @@ public class Tests implements WiimoteListener {
 				System.out.println("Threshold orientation 0.5 degrees");
 				wiimote.setOrientationThreshold((float) 0.5);
 			}
+			
+			//@TODO add accelereation threshold test, add alpha smoothing test
+			
+			
 			System.out.println(e);
 
 			/* leave test */
@@ -347,10 +332,10 @@ public class Tests implements WiimoteListener {
 		} else if (dump == TEST_LEDS) {
 			wiimote.activateMotionSensing();
 			if (e.isButtonUpJustPressed()) {
-				wiimote.setLeds(true, false, false,	false);
+				wiimote.setLeds(true, false, false, false);
 			}
 			if (e.isButtonDownJustPressed()) {
-				wiimote.setLeds(false, true, false,	false);
+				wiimote.setLeds(false, true, false, false);
 			}
 			if (e.isButtonLeftJustPressed()) {
 				wiimote.setLeds(false, false, true, false);
@@ -366,20 +351,30 @@ public class Tests implements WiimoteListener {
 			}
 		}
 	}
+		
+	@Override
+	public void statusEvent(StatusEvent e) {
+		//Display status variables
+		System.out.println(e);	
+	}
+	
+	@Override
+	public void disconnectionEvent(DisconnectionEvent e) {
+		System.out.println(e.getWiimoteId()+" notify it's been disconnected !!");		
+	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes();		
-		if (wiimotes.length>0){
+		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(4);
+		if (wiimotes.length > 0) {
 			System.out.println(wiimotes[0]);
 			Tests tests = new Tests(wiimotes[0]);
-		}else{
+		} else {
 			System.out.println("No wiimotes found !!!");
 		}
-				
-				
+
 		// java.util.Timer timer = new java.util.Timer();
 		// timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
 
