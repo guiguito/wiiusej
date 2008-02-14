@@ -12,21 +12,10 @@
  *
  *	See below in main() for what they are used for.
  */
-#define WIIMOTE_ID_1		0
-#define WIIMOTE_ID_2		1
 #define WIIMOTE_STATE_RUMBLE			0x08
 #define WIIMOTE_STATE_CONNECTED			0x04
 #define WIIMOTE_IS_SET(wm, s)			((wm->state & (s)) == (s))
 #define WIIMOTE_IS_FLAG_SET(wm, s)		((wm->flags & (s)) == (s))
-
-/****************** CALLBACKS DECLARATIONS *************************/
-
-static void handle_event(struct wiimote_t* wm);
-static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
-		int speaker, int ir, int led[4], float battery_level);
-static void handle_disconnect(wiimote* wm);
-
-static void copy_common_status(struct wiimote_t* wm);/* function with common code for callbacks */
 
 /********************* VARIABLES DECLARATIONS *****************************/
 
@@ -36,65 +25,33 @@ static void copy_common_status(struct wiimote_t* wm);/* function with common cod
  *	two wiimotes.  Each wiimote connected
  *	will get one of these ids.
  */
-static int ids[] = { WIIMOTE_ID_1, WIIMOTE_ID_2 };
 static wiimote** wiimotes;
+
+static int nbMaxWiiMotes=0;
+
 static JNIEnv *globalEnv;
 static jobject globalObj;
 static jobject globalWim;
 
 /****************** GENERAL FUNCTIONS DEFINITIONS *************************/
 
-/*
- *	Load the wiiuse library
- *
- *	This needs to be done before anything else can happen
- *	wiiuse_startup() will return the version of the library loaded.
- * 
- *  @return 0 if there is an error, 1 if everything is ok.
- */
-JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_loadLibrary
-(JNIEnv *env, jobject obj) {
-	const char* version;
-	version = wiiuse_startup(WIIUSE_PATH);
-	//printf("Wiiuse Version = %s\n", version);
-	if (!version) {
-		return 0;
-	}
-
-	/* no problems loading library */
-	return 1;
-}
-
 /**
  * Try to connect to 2 wiimotes.
  * Make them rumble to show they are connected.
- * 
+ * @param nbConnects number of connections maximum.
  * @return 0 if there is an error otherwise it returns 
  * 			the number of wiimotes connected..
  */
 JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
-(JNIEnv *env, jobject obj) {
+(JNIEnv *env, jobject obj, jint nbConnects) {
 
 	/* variables declarations */
-	int found, connected;
+	int found, connected, i;
 
-	/*
-	 *	Initialize an array of wiimote objects.
-	 *
-	 *	The first parameter is the number of wiimotes
-	 *	I want to create.  I only have two wiimotes
-	 *	so I'm limiting the test to just 2.
-	 *
-	 *	Then I get it the array of ids and a couple
-	 *	callback functions to invoke when something
-	 *	happens on one of the wiimotes.
-	 *
-	 *	handle_event gets called when a generic event occurs (button press, motion sensing, etc)
-	 *	handle_ctrl_status gets called when a response to a status request arrives (battery power, etc)
-	 *	handle_disconnect gets called when the wiimote disconnect (holding power button)
-	 */
-	wiimotes = wiiuse_init(2, ids, handle_event, handle_ctrl_status,
-			handle_disconnect);
+	nbMaxWiiMotes = nbConnects;
+
+	/* initialize wiimotes array with the maximum number of wiimotes */
+	wiimotes = wiiuse_init(nbMaxWiiMotes);
 
 	/*
 	 *	Find wiimote devices
@@ -104,7 +61,7 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 	 *	Set the timeout to be 5 seconds.
 	 *	This will return the number of actual wiimotes that are in discovery mode.
 	 */
-	found = wiiuse_find(wiimotes, 2, 5);
+	found = wiiuse_find(wiimotes, nbMaxWiiMotes, 5);
 	if (!found) return 0;
 
 	/*
@@ -113,7 +70,7 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 	 *	Give the function the wiimote array and the number of wiimote devices we found.
 	 *	This will return the number of established connections to the found wiimotes.
 	 */
-	connected = wiiuse_connect(wiimotes, 2);
+	connected = wiiuse_connect(wiimotes, nbMaxWiiMotes);
 	if (!connected) return 0;
 
 	//no problems during connection show that wiimotes are connected
@@ -122,10 +79,10 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 	 *	Now set the LEDs and rumble for a second so it's easy
 	 *	to tell which wiimotes are connected (just like the wii does).
 	 */
-	wiiuse_set_leds(wiimotes[0], WIIMOTE_LED_1);
-	wiiuse_set_leds(wiimotes[1], WIIMOTE_LED_2);
-	wiiuse_rumble(wiimotes[0], 1);
-	wiiuse_rumble(wiimotes[1], 1);
+	for (i=0;i<nbMaxWiiMotes;i++) {
+		wiiuse_set_leds(wiimotes[i], ((2^(i%4-1))*16));
+		wiiuse_rumble(wiimotes[i], 1);
+	}
 
 #ifndef WIN32
 	usleep(200000);
@@ -133,8 +90,9 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 	Sleep(200);
 #endif
 
-	wiiuse_rumble(wiimotes[0], 0);
-	wiiuse_rumble(wiimotes[1], 0);
+	for (i=0;i<nbMaxWiiMotes;i++) {
+		wiiuse_rumble(wiimotes[i], 0);
+	}
 
 	//no pb connecting leave	
 	return connected;
@@ -155,7 +113,8 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_closeConnection
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_shutdownApi
 (JNIEnv *env, jobject obj) {
-	wiiuse_shutdown();
+	//wiiuse_shutdown();
+	wiiuse_cleanup(wiimotes, nbMaxWiiMotes);
 }
 
 /**
@@ -243,6 +202,35 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 }
 
 /**
+ * Set how much acceleration must change to generate an event.
+ * @param id id of the wiimote concerned
+ * @param value minimum value detected by an event
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
+(JNIEnv *env, jobject obj, jint id, jfloat thresh) {
+	wiiuse_set_accel_threshold(wiimotes[id], thresh);
+}
+
+/**
+ * Set alpha smoothing parameter for the given id.
+ * @param id id of the wiimote concerned
+ * @param value alpha smoothing value
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSmoothAlpha
+(JNIEnv *env, jobject obj, jint id, jfloat val) {
+	wiiuse_set_smooth_alpha(wiimotes[id], val);
+}
+
+/**
+ * Try to resync with the wiimote by starting a new handshake.
+ * @param id id of the wiimote concerned
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_reSync
+(JNIEnv *env, jobject obj, jint id) {
+	wiiuse_resync(wiimotes[id]);
+}
+
+/**
  * Make the the accelerometers give smoother results.
  * This is set by default.
  * @param id the id of the wiimote concerned
@@ -298,165 +286,110 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 (JNIEnv *env, jobject obj, jobject wim) {
 
+	/* Variables Declarations */
+	int i;
+	short leds = 0;
+	jclass cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
+	jmethodID mid;
+
 	globalEnv = env;
 	globalObj = obj;
 	globalWim = wim;
 
-	wiiuse_poll(wiimotes, 2);
-}
-
-/****************** CALLBACKS DEFINITIONS *************************/
-
-/**
- *	@brief Callback that handles an event.
- *
- *	@param wm		Pointer to a wiimote_t structure.
- *
- *	This function is called automatically by the wiiuse library when an
- *	event occurs on the specified wiimote.
- */
-static void handle_event(struct wiimote_t* wm) {
-
-	/* Variables Declarations */
-	jclass cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-	jmethodID mid;
-
-	/* fill java class */
-	copy_common_status(wm);
-
-	/* Set all buttons */
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setAllButtons", "(SSS)V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wm->btns,
-			wm->btns_released, wm->btns_held);
-
-	/*
-	 *	If IR tracking is enabled then print the coordinates
-	 *	on the virtual screen that the wiimote is pointing to.
-	 *
-	 *	Also make sure that we see at least 1 dot.
-	 */
-	if (WIIUSE_USING_IR(wm)) {
-		int i = 0;
-		/* go through each of the 4 possible IR sources */
-		for (; i < 4; ++i) {
-			/* check if the source is visible */
-			if (wm->ir.dot[i].visible) {
-				cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addIRpoint",
-						"(II)V");
+	if (wiiuse_poll(wiimotes, nbMaxWiiMotes)) {
+		/*
+		 *	This happens if something happened on any wiimote.
+		 *	So go through each one and check if anything happened.
+		 */
+		for (i=0; i < nbMaxWiiMotes; ++i) {
+			switch (wiimotes[i]->event) {
+				case WIIUSE_EVENT:
+				/* a generic event occured */
+				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "prepareWiiMoteEvent", "(ISSS)V");
 				if (mid == 0) {
 					return;
 				}
+				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wiimotes[i]->unid, wiimotes[i]->btns,
+						wiimotes[i]->btns_released, wiimotes[i]->btns_held);
+				/*
+				 *	If IR tracking is enabled then print the coordinates
+				 *	on the virtual screen that the wiimote is pointing to.
+				 *
+				 *	Also make sure that we see at least 1 dot.
+				 */
+				if (WIIUSE_USING_IR(wiimotes[i])) {
+					int i = 0;
+					/* go through each of the 4 possible IR sources */
+					for (; i < 4; ++i) {
+						/* check if the source is visible */
+						if (wiimotes[i]->ir.dot[i].visible) {
+							mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addIRPointToPreparedWiiMoteEvent",
+									"(II)V");
+							if (mid == 0) {
+								return;
+							}
+							(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
+									wiimotes[i]->ir.dot[i].x, wiimotes[i]->ir.dot[i].y);
+						}
+					}
+				}
+
+				/* Motion Sensing */
+				if (WIIUSE_USING_ACC(wiimotes[i])) {
+					/* set orientation and gravity force */
+					mid = (*globalEnv)->GetMethodID(globalEnv, cls,
+							"addMotionSensingValues", "(FFFFFF)V");
+					if (mid == 0) {
+						return;
+					}
+					(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
+							wiimotes[i]->orient.roll, wiimotes[i]->orient.pitch, wiimotes[i]->orient.yaw,
+							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z);
+				}
+
+				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addWiimoteEvent",
+						"()V");
+				if (mid == 0) {
+					return;
+				}
+				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
+				break;
+
+				case WIIUSE_STATUS:
+				/* a status event occured */
+				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addDisconnectionEvent", "(IZFSZIZFFFZZZZ)V");
+				if (mid == 0) {
+					return;
+				}
+				/* LEDS */
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
+
 				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-						wm->ir.dot[i].x, wm->ir.dot[i].y);
+						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
+						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
+						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
+						wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
+						wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
+						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
+						WIIUSE_USING_ACC(wiimotes[i]));
+
+				break;
+
+				case WIIUSE_DISCONNECT:
+				/* the wiimote disconnected */
+				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addDisconnectionEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wiimotes[i]->unid);
+				break;
+
+				default:
+				break;
 			}
 		}
-		//printf("IR cursor: (%u, %u)\n", wm->ir.x, wm->ir.y);
-		//printf("IR z distance: %f\n", wm->ir.z);
 	}
-
-	/* Motion Sensing */
-	if (WIIUSE_USING_ACC(wm)) {
-		/* set orientation and gravity force */
-		cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-		mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-				"setOrientationAndGforce", "(FFFFFF)V");
-		if (mid == 0) {
-			return;
-		}
-		(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-				wm->orient.roll, wm->orient.pitch, wm->orient.yaw,
-				wm->gforce.x, wm->gforce.y, wm->gforce.z);
-	}
-}
-
-/**
- *	@brief Callback that handles a controller status event.
- *
- *	@param wm				Pointer to a wiimote_t structure.
- *	@param attachment		Is there an attachment? (1 for yes, 0 for no)
- *	@param speaker			Is the speaker enabled? (1 for yes, 0 for no)
- *	@param ir				Is the IR support enabled? (1 for yes, 0 for no)
- *	@param led				What LEDs are lit.
- *	@param battery_level	Battery level, between 0.0 (0%) and 1.0 (100%).
- *
- *	This occurs when either the controller status changed
- *	or the controller status was requested explicitly by
- *	wiiuse_status().
- *
- *	One reason the status can change is if the nunchuk was
- *	inserted or removed from the expansion port.
- */
-static void handle_ctrl_status(struct wiimote_t* wm, int attachment,
-		int speaker, int ir, int led[4], float battery_level) {
-
-	/* Variables Declarations */
-	jclass cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-	jmethodID mid;
-	short leds = 0;
-
-	/* fill java class */
-	copy_common_status(wm);
-
-	/* LEDS */
-	if (led[0])
-		leds += 1;
-	if (led[1])
-		leds += 2;
-	if (led[2])
-		leds += 4;
-	if (led[3])
-		leds += 8;
-
-	/* set values for battery, leds, speaker and attachment*/
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls,
-			"setBatteryLedsSpeakerAttachment", "(FSZZ)V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-			battery_level, leds, speaker, attachment);
-
-}
-
-/**
- *	@brief Callback that handles a disconnection event.
- *
- *	@param wm				Pointer to a wiimote_t structure.
- *
- *	This can happen if the POWER button is pressed, or
- *	if the connection is interrupted.
- */
-static void handle_disconnect(wiimote* wm) {
-	
-	/* call java method handling disconnection */
-	copy_common_status(wm);
-}
-
-/**
- * Fills status variables. This method fills some status variables always filled in a WiiMoteEvent object.
- * This function is called in every callback function.
- */
-static void copy_common_status(struct wiimote_t* wm) {
-
-	/* Variables Declarations */
-	jmethodID mid;
-	jclass cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
-
-	/* set statuses */
-	mid = (*globalEnv)->GetMethodID(globalEnv, cls, "setPermanentStatus",
-			"(IZZZZFZZ)V");
-	if (mid == 0) {
-		return;
-	}
-	(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-							wm->unid, WIIMOTE_IS_SET(wm, WIIMOTE_STATE_CONNECTED),
-							WIIUSE_USING_IR(wm), WIIMOTE_IS_SET(wm, WIIMOTE_STATE_RUMBLE),
-							WIIUSE_USING_ACC(wm), wm->orient_threshold,
-							WIIMOTE_IS_FLAG_SET(wm,WIIUSE_CONTINUOUS),
-							WIIMOTE_IS_FLAG_SET(wm,WIIUSE_SMOOTHING));
-
 }
