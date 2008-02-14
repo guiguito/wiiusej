@@ -9,19 +9,11 @@ extern "C" {
 #endif
 /*
  * Class:     wiiusej_WiiUseApi
- * Method:    loadLibrary
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_loadLibrary
-  (JNIEnv *, jobject);
-
-/*
- * Class:     wiiusej_WiiUseApi
  * Method:    doConnections
- * Signature: ()I
+ * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     wiiusej_WiiUseApi
@@ -105,6 +97,30 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 
 /*
  * Class:     wiiusej_WiiUseApi
+ * Method:    setAccelThreshold
+ * Signature: (IF)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
+  (JNIEnv *, jobject, jint, jfloat);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setSmoothAlpha
+ * Signature: (IF)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSmoothAlpha
+  (JNIEnv *, jobject, jint, jfloat);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    reSync
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_reSync
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
  * Method:    activateSmoothing
  * Signature: (I)V
  */
@@ -146,7 +162,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 /*
  * Class:     wiiusej_WiiUseApi
  * Method:    specialPoll
- * Signature: (Lwiiusej/WiiMoteEvent;)V
+ * Signature: (Lwiiusej/wiiuseapievents/EventsGatherer;)V
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
   (JNIEnv *, jobject, jobject);
