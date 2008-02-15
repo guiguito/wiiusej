@@ -55,9 +55,9 @@ public class WiiUseApiManager extends Thread {
 		if (manager.connected < 0) {
 			int nbWiimotes = manager.connectWiimotes(nb);
 			manager.wiimotes = new Wiimote[nbWiimotes];
-			for (int i = 0; i < nbWiimotes; i++) {
+			for (int i = 1; i <= nbWiimotes; i++) {
 				Wiimote wim = new Wiimote(i, manager);
-				manager.wiimotes[i] = wim;
+				manager.wiimotes[i-1] = wim;
 				manager.addWiiUseApiListener(wim);
 			}
 		}
@@ -99,8 +99,8 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote to disconnect.
 	 */
 	public void closeConnection(int id) {
-		removeWiiUseApiListener(wiimotes[id]);
-		wiimotes[id] = null;
+		removeWiiUseApiListener(wiimotes[id-1]);
+		wiimotes[id-1] = null;
 		requests.add(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST));
 		System.out.println("Wiimote " + id + " disconnected !");

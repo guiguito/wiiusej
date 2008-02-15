@@ -30,7 +30,7 @@ public class EventsGatherer {
 	 * @param e
 	 *            the event to add.
 	 */
-	private void addEvent(WiiUseApiEvent e) {
+	private void addEvent(WiiUseApiEvent e) {		
 		events[index] = e;
 		index++;
 	}
@@ -136,7 +136,7 @@ public class EventsGatherer {
 	 */
 	public void addStatusEvent(int id, boolean connect, float batt, short led,
 			boolean speak, int attach, boolean rumbleState,
-			float orientationThreshold, float accelerationThreshold,
+			float orientationThreshold, int accelerationThreshold,
 			float alphaSmooth, boolean continuousState, boolean smoothingState,
 			boolean irState, boolean motionSensingState) {
 		StatusEvent evt = new StatusEvent(id, connect, batt, led, speak,

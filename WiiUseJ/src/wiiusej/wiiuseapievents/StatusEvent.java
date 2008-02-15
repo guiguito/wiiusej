@@ -29,7 +29,7 @@ public class StatusEvent extends WiiUseApiEvent {
 
 	private float orientationThreshold = 0;
 
-	private float accelerationThreshold = 0;
+	private int accelerationThreshold = 0;
 
 	private float alphaSmoothing = 0;
 
@@ -87,7 +87,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 */
 	public StatusEvent(int id, boolean connect, float batt, short led,
 			boolean speak, int attach, boolean rumbleState,
-			float orientationThreshold, float accelerationThreshold,
+			float orientationThreshold, int accelerationThreshold,
 			float alphaSmooth, boolean continuousState, boolean smoothingState,
 			boolean irState, boolean motionSensingState) {
 		super(id, WiiUseApiEvent.STATUS_EVENT);
@@ -174,7 +174,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * 
 	 * @return the accelerationThreshold
 	 */
-	public float getAccelerationThreshold() {
+	public int getAccelerationThreshold() {
 		return accelerationThreshold;
 	}
 

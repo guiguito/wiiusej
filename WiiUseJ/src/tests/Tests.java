@@ -42,10 +42,12 @@ public class Tests implements WiimoteListener {
 			e.printStackTrace();
 		}
 	}
-
+	
+	private static int nb = 0;
+	
 	@Override
 	public void wiimoteEvent(WiiMoteEvent e) {
-
+		System.out.println("Number of events : "+nb++);
 		if (dump == DISPLAY_EACH_VALUE) {
 			// System.out.println("*********** WIIMOTE ID : "+
 			// e.getWiimoteId() + " **************");
@@ -171,7 +173,7 @@ public class Tests implements WiimoteListener {
 			}
 
 			/* get status */
-			if (e.isButtonMinusJustPressed() && e.isButtonPlusJustPressed()) {
+			if (e.isButtonUpJustPressed()) {
 				wiimote.getStatus();
 			}
 
