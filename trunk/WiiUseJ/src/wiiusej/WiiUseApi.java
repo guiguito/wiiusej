@@ -103,14 +103,14 @@ public class WiiUseApi {
 	 * @param id id of the wiimote concerned
 	 * @param value minimum value detected by an event
 	 */
-	native void setAccelThreshold(int id, float value);
+	native void setAccelThreshold(int id, int value);
 	
 	/**
 	 * Set alpha smoothing parameter for the given id.
 	 * @param id id of the wiimote concerned
 	 * @param value alpha smoothing value
 	 */
-	native void setSmoothAlpha(int id, float value);
+	native void setAlphaSmoothing(int id, float value);
 	
 	/**
 	 * Try to resync with the wiimote by starting a new handshake.

@@ -1,6 +1,5 @@
- package wiiusej;
+package wiiusej;
 
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -10,6 +9,7 @@ import wiiusej.wiiuseapievents.EventsGatherer;
 import wiiusej.wiiuseapievents.WiiUseApiEvent;
 import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapirequest.FloatValueRequest;
+import wiiusej.wiiuseapirequest.IntValueRequest;
 import wiiusej.wiiuseapirequest.LedsRequest;
 import wiiusej.wiiuseapirequest.WiiUseApiRequest;
 
@@ -98,9 +98,9 @@ public class WiiUseApiManager extends Thread {
 	 * @param id
 	 *            id of the wiimote to disconnect.
 	 */
-	public void closeConnection(int id) {		
+	public void closeConnection(int id) {
 		removeWiiUseApiListener(wiimotes[id]);
-		wiimotes[id] = null;		
+		wiimotes[id] = null;
 		requests.add(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST));
 		System.out.println("Wiimote " + id + " disconnected !");
@@ -273,8 +273,8 @@ public class WiiUseApiManager extends Thread {
 	 * @param th
 	 *            threshold
 	 */
-	public void setAccelerationThreshold(int id, float th) {
-		requests.add(new FloatValueRequest(id,
+	public void setAccelerationThreshold(int id, int th) {
+		requests.add(new IntValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ACCEL_THRESHOLHD_REQUEST, th));
 	}
 
@@ -289,6 +289,16 @@ public class WiiUseApiManager extends Thread {
 	public void setAlphaSmoothing(int id, float th) {
 		requests.add(new FloatValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ALPHA_SMOOTHING_REQUEST, th));
+	}
+
+	/**
+	 * Try to resync with the wiimote by starting a new handshake.
+	 * @TODO not used yet !!
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void reSync(int id) {
+		requests.add(new WiiUseApiRequest(id, WiiUseApiRequest.WIIUSE_RESYNC));
 	}
 
 	/**
@@ -318,11 +328,12 @@ public class WiiUseApiManager extends Thread {
 					if (req.getRequestType() == WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST) {
 						/* Close connections requests */
 						wiiuse.closeConnection(id);
-						
+
 						connected--;
 						if (connected == 0) {// stop this thread if there is
 							// no more wiimotes connected.
-							System.out.println("No more wiimotes connected !!!");
+							System.out
+									.println("No more wiimotes connected !!!");
 							shutdown();
 						}
 					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_STATUS_REQUEST) {
@@ -369,12 +380,15 @@ public class WiiUseApiManager extends Thread {
 								((FloatValueRequest) req).getFloatValue());
 					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACCEL_THRESHOLHD_REQUEST) {
 						/* set acceleration threshold request */
-						wiiuse.setOrientThreshold(req.getId(),
-								((FloatValueRequest) req).getFloatValue());
+						wiiuse.setAccelThreshold(req.getId(),
+								((IntValueRequest) req).getIntValue());
 					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ALPHA_SMOOTHING_REQUEST) {
 						/* set alpha smoothing request */
-						wiiuse.setOrientThreshold(req.getId(),
+						wiiuse.setAlphaSmoothing(req.getId(),
 								((FloatValueRequest) req).getFloatValue());
+					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_RESYNC) {
+						/* set resync request */
+						wiiuse.reSync(req.getId());
 					} else {
 						System.out.println("Bad request to Wiiuse API !!!!!");
 					}
@@ -398,7 +412,7 @@ public class WiiUseApiManager extends Thread {
 								.println("There is an event with id == -1 ??? there is a problem !!! : "
 										+ evt);
 					}
-				}				
+				}
 				gather.clearEvents();
 			}
 		} else {
@@ -446,7 +460,7 @@ public class WiiUseApiManager extends Thread {
 	 */
 	private void notifyWiiUseApiListener(WiiUseApiEvent evt) {
 		for (WiiUseApiListener listener : getWiiUseApiListeners()) {
-			listener.wiiUseApiEvent(evt);		
+			listener.wiiUseApiEvent(evt);
 		}
 	}
 

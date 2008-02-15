@@ -140,6 +140,24 @@ public class Wiimote implements WiiUseApiListener {
 	public void setOrientationThreshold(float th) {
 		manager.setOrientationThreshold(id,th);
 	}
+	
+	/**
+	 * Set the acceleration threshold .
+	 * @param th
+	 *            threshold
+	 */
+	public void setAccelerationThreshold(int th) {
+		manager.setAccelerationThreshold(id,th);
+	}
+	
+	/**
+	 * Set the alpha smoothing value.
+	 * @param th
+	 *            threshold
+	 */
+	public void setAlphaSmoothingValue(int th) {
+		manager.setAlphaSmoothing(id,th);
+	}
 
 	/**
 	 * Get Status of the wiimote.
