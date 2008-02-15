@@ -321,6 +321,7 @@
 </target>
 </buildTargets>
 </storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 </cconfiguration>
 <cconfiguration id="cdt.managedbuild.config.gnu.mingw.so.release.809597794">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.mingw.so.release.809597794" moduleId="org.eclipse.cdt.core.settings" name="Release">
@@ -367,12 +368,9 @@
 <listOptionValue builtIn="false" value="wiiusej_WiiUseApi.def"/>
 </option>
 <option id="gnu.c.link.option.libs.1341142556" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
-<listOptionValue builtIn="false" value="wiiuse.lib"/>
-<listOptionValue builtIn="false" value="wiiuse.lib"/>
+<listOptionValue builtIn="false" value="C:\temp\wiiuse.lib"/>
 </option>
-<option id="gnu.c.link.option.paths.1179889356" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/WiiUseJavaC/lib}&quot;"/>
-</option>
+<option id="gnu.c.link.option.paths.1179889356" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1112337924" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 <additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -647,6 +645,7 @@
 </target>
 </buildTargets>
 </storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 </cconfiguration>
 </storageModule>
 <storageModule moduleId="cdtBuildSystem" version="4.0.0">
