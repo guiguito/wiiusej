@@ -1,8 +1,7 @@
 package wiiusej.wiiuseapirequest;
 
 /**
- * Represents a request to set orientation Threshold in Wiiuse API.
- * Orientation Threshold is the minimum angle (in degrees) between two events. 
+ * Represents a request with a float value to pass to wiiuse API.
  * @author gduche
  *
  */
@@ -36,6 +35,7 @@ public class FloatValueRequest extends WiiUseApiRequest {
 	}
 
 	/**
+	 * Get the float value.
 	 * @return the float value
 	 */
 	public float getFloatValue() {
@@ -43,7 +43,8 @@ public class FloatValueRequest extends WiiUseApiRequest {
 	}
 
 	/**
-	 * @param val the thresholhd to set
+	 * Set the float value.
+	 * @param val the value to set
 	 */
 	public void setFloatValue(float val) {
 		this.floatValue = val;
