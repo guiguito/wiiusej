@@ -98,17 +98,17 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 /*
  * Class:     wiiusej_WiiUseApi
  * Method:    setAccelThreshold
- * Signature: (IF)V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
-  (JNIEnv *, jobject, jint, jfloat);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     wiiusej_WiiUseApi
- * Method:    setSmoothAlpha
+ * Method:    setAlphaSmoothing
  * Signature: (IF)V
  */
-JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSmoothAlpha
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAlphaSmoothing
   (JNIEnv *, jobject, jint, jfloat);
 
 /*
