@@ -29,10 +29,6 @@ static wiimote** wiimotes;
 
 static int nbMaxWiiMotes=0;
 
-static JNIEnv *globalEnv;
-static jobject globalObj;
-static jobject globalWim;
-
 /****************** GENERAL FUNCTIONS DEFINITIONS *************************/
 
 /**
@@ -47,7 +43,8 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 
 	/* variables declarations */
 	int found, connected, i;
-
+	short leds;
+	
 	nbMaxWiiMotes = nbConnects;
 
 	/* initialize wiimotes array with the maximum number of wiimotes */
@@ -80,7 +77,12 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 	 *	to tell which wiimotes are connected (just like the wii does).
 	 */
 	for (i=0;i<nbMaxWiiMotes;i++) {
-		wiiuse_set_leds(wiimotes[i], ((2^(i%4-1))*16));
+		leds = 0;
+		if (i%4==0) leds |= WIIMOTE_LED_1;
+		else if (i%4==1) leds |= WIIMOTE_LED_2;
+		else if (i%4==2) leds |= WIIMOTE_LED_3;
+		else if (i%4==3) leds |= WIIMOTE_LED_4;
+		wiiuse_set_leds(wiimotes[i], leds);
 		wiiuse_rumble(wiimotes[i], 1);
 	}
 
@@ -105,7 +107,7 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_closeConnection
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_disconnect(wiimotes[id]);
+	wiiuse_disconnect(wiimotes[id-1]);
 }
 
 /**
@@ -123,7 +125,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_shutdownApi
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateRumble
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_rumble(wiimotes[id], 1);
+	wiiuse_rumble(wiimotes[id-1], 1);
 }
 
 /**
@@ -132,7 +134,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateRumble
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateRumble
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_rumble(wiimotes[id], 0);
+	wiiuse_rumble(wiimotes[id-1], 0);
 }
 
 /**
@@ -141,7 +143,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateRumble
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateIRTracking
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir(wiimotes[id], 1);
+	wiiuse_set_ir(wiimotes[id-1], 1);
 }
 
 /**
@@ -150,7 +152,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateIRTracking
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateIRTracking
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir(wiimotes[id], 0);
+	wiiuse_set_ir(wiimotes[id-1], 0);
 }
 
 /**
@@ -159,7 +161,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateIRTracking
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateMotionSensing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_motion_sensing(wiimotes[id], 1);
+	wiiuse_motion_sensing(wiimotes[id-1], 1);
 }
 
 /**
@@ -168,7 +170,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateMotionSensing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateMotionSensing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_motion_sensing(wiimotes[id], 0);
+	wiiuse_motion_sensing(wiimotes[id-1], 0);
 }
 
 /**
@@ -188,7 +190,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
 	if (led3) leds |= WIIMOTE_LED_3;
 	if (led4) leds |= WIIMOTE_LED_4;
 
-	wiiuse_set_leds(wiimotes[id], leds);
+	wiiuse_set_leds(wiimotes[id-1], leds);
 }
 
 /**
@@ -198,7 +200,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 (JNIEnv *env, jobject obj, jint id, jfloat thresh) {
-	wiiuse_set_orient_threshold(wiimotes[id], thresh);
+	wiiuse_set_orient_threshold(wiimotes[id-1], thresh);
 }
 
 /**
@@ -207,8 +209,10 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
  * @param value minimum value detected by an event
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
-(JNIEnv *env, jobject obj, jint id, jfloat thresh) {
-	wiiuse_set_accel_threshold(wiimotes[id], thresh);
+(JNIEnv *env, jobject obj, jint id, jint val) {
+	/*
+	 wiiuse_set_accel_threshold(wiimotes[id-1], val);
+	 */
 }
 
 /**
@@ -218,7 +222,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSmoothAlpha
 (JNIEnv *env, jobject obj, jint id, jfloat val) {
-	wiiuse_set_smooth_alpha(wiimotes[id], val);
+	wiiuse_set_smooth_alpha(wiimotes[id-1], val);
 }
 
 /**
@@ -227,7 +231,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSmoothAlpha
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_reSync
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_resync(wiimotes[id]);
+	wiiuse_resync(wiimotes[id-1]);
 }
 
 /**
@@ -237,7 +241,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_reSync
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateSmoothing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id], WIIUSE_SMOOTHING, 0);
+	wiiuse_set_flags(wiimotes[id-1], WIIUSE_SMOOTHING, 0);
 }
 
 /**
@@ -246,7 +250,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateSmoothing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id], 0, WIIUSE_SMOOTHING);
+	wiiuse_set_flags(wiimotes[id-1], 0, WIIUSE_SMOOTHING);
 }
 
 /**
@@ -256,7 +260,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateContinuous
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id], WIIUSE_CONTINUOUS, 0);
+	wiiuse_set_flags(wiimotes[id-1], WIIUSE_CONTINUOUS, 0);
 }
 
 /**
@@ -266,7 +270,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateContinuous
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id], 0, WIIUSE_CONTINUOUS);
+	wiiuse_set_flags(wiimotes[id-1], 0, WIIUSE_CONTINUOUS);
 }
 
 /**
@@ -276,7 +280,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_status(wiimotes[id]);
+	wiiuse_status(wiimotes[id-1]);
 }
 
 /**
@@ -284,17 +288,13 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
  * @param wim the wiimote object to fill with the datas.
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
-(JNIEnv *env, jobject obj, jobject wim) {
+(JNIEnv *env, jobject obj, jobject gath) {
 
 	/* Variables Declarations */
 	int i;
 	short leds = 0;
-	jclass cls = (*globalEnv)->GetObjectClass(globalEnv, globalWim);
+	jclass cls = (*env)->GetObjectClass(env, gath);
 	jmethodID mid;
-
-	globalEnv = env;
-	globalObj = obj;
-	globalWim = wim;
 
 	if (wiiuse_poll(wiimotes, nbMaxWiiMotes)) {
 		/*
@@ -305,11 +305,11 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 			switch (wiimotes[i]->event) {
 				case WIIUSE_EVENT:
 				/* a generic event occured */
-				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "prepareWiiMoteEvent", "(ISSS)V");
+				mid = (*env)->GetMethodID(env, cls, "prepareWiiMoteEvent", "(ISSS)V");
 				if (mid == 0) {
 					return;
 				}
-				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wiimotes[i]->unid, wiimotes[i]->btns,
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid, wiimotes[i]->btns,
 						wiimotes[i]->btns_released, wiimotes[i]->btns_held);
 				/*
 				 *	If IR tracking is enabled then print the coordinates
@@ -323,12 +323,12 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 					for (; i < 4; ++i) {
 						/* check if the source is visible */
 						if (wiimotes[i]->ir.dot[i].visible) {
-							mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addIRPointToPreparedWiiMoteEvent",
+							mid = (*env)->GetMethodID(env, cls, "addIRPointToPreparedWiiMoteEvent",
 									"(II)V");
 							if (mid == 0) {
 								return;
 							}
-							(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
+							(*env)->CallVoidMethod(env, gath, mid,
 									wiimotes[i]->ir.dot[i].x, wiimotes[i]->ir.dot[i].y);
 						}
 					}
@@ -337,54 +337,54 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				/* Motion Sensing */
 				if (WIIUSE_USING_ACC(wiimotes[i])) {
 					/* set orientation and gravity force */
-					mid = (*globalEnv)->GetMethodID(globalEnv, cls,
+					mid = (*env)->GetMethodID(env, cls,
 							"addMotionSensingValues", "(FFFFFF)V");
 					if (mid == 0) {
 						return;
 					}
-					(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
+					(*env)->CallVoidMethod(env, gath, mid,
 							wiimotes[i]->orient.roll, wiimotes[i]->orient.pitch, wiimotes[i]->orient.yaw,
 							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z);
 				}
 
-				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addWiimoteEvent",
+				mid = (*env)->GetMethodID(env, cls, "addWiimoteEvent",
 						"()V");
 				if (mid == 0) {
 					return;
 				}
-				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid);
+				(*env)->CallVoidMethod(env, gath, mid);
 				break;
 
 				case WIIUSE_STATUS:
-				/* a status event occured */
-				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addDisconnectionEvent", "(IZFSZIZFFFZZZZ)V");
-				if (mid == 0) {
-					return;
-				}
-				/* LEDS */
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
-
-				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid,
-						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
-						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
-						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
-						wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
-						wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
-						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
-						WIIUSE_USING_ACC(wiimotes[i]));
+				//				/* a status event occured */
+				//				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(IZFSZIZFFFZZZZ)V");
+				//				if (mid == 0) {
+				//					return;
+				//				}
+				//				/* LEDS */
+				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
+				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
+				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
+				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
+				//
+				//				(*env)->CallVoidMethod(env, gath, mid,
+				//						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
+				//						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
+				//						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
+				//						wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
+				//						wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
+				//						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
+				//						WIIUSE_USING_ACC(wiimotes[i]));
 
 				break;
 
 				case WIIUSE_DISCONNECT:
-				/* the wiimote disconnected */
-				mid = (*globalEnv)->GetMethodID(globalEnv, cls, "addDisconnectionEvent", "(I)V");
-				if (mid == 0) {
-					return;
-				}
-				(*globalEnv)->CallVoidMethod(globalEnv, globalWim, mid, wiimotes[i]->unid);
+				//				/* the wiimote disconnected */
+				//				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
+				//				if (mid == 0) {
+				//					return;
+				//				}
+				//				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
 				break;
 
 				default:
