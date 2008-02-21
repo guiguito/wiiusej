@@ -45,7 +45,6 @@ public class Tests implements WiimoteListener {
 	
 	private static int nb = 0;
 	
-	@Override
 	public void wiimoteEvent(WiiMoteEvent e) {
 		System.out.println("Number of events : "+nb++);
 		if (dump == DISPLAY_EACH_VALUE) {
@@ -354,13 +353,11 @@ public class Tests implements WiimoteListener {
 		}
 	}
 		
-	@Override
 	public void statusEvent(StatusEvent e) {
 		//Display status variables
 		System.out.println(e);	
 	}
 	
-	@Override
 	public void disconnectionEvent(DisconnectionEvent e) {
 		System.out.println(e.getWiimoteId()+" notify it's been disconnected !!");		
 	}
