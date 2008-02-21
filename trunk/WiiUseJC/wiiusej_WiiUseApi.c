@@ -346,7 +346,8 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 							wiimotes[i]->orient.roll, wiimotes[i]->orient.pitch, wiimotes[i]->orient.yaw,
 							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z);
 				}
-
+				
+				/* add generic event to java object used to gather events in c environment */
 				mid = (*env)->GetMethodID(env, cls, "addWiimoteEvent",
 						"()V");
 				if (mid == 0) {
@@ -356,35 +357,35 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				break;
 
 				case WIIUSE_STATUS:
-				//				/* a status event occured */
-				//				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(IZFSZIZFFFZZZZ)V");
-				//				if (mid == 0) {
-				//					return;
-				//				}
-				//				/* LEDS */
-				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
-				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
-				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
-				//				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
-				//
-				//				(*env)->CallVoidMethod(env, gath, mid,
-				//						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
-				//						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
-				//						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
-				//						wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
-				//						wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
-				//						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
-				//						WIIUSE_USING_ACC(wiimotes[i]));
+								/* a status event occured */
+								mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(IZFSZIZFFFZZZZ)V");
+								if (mid == 0) {
+									return;
+								}
+								/* LEDS */
+								if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
+								if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
+								if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
+								if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
+				
+								(*env)->CallVoidMethod(env, gath, mid,
+										wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
+										wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
+										wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
+										wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
+										wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
+										WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
+										WIIUSE_USING_ACC(wiimotes[i]));
 
 				break;
 
 				case WIIUSE_DISCONNECT:
-				//				/* the wiimote disconnected */
-				//				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
-				//				if (mid == 0) {
-				//					return;
-				//				}
-				//				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+								/* the wiimote disconnected */
+								mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
+								if (mid == 0) {
+									return;
+								}
+								(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
 				break;
 
 				default:
