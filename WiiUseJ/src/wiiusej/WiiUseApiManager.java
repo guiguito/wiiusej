@@ -98,7 +98,7 @@ public class WiiUseApiManager extends Thread {
 	 * @param id
 	 *            id of the wiimote to disconnect.
 	 */
-	public void closeConnection(int id) {
+	public void closeConnection(int id) {		
 		removeWiiUseApiListener(wiimotes[id-1]);
 		wiimotes[id-1] = null;
 		requests.add(new WiiUseApiRequest(id,
@@ -321,7 +321,30 @@ public class WiiUseApiManager extends Thread {
 			EventsGatherer gather = new EventsGatherer(nbMaxWiimotes);
 
 			// Start polling and tell the observers when there Wiimote events
-			while (running.get()) {
+			while (running.get() &&  connected > 0) {
+				
+				/* Polling */
+				wiiuse.specialPoll(gather);
+
+				/* deal with events gathered in Wiiuse API */
+				for (WiiUseApiEvent evt : gather.getEvents()) {
+					if (evt.getWiimoteId() != -1) {// event filled
+						// there is an event notify observers
+						notifyWiiUseApiListener(evt);
+						if (evt.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
+							// check if it was a disconnection
+							// in this case disconnect the wiimote
+							closeConnection(evt.getWiimoteId());
+						}
+					} else {
+						System.out
+								.println("There is an event with id == -1 ??? there is a problem !!! : "
+										+ evt);
+					}
+				}
+				gather.clearEvents();
+				
+				/* deal with request done to wiiuse API*/
 				WiiUseApiRequest req = requests.poll();
 				if (req != null) {// there is a request for the wiiuse api
 					int id = req.getId();
@@ -393,27 +416,6 @@ public class WiiUseApiManager extends Thread {
 						System.out.println("Bad request to Wiiuse API !!!!!");
 					}
 				}
-
-				/* Polling */
-				wiiuse.specialPoll(gather);
-
-				/* deal with events gathered in Wiiuse API */
-				for (WiiUseApiEvent evt : gather.getEvents()) {
-					if (evt.getWiimoteId() != -1) {// event filled
-						// there is an event notify observers
-						notifyWiiUseApiListener(evt);
-						if (evt.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
-							// check if it was a disconnection
-							// in this case disconnect the wiimote
-							closeConnection(evt.getWiimoteId());
-						}
-					} else {
-						System.out
-								.println("There is an event with id == -1 ??? there is a problem !!! : "
-										+ evt);
-					}
-				}
-				gather.clearEvents();
 			}
 		} else {
 			if (connected <= 0) {

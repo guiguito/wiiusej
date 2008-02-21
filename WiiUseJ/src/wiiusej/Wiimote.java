@@ -166,7 +166,6 @@ public class Wiimote implements WiiUseApiListener {
 		manager.getStatus(id);
 	}
 			
-	@Override
 	public void wiiUseApiEvent(WiiUseApiEvent e) {
 		if (e.getWiimoteId() == id){			
 			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT){
