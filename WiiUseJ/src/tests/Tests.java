@@ -10,7 +10,6 @@ import wiiusej.Wiimote;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
 import wiiusej.wiiuseapievents.WiiMoteEvent;
-import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapievents.WiimoteListener;
 
 /**

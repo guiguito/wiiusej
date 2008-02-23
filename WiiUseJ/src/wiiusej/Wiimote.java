@@ -159,6 +159,8 @@ public class Wiimote implements WiiUseApiListener {
 		manager.setAlphaSmoothing(id,th);
 	}
 
+	//TODO resync ?
+
 	/**
 	 * Get Status of the wiimote.
 	 */
