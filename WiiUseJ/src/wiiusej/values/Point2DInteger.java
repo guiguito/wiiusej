@@ -1,4 +1,4 @@
-package wiiusej;
+package wiiusej.values;
 
 import java.awt.geom.Point2D;
 
@@ -15,7 +15,7 @@ public class Point2DInteger extends Point2D {
 	public double getX() {
 		return x;
 	}
-
+	
 	@Override
 	public double getY() {
 		return y;

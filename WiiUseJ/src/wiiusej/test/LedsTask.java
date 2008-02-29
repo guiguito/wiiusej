@@ -1,4 +1,4 @@
-package tests;
+package wiiusej.test;
 
 import java.util.TimerTask;
 

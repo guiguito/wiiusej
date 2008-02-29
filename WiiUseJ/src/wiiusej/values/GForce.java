@@ -1,4 +1,4 @@
-package wiiusej;
+package wiiusej.values;
 
 /**
  * Represents gravity force on each axis.

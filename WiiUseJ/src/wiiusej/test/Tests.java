@@ -1,15 +1,18 @@
-package tests;
+package wiiusej.test;
 
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
-import wiiusej.Point2DInteger;
 import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
+import wiiusej.values.Point2DInteger;
+import wiiusej.wiiuseapievents.ButtonsEvent;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.IREvent;
+import wiiusej.wiiuseapievents.MotionSensingEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
-import wiiusej.wiiuseapievents.WiiMoteEvent;
+import wiiusej.wiiuseapievents.GenericEvent;
 import wiiusej.wiiuseapievents.WiimoteListener;
 
 /**
@@ -41,11 +44,10 @@ public class Tests implements WiimoteListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static int nb = 0;
-	
-	public void wiimoteEvent(WiiMoteEvent e) {
-		System.out.println("Number of events : "+nb++);
+
+	public void onButtonsEvent(ButtonsEvent e) {
 		if (dump == DISPLAY_EACH_VALUE) {
 			// System.out.println("*********** WIIMOTE ID : "+
 			// e.getWiimoteId() + " **************");
@@ -203,23 +205,6 @@ public class Tests implements WiimoteListener {
 			if (e.isButtonMinusJustPressed()) {
 				System.out.println("Motion sensing Deactivated");
 				wiimote.deactivateMotionSensing();
-			}			
-
-			/* display ir points */
-			if (e.isIrActive()) {
-				Point2DInteger[] list = e.getIRPoints();
-				for (int i = 0; i < list.length; i++) {
-					if (list[i] != null)
-						System.out.print("Point :(" + list[i].getX() + ","
-								+ list[i].getY() + ") ");
-				}
-				System.out.println("");
-			}
-
-			/* display motion sensing */
-			if (e.isMotionSensingActive()) {
-				System.out.println("Motion Sensing :" + e.getOrientation()
-						+ " , " + e.getGforce());
 			}
 
 			/* leave test */
@@ -276,17 +261,6 @@ public class Tests implements WiimoteListener {
 				robot.mouseRelease(InputEvent.BUTTON2_MASK);
 			}
 
-			Point2DInteger[] list = e.getIRPoints();
-			if (e.isIrActive() && list[0] != null) {
-
-				int x1 = (int) list[0].getX();
-				int y1 = (int) list[0].getY();
-
-				int mousex = (int) Math.round(((double) x1 / 1024.0) * 1280.0);
-				int mousey = (int) Math.round(((double) y1 / 768.0) * 1024.0);
-				robot.mouseMove(mousex, mousey);
-			}
-
 			/* leave test */
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
@@ -318,10 +292,9 @@ public class Tests implements WiimoteListener {
 				System.out.println("Threshold orientation 0.5 degrees");
 				wiimote.setOrientationThreshold((float) 0.5);
 			}
-			
-			//@TODO add accelereation threshold test, add alpha smoothing test
-			
-			
+
+			// @TODO add accelereation threshold test, add alpha smoothing test
+
 			System.out.println(e);
 
 			/* leave test */
@@ -350,15 +323,56 @@ public class Tests implements WiimoteListener {
 				wiimote.disconnect();
 			}
 		}
+
 	}
-		
-	public void statusEvent(StatusEvent e) {
-		//Display status variables
-		System.out.println(e);	
+
+	public void onIrEvent(IREvent e) {
+		if (dump == DISPLAY_EACH_VALUE) {
+			/* display ir points */
+			Point2DInteger[] list = e.getIRPoints();
+			for (int i = 0; i < list.length; i++) {
+				if (list[i] != null)
+					System.out.print("Point :(" + list[i].getX() + ","
+							+ list[i].getY() + ") ");
+			}
+		} else if (dump == DUMP) {
+			System.out.println(e);
+		} else if (dump == MOVE_MOUSE) {
+			Point2DInteger[] list = e.getIRPoints();
+			if (list.length > 0) {
+				int x1 = (int) list[0].getX();
+				int y1 = (int) list[0].getY();
+
+				int mousex = (int) Math.round(((double) x1 / 1024.0) * 1280.0);
+				int mousey = (int) Math.round(((double) y1 / 768.0) * 1024.0);
+				robot.mouseMove(mousex, mousey);
+			}
+		} else if (dump == ORIENT_THRESH_CONT) {
+
+			// @TODO add acceleration threshold test, add alpha smoothing test
+		} else if (dump == TEST_LEDS) {
+			wiimote.activateMotionSensing();
+
+		}
+
+		System.out.println("");
+	}
+
+	public void onMotionSensingEvent(MotionSensingEvent e) {
+		/* display motion sensing */
+		System.out.println("Motion Sensing :" + e.getOrientation() + " , "
+				+ e.getGforce());
+
+	}
+
+	public void onStatusEvent(StatusEvent e) {
+		// Display status variables
+		System.out.println(e);
 	}
 	
-	public void disconnectionEvent(DisconnectionEvent e) {
-		System.out.println(e.getWiimoteId()+" notify it's been disconnected !!");		
+	public void onDisconnectionEvent(DisconnectionEvent e) {
+		System.out.println(e.getWiimoteId()
+				+ " notify it's been disconnected !!");
 	}
 
 	/**
@@ -377,5 +391,4 @@ public class Tests implements WiimoteListener {
 		// timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
 
 	}
-
 }

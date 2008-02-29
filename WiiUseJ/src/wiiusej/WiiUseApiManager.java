@@ -50,7 +50,7 @@ public class WiiUseApiManager extends Thread {
 	 *            try to connect nb wiimotes
 	 * @return an array with connected wiimotes or NULL.
 	 */
-	public static Wiimote[] getWiimotes(int nb) {
+	public synchronized static Wiimote[] getWiimotes(int nb) {
 		WiiUseApiManager manager = getInstance();
 		if (manager.connected < 0) {
 			int nbWiimotes = manager.connectWiimotes(nb);
@@ -80,7 +80,7 @@ public class WiiUseApiManager extends Thread {
 	 *            try to connect nb wiimotes
 	 * @return 0 if nothing connected or the number of wiimotes connected.
 	 */
-	public int connectWiimotes(int nb) {
+	private int connectWiimotes(int nb) {
 		nbMaxWiimotes = nb;
 		if (connected < 0) {
 			connected = wiiuse.doConnections(nb);
@@ -462,7 +462,7 @@ public class WiiUseApiManager extends Thread {
 	 */
 	private void notifyWiiUseApiListener(WiiUseApiEvent evt) {
 		for (WiiUseApiListener listener : getWiiUseApiListeners()) {
-			listener.wiiUseApiEvent(evt);
+			listener.onWiiUseApiEvent(evt);
 		}
 	}
 

@@ -1,9 +1,8 @@
 package wiiusej.wiiuseapievents;
 
-import tests.Tests;
 
 /**
- * Gather events in a call to the Wiiuse API.
+ * Gather events during a call to the Wiiuse API.
  * 
  * @author gduche
  * 
@@ -12,7 +11,7 @@ public class EventsGatherer {
 
 	private WiiUseApiEvent[] events;
 	private int index = 0;
-	private WiiMoteEvent genericEvent = null;
+	private GenericEvent genericEvent = null;
 
 	/**
 	 * Create EventsGatherer.
@@ -49,9 +48,10 @@ public class EventsGatherer {
 	 */
 	public void prepareWiiMoteEvent(int id, short buttonsJustPressed,
 			short buttonsJustReleased, short buttonsHeld) {
-		genericEvent = new WiiMoteEvent(id, buttonsJustPressed,
+		genericEvent = new GenericEvent(id, buttonsJustPressed,
 				buttonsJustReleased, buttonsHeld);
 	}
+
 
 	/**
 	 * Add an IR point to the WiiMoteEvent prepared
@@ -61,8 +61,8 @@ public class EventsGatherer {
 	 * @param y
 	 *            y coordinates
 	 */
-	public void addIRPointToPreparedWiiMoteEvent(int x, int y) {
-		if (genericEvent != null) {
+	public void addIRPointToPreparedWiiMoteEvent(int x, int y) {		
+		if (genericEvent != null) {			
 			genericEvent.addIRpoint(x, y);
 		}
 	}
@@ -86,7 +86,7 @@ public class EventsGatherer {
 	public void addMotionSensingValues(float r, float p, float ya, float x,
 			float y, float z) {
 		if (genericEvent != null) {
-			genericEvent.setOrientationAndGforce(r, p, ya, x, y, z);
+			genericEvent.setMotionSensingEvent(r, p, ya, x, y, z);
 		}
 	}
 

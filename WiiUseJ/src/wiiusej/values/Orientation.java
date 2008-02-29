@@ -1,4 +1,4 @@
-package wiiusej;
+package wiiusej.values;
 
 /**
  * Class that represents the orientation of the wiimote.
