@@ -4,7 +4,7 @@ import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiuseapievents.DisconnectionEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
-import wiiusej.wiiuseapievents.WiiMoteEvent;
+import wiiusej.wiiuseapievents.GenericEvent;
 import wiiusej.wiiuseapievents.WiiUseApiEvent;
 import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapievents.WiimoteListener;
@@ -168,10 +168,10 @@ public class Wiimote implements WiiUseApiListener {
 		manager.getStatus(id);
 	}
 			
-	public void wiiUseApiEvent(WiiUseApiEvent e) {
+	public void onWiiUseApiEvent(WiiUseApiEvent e) {
 		if (e.getWiimoteId() == id){			
 			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT){
-				notifyWiiMoteEventListeners((WiiMoteEvent)e);
+				notifyWiiMoteEventListeners((GenericEvent)e);
 			}else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT){
 				notifyStatusEventListeners((StatusEvent)e);
 			}else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT){
@@ -205,12 +205,21 @@ public class Wiimote implements WiiUseApiListener {
 	}
 
 	/**
-	 * Notify WiimoteListener that an event occured.
+	 * Notify WiimoteListeners that an event occured.
+	 * Notify in first the listeners for Buttons Events.
+	 * In second the listeners for IR Events.
+	 * In third the listeners for Motion sensing events.
 	 * @param evt WiimoteEvent occured
 	 */
-	private void notifyWiiMoteEventListeners(WiiMoteEvent evt) {		
+	private void notifyWiiMoteEventListeners(GenericEvent evt) {		
 		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
-			listener.wiimoteEvent(evt);
+			listener.onButtonsEvent(evt.getButtonsEvent());
+			if (evt.isThereIrEvent()){
+				listener.onIrEvent(evt.getIREvent());				
+			}
+			if (evt.isThereMotionSensingEvent()){
+				listener.onMotionSensingEvent(evt.getMotionSensingEvent());				
+			}
 		}
 	}
 	
@@ -220,7 +229,7 @@ public class Wiimote implements WiiUseApiListener {
 	 */
 	private void notifyStatusEventListeners(StatusEvent evt) {		
 		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
-			listener.statusEvent(evt);
+			listener.onStatusEvent(evt);
 		}
 	}
 	
@@ -230,7 +239,7 @@ public class Wiimote implements WiiUseApiListener {
 	 */
 	private void notifyDisconnectionEventListeners(DisconnectionEvent evt) {		
 		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
-			listener.disconnectionEvent(evt);
+			listener.onDisconnectionEvent(evt);
 		}
 	}
 	

@@ -9,7 +9,7 @@ package wiiusej.wiiuseapievents;
  */
 public interface WiiUseApiListener extends java.util.EventListener {
 	
-	void wiiUseApiEvent(WiiUseApiEvent e);
+	void onWiiUseApiEvent(WiiUseApiEvent e);
 	
 	
 }
