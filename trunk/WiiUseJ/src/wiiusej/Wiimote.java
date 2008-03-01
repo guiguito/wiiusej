@@ -1,3 +1,19 @@
+/**
+ * This file is part of WiiuseJ.
+ *
+ *  WiiuseJ is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  WiiuseJ is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package wiiusej;
 
 import javax.swing.event.EventListenerList;
@@ -13,8 +29,7 @@ import wiiusej.wiiuseapievents.WiimoteListener;
  * Class that represents a wiimote.
  * You can register as an observer of this wiimote to listen events from it.
  * You manage it.
- * @author gduche
- *
+ * @author guiguito
  */
 public class Wiimote implements WiiUseApiListener {
 
@@ -162,12 +177,15 @@ public class Wiimote implements WiiUseApiListener {
 	//TODO resync ?
 
 	/**
-	 * Get Status of the wiimote.
+	 * Ask for the status of the wiimote.
+	 * The result will be received in a status event object.
+	 * Implements onStatusEvent on wiimote listener to get it.
 	 */
 	public void getStatus() {
 		manager.getStatus(id);
 	}
-			
+	
+	
 	public void onWiiUseApiEvent(WiiUseApiEvent e) {
 		if (e.getWiimoteId() == id){			
 			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT){
