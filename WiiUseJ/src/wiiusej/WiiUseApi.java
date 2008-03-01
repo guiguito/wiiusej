@@ -1,11 +1,26 @@
+/**
+ * This file is part of WiiuseJ.
+ *
+ *  WiiuseJ is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  WiiuseJ is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package wiiusej;
 
 import wiiusej.wiiuseapievents.EventsGatherer;
 
 /**
  * Singleton used to manipulate WiiUse Api.
- * @author gduche
- * 
+ * @author guiguito
  */
 public class WiiUseApi {
 	
@@ -157,35 +172,5 @@ public class WiiUseApi {
 	 * @param gath the object where we store all the new events.
 	 */
 	native void specialPoll(EventsGatherer gath);	   
-    
-	
-	/* Tests */
-	public static void main(String[] args) {
-
-		/* Test JNI Side */
-		/*
-		WiiUseApi manager = new WiiUseApi();
-
-		int value = manager.loadLibrary();
-		System.out.println("loadLibrary : " + value);
-
-		value = manager.doConnections();
-		System.out.println("doConnections : " + value);  
-		 WiiMoteEvent mote = new WiiMoteEvent();		
-		 
-
-		manager.getStatus(1);
-		System.out.println("Status : \n" + mote);
-
-		System.out.println("");
-		System.out.println("!!!!!!!!!!!!!! Polling !!!!!!!!!");
-		while (true) {
-			manager.specialPoll(mote);
-			System.out.println(mote);
-			mote.EmptyIRPoints();
-		}
-		 */
-		// manager.closeConnectionsAndShutDown();
-	}
 
 }
