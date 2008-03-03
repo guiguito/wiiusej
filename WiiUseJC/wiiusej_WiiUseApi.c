@@ -329,7 +329,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 						/* check if the source is visible */
 						if (wiimotes[i]->ir.dot[a].visible) {							
 							(*env)->CallVoidMethod(env, gath, mid,
-									wiimotes[i]->ir.dot[a].x, wiimotes[i]->ir.dot[a].y);
+									wiimotes[i]->ir.dot[a].rx, wiimotes[i]->ir.dot[a].ry);
 						}
 					}
 				}
@@ -358,7 +358,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 
 				case WIIUSE_STATUS:
 								/* a status event occured */
-								mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(IZFSZIZFFFZZZZ)V");
+								mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZFIFZZZZ)V");
 								if (mid == 0) {
 									return;
 								}
