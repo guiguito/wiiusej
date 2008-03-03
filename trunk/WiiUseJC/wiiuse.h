@@ -183,9 +183,13 @@ typedef enum ir_position_t {
  */
 #define MAX_PAYLOAD			32
 
+/*
+ *	This is left over from an old hack, but it may actually
+ *	be a useful feature to keep so it wasn't removed.
+ */
 #ifdef WIN32
 	#define WIIMOTE_DEFAULT_TIMEOUT		10
-	#define WIIMOTE_EXP_TIMEOUT			50
+	#define WIIMOTE_EXP_TIMEOUT			10
 #endif
 
 typedef unsigned char byte;
@@ -389,6 +393,9 @@ typedef struct nunchuk_t {
 	byte btns_held;					/**< what buttons are being held down		*/
 	byte btns_released;				/**< what buttons were just released this	*/
 
+	float orient_threshold;			/**< threshold for orient to generate an event */
+	int accel_threshold;			/**< threshold for accel to generate an event */
+
 	struct vec3b_t accel;			/**< current raw acceleration data			*/
 	struct orient_t orient;			/**< current orientation on each axis		*/
 	struct gforce_t gforce;			/**< current gravity forces on each axis	*/
@@ -465,6 +472,7 @@ typedef struct wiimote_state_t {
 	float exp_rjs_mag;
 	unsigned short exp_btns;
 	struct orient_t exp_orient;
+	struct vec3b_t exp_accel;
 	float exp_r_shoulder;
 	float exp_l_shoulder;
 
@@ -488,9 +496,14 @@ typedef enum WIIUSE_EVENT_TYPE {
 	WIIUSE_NONE = 0,
 	WIIUSE_EVENT,
 	WIIUSE_STATUS,
-	WIIUSE_DISCONNECT
+	WIIUSE_DISCONNECT,
+	WIIUSE_NUNCHUK_INSERTED,
+	WIIUSE_NUNCHUK_REMOVED,
+	WIIUSE_CLASSIC_CTRL_INSERTED,
+	WIIUSE_CLASSIC_CTRL_REMOVED,
+	WIIUSE_GUITAR_HERO_3_CTRL_INSERTED,
+	WIIUSE_GUITAR_HERO_3_CTRL_REMOVED
 } WIIUSE_EVENT_TYPE;
-
 
 /**
  *	@struct wiimote_t
@@ -587,9 +600,9 @@ WIIUSE_EXPORT extern int wiiuse_set_flags(struct wiimote_t* wm, int enable, int 
 WIIUSE_EXPORT extern float wiiuse_set_smooth_alpha(struct wiimote_t* wm, float alpha);
 WIIUSE_EXPORT extern void wiiuse_set_bluetooth_stack(struct wiimote_t** wm, int wiimotes, enum win_bt_stack_t type);
 WIIUSE_EXPORT extern void wiiuse_set_orient_threshold(struct wiimote_t* wm, float threshold);
-WIIUSE_EXPORT extern void wiiuse_set_accel_threshold(struct wiimote_t* wm, float threshold);
 WIIUSE_EXPORT extern void wiiuse_resync(struct wiimote_t* wm);
 WIIUSE_EXPORT extern void wiiuse_set_timeout(struct wiimote_t** wm, int wiimotes, byte normal_timeout, byte exp_timeout);
+WIIUSE_EXPORT extern void wiiuse_set_accel_threshold(struct wiimote_t* wm, int threshold);
 
 /* connect.c */
 WIIUSE_EXPORT extern int wiiuse_find(struct wiimote_t** wm, int max_wiimotes, int timeout);
@@ -604,6 +617,11 @@ WIIUSE_EXPORT extern void wiiuse_set_ir(struct wiimote_t* wm, int status);
 WIIUSE_EXPORT extern void wiiuse_set_ir_vres(struct wiimote_t* wm, unsigned int x, unsigned int y);
 WIIUSE_EXPORT extern void wiiuse_set_ir_position(struct wiimote_t* wm, enum ir_position_t pos);
 WIIUSE_EXPORT extern void wiiuse_set_aspect_ratio(struct wiimote_t* wm, enum aspect_t aspect);
+
+/* nunchuk.c */
+WIIUSE_EXPORT extern void wiiuse_set_nunchuk_orient_threshold(struct nunchuk_t* nc, float threshold);
+WIIUSE_EXPORT extern void wiiuse_set_nunchuk_accel_threshold(struct nunchuk_t* nc, int threshold);
+
 
 #ifdef __cplusplus
 }

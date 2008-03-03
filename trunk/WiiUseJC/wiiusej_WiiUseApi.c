@@ -318,18 +318,18 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				 *	Also make sure that we see at least 1 dot.
 				 */
 				if (WIIUSE_USING_IR(wiimotes[i])) {
-					int i = 0;
+					int a = 0;
+					mid = (*env)->GetMethodID(env, cls, "addIRPointToPreparedWiiMoteEvent",
+							"(II)V");
+					if (mid == 0) {
+						return;
+					}
 					/* go through each of the 4 possible IR sources */
-					for (; i < 4; ++i) {
+					for (; a < 4; a++) {
 						/* check if the source is visible */
-						if (wiimotes[i]->ir.dot[i].visible) {
-							mid = (*env)->GetMethodID(env, cls, "addIRPointToPreparedWiiMoteEvent",
-									"(II)V");
-							if (mid == 0) {
-								return;
-							}
+						if (wiimotes[i]->ir.dot[a].visible) {							
 							(*env)->CallVoidMethod(env, gath, mid,
-									wiimotes[i]->ir.dot[i].x, wiimotes[i]->ir.dot[i].y);
+									wiimotes[i]->ir.dot[a].x, wiimotes[i]->ir.dot[a].y);
 						}
 					}
 				}
