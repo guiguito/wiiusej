@@ -375,9 +375,7 @@ public class Tests implements WiimoteListener {
 
 	public void onMotionSensingEvent(MotionSensingEvent e) {
 		/* display motion sensing */
-		System.out.println("Motion Sensing :" + e.getOrientation() + " , "
-				+ e.getGforce());
-
+		System.out.println(e);
 	}
 
 	public void onStatusEvent(StatusEvent e) {
