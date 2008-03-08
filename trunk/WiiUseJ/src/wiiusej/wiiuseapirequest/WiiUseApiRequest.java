@@ -40,6 +40,11 @@ public class WiiUseApiRequest {
 	public static int WIIUSE_ACCEL_THRESHOLHD_REQUEST = 10;
 	public static int WIIUSE_ALPHA_SMOOTHING_REQUEST = 11;
 	public static int WIIUSE_RESYNC = 12;
+	public static int WIIUSE_ASPECT_RATIO_4_3 = 13;
+	public static int WIIUSE_ASPECT_RATIO_16_9 = 14;
+	public static int WIIUSE_SENSOR_BAR_ABOVE = 15;
+	public static int WIIUSE_SENSOR_BAR_BELOW = 16;	
+	public static int WIIUSE_SET_VIRTUAL_RESOLUTION = 17;
 
 	private int wiimoteId = 0;
 	private int requestType = 0;

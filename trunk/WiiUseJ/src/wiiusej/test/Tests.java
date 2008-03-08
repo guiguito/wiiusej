@@ -22,7 +22,7 @@ import java.awt.event.InputEvent;
 
 import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
-import wiiusej.values.Point2DInteger;
+import wiiusej.values.IRSource;
 import wiiusej.wiiuseapievents.ButtonsEvent;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
 import wiiusej.wiiuseapievents.IREvent;
@@ -343,17 +343,11 @@ public class Tests implements WiimoteListener {
 
 	public void onIrEvent(IREvent e) {
 		if (dump == DISPLAY_EACH_VALUE) {
-			/* display ir points */
-			Point2DInteger[] list = e.getIRPoints();
-			for (int i = 0; i < list.length; i++) {
-				if (list[i] != null)
-					System.out.print("Point :(" + list[i].getX() + ","
-							+ list[i].getY() + ") ");
-			}
+			System.out.println(e);
 		} else if (dump == DUMP) {
 			System.out.println(e);
 		} else if (dump == MOVE_MOUSE) {
-			Point2DInteger[] list = e.getIRPoints();
+			IRSource[] list = e.getIRPoints();
 			if (list.length > 0) {
 				int x1 = (int) list[0].getX();
 				int y1 = (int) list[0].getY();

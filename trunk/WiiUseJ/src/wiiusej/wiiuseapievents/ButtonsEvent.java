@@ -119,7 +119,10 @@ public class ButtonsEvent extends WiimoteEvent{
 	private boolean isButtonHeld(short buttonBitsDefinition) {
 		return buttonTest(buttonBitsDefinition, buttonsHeld);
 	}
-
+	
+	private boolean isButtonPressed(short buttonBitsDefinition) {
+		return isButtonHeld(buttonBitsDefinition)||isButtonJustPressed(buttonBitsDefinition);
+	}
 	/* Button ONE */
 
 	public boolean isButtonOneJustPressed() {
@@ -132,6 +135,10 @@ public class ButtonsEvent extends WiimoteEvent{
 
 	public boolean isButtonOneHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_ONE);
+	}
+	
+	public boolean isButtonOnePressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_ONE);
 	}
 
 	/* Button TWO */
@@ -147,6 +154,10 @@ public class ButtonsEvent extends WiimoteEvent{
 	public boolean isButtonTwoHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_TWO);
 	}
+	
+	public boolean isButtonTwoPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_TWO);
+	}
 
 	/* Button A */
 
@@ -160,6 +171,10 @@ public class ButtonsEvent extends WiimoteEvent{
 
 	public boolean isButtonAHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_A);
+	}
+	
+	public boolean isButtonAPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_A);
 	}
 
 	/* Button B */
@@ -175,6 +190,10 @@ public class ButtonsEvent extends WiimoteEvent{
 	public boolean isButtonBHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_B);
 	}
+	
+	public boolean isButtonBPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_B);
+	}
 
 	/* Button LEFT */
 
@@ -188,6 +207,10 @@ public class ButtonsEvent extends WiimoteEvent{
 
 	public boolean isButtonLeftHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_LEFT);
+	}
+	
+	public boolean isButtonLeftPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_LEFT);
 	}
 
 	/* Button RIGHT */
@@ -203,6 +226,10 @@ public class ButtonsEvent extends WiimoteEvent{
 	public boolean isButtonRightHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_RIGHT);
 	}
+	
+	public boolean isButtonRightPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_RIGHT);
+	}
 
 	/* Button UP */
 
@@ -216,6 +243,10 @@ public class ButtonsEvent extends WiimoteEvent{
 
 	public boolean isButtonUpHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_UP);
+	}
+	
+	public boolean isButtonUpPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_UP);
 	}
 
 	/* Button DOWN */
@@ -231,6 +262,10 @@ public class ButtonsEvent extends WiimoteEvent{
 	public boolean isButtonDownHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_DOWN);
 	}
+	
+	public boolean isButtonDownPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_DOWN);
+	}
 
 	/* Button - */
 
@@ -244,6 +279,10 @@ public class ButtonsEvent extends WiimoteEvent{
 
 	public boolean isButtonMinusHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_MINUS);
+	}
+	
+	public boolean isButtonMinusPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_MINUS);
 	}
 
 	/* Button + */
@@ -259,6 +298,10 @@ public class ButtonsEvent extends WiimoteEvent{
 	public boolean isButtonPlusHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_PLUS);
 	}
+	
+	public boolean isButtonPlusPressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_PLUS);
+	}
 
 	/* Button HOME */
 
@@ -272,6 +315,10 @@ public class ButtonsEvent extends WiimoteEvent{
 
 	public boolean isButtonHomeHeld() {
 		return isButtonHeld(WIIMOTE_BUTTON_HOME);
+	}
+	
+	public boolean isButtonHomePressed() {
+		return isButtonPressed(WIIMOTE_BUTTON_HOME);
 	}
 	
 	@Override

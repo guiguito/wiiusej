@@ -18,6 +18,7 @@ package wiiusej.wiiuseapievents;
 
 import wiiusej.values.GForce;
 import wiiusej.values.Orientation;
+import wiiusej.values.RawAcceleration;
 
 /**
  * Class which represents a motion sensing event.
@@ -29,6 +30,7 @@ public class MotionSensingEvent extends WiimoteEvent{
 	/* Motion Sensing */
 	private Orientation orientation;
 	private GForce gforce;
+	private RawAcceleration acceleration;
 
 	/**
 	 * Constructor for a Motion Sensing Event.
@@ -47,15 +49,21 @@ public class MotionSensingEvent extends WiimoteEvent{
 	 *            gravity force on y axis
 	 * @param z
 	 *            gravity force on z axis
+	 * @param xx
+	 *            raw acceleration on x axis
+	 * @param yy
+	 *            raw acceleration on y axis
+	 * @param zz
+	 *            raw acceleration on z axis
 	 */
 	public MotionSensingEvent(int id, float r, float p, float ya, float x, float y,
-			float z) {
+			float z, short xx, short yy, short zz) {
 		super(id);
-		setOrientationAndGforce(r, p, ya, x, y, z);
+		setOrientationAndGforce(r, p, ya, x, y, z, xx, yy, zz);
 	}
 
 	/**
-	 * Set orientation and gravity force.
+	 * Set orientation, gravity force and raw acceleration.
 	 * 
 	 * @param r
 	 *            roll
@@ -69,11 +77,18 @@ public class MotionSensingEvent extends WiimoteEvent{
 	 *            gravity force on y axis
 	 * @param z
 	 *            gravity force on z axis
+     * @param xx
+	 *            raw acceleration on x axis
+	 * @param yy
+	 *            raw acceleration on y axis
+	 * @param zz
+	 *            raw acceleration on z axis
 	 */
 	private void setOrientationAndGforce(float r, float p, float ya, float x,
-			float y, float z) {
+			float y, float z, short xx, short yy, short zz) {
 		this.orientation = new Orientation(r, p, ya);
 		this.gforce = new GForce(x, y, z);
+		this.acceleration = new RawAcceleration(xx, yy, zz);
 	}
 
 	/**
@@ -91,6 +106,15 @@ public class MotionSensingEvent extends WiimoteEvent{
 	public GForce getGforce() {
 		return gforce;
 	}
+	
+	/**
+	 * Get the raw acceleration.
+	 * 
+	 * @return the raw acceleration
+	 */
+	public RawAcceleration getRawAcceleration() {
+		return acceleration;
+	}
 
 	@Override
 	public String toString() {
@@ -100,6 +124,7 @@ public class MotionSensingEvent extends WiimoteEvent{
 		out += "--- Motion sensing : true \n";
 		out += "--- " + orientation + "\n";
 		out += "--- " + gforce + "\n";
+		out += "--- " + acceleration + "\n";
 		return out;
 	}
 }

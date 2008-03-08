@@ -53,35 +53,19 @@ public class Orientation {
 		public float getRoll() {
 			return roll;
 		}
-		/**
-		 * @param roll the roll to set
-		 */
-		public void setRoll(float roll) {
-			this.roll = roll;
-		}
+
 		/**
 		 * @return the pitch
 		 */
 		public float getPitch() {
 			return pitch;
 		}
-		/**
-		 * @param pitch the pitch to set
-		 */
-		public void setPitch(float pitch) {
-			this.pitch = pitch;
-		}
+
 		/**
 		 * @return the yaw
 		 */
 		public float getYaw() {
 			return yaw;
-		}
-		/**
-		 * @param yaw the yaw to set
-		 */
-		public void setYaw(float yaw) {
-			this.yaw = yaw;
 		}
 		
 		@Override

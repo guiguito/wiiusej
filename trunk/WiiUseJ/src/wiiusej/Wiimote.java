@@ -170,8 +170,47 @@ public class Wiimote implements WiiUseApiListener {
 	 * @param th
 	 *            threshold
 	 */
-	public void setAlphaSmoothingValue(int th) {
+	public void setAlphaSmoothingValue(float th) {
 		manager.setAlphaSmoothing(id,th);
+	}
+	
+	/**
+	 * Set the screen aspect ratio to be considered as 4/3.
+	 */
+	public void setScreenAspectRatio43() {
+		manager.setScreenAspectRatio43(id);
+	}
+	
+	/**
+	 * Set the screen aspect ratio to be considered as 16/9.
+	 */
+	public void setScreenAspectRatio169() {
+		manager.setScreenAspectRatio169(id);
+	}
+	
+	/**
+	 * Set the sensor bar to be considered above the screen.
+	 */
+	public void setSensorBarAboveScreen() {
+		manager.setSensorBarAboveScreen(id);
+	}
+	
+	/**
+	 * Set the sensor bar to be considered below the screen.
+	 */
+	public void setSensorBarBelowScreen() {
+		manager.setSensorBarBelowScreen(id);
+	}
+	
+	/**
+	 * Set the screen resolution of the you are pointing at 
+	 * with your wiimote.
+	 * 
+	 * @param x x resolution.
+	 * @param y y resolution.
+	 */
+	public void setVirtualResolution(int x, int y) {
+		manager.setVirtualResolution(id, x ,y);
 	}
 
 	//TODO resync ?
@@ -185,12 +224,21 @@ public class Wiimote implements WiiUseApiListener {
 		manager.getStatus(id);
 	}
 	
-	
+	/**
+	 * Method called when a WiiUseApiEvent occurs.
+	 * @param e the WiiUseApiEvent.
+	 */
 	public void onWiiUseApiEvent(WiiUseApiEvent e) {
 		if (e.getWiimoteId() == id){			
 			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT){
 				notifyWiiMoteEventListeners((GenericEvent)e);
-			}else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT){
+			}else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT
+					||e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED
+					||e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED
+					||e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED
+					||e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED
+					||e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED
+					||e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED){
 				notifyStatusEventListeners((StatusEvent)e);
 			}else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT){
 				notifyDisconnectionEventListeners((DisconnectionEvent)e);

@@ -27,6 +27,7 @@ import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapirequest.FloatValueRequest;
 import wiiusej.wiiuseapirequest.IntValueRequest;
 import wiiusej.wiiuseapirequest.LedsRequest;
+import wiiusej.wiiuseapirequest.TwoIntValueRequest;
 import wiiusej.wiiuseapirequest.WiiUseApiRequest;
 
 /**
@@ -72,7 +73,7 @@ public class WiiUseApiManager extends Thread {
 			manager.wiimotes = new Wiimote[nbWiimotes];
 			for (int i = 1; i <= nbWiimotes; i++) {
 				Wiimote wim = new Wiimote(i, manager);
-				manager.wiimotes[i-1] = wim;
+				manager.wiimotes[i - 1] = wim;
 				manager.addWiiUseApiListener(wim);
 			}
 		}
@@ -113,9 +114,9 @@ public class WiiUseApiManager extends Thread {
 	 * @param id
 	 *            id of the wiimote to disconnect.
 	 */
-	public void closeConnection(int id) {		
-		removeWiiUseApiListener(wiimotes[id-1]);
-		wiimotes[id-1] = null;
+	public void closeConnection(int id) {
+		removeWiiUseApiListener(wiimotes[id - 1]);
+		wiimotes[id - 1] = null;
 		requests.add(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST));
 		System.out.println("Wiimote " + id + " disconnected !");
@@ -308,12 +309,74 @@ public class WiiUseApiManager extends Thread {
 
 	/**
 	 * Try to resync with the wiimote by starting a new handshake.
+	 * 
 	 * @TODO not used yet !!
 	 * @param id
 	 *            id of the wiimote
 	 */
 	public void reSync(int id) {
 		requests.add(new WiiUseApiRequest(id, WiiUseApiRequest.WIIUSE_RESYNC));
+	}
+
+	/**
+	 * Set screen aspect ratio to 4/3 for the given id.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void setScreenAspectRatio43(int id) {
+		requests.add(new WiiUseApiRequest(id,
+				WiiUseApiRequest.WIIUSE_ASPECT_RATIO_4_3));
+	}
+
+	/**
+	 * Set screen aspect ratio to 16/9 for the given id.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void setScreenAspectRatio169(int id) {
+		requests.add(new WiiUseApiRequest(id,
+				WiiUseApiRequest.WIIUSE_ASPECT_RATIO_16_9));
+	}
+
+	/**
+	 * Set the sensor bar to be above the screen.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void setSensorBarAboveScreen(int id) {
+		requests.add(new WiiUseApiRequest(id,
+				WiiUseApiRequest.WIIUSE_SENSOR_BAR_ABOVE));
+	}
+
+	/**
+	 * Set the sensor bar to be below the screen.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void setSensorBarBelowScreen(int id) {
+		requests.add(new WiiUseApiRequest(id,
+				WiiUseApiRequest.WIIUSE_SENSOR_BAR_BELOW));
+	}
+
+	/**
+	 * Set virtual resolution. It is used to automatically compute the position
+	 * of a cursor on this virtual screen using the sensor bar. These results
+	 * come in the IREvent.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 * @param x
+	 *            x resolution
+	 * @param y
+	 *            y resolution
+	 */
+	public void setVirtualResolution(int id, int x, int y) {
+		requests.add(new TwoIntValueRequest(id,
+				WiiUseApiRequest.WIIUSE_SET_VIRTUAL_RESOLUTION, x, y));
 	}
 
 	/**
@@ -336,8 +399,8 @@ public class WiiUseApiManager extends Thread {
 			EventsGatherer gather = new EventsGatherer(nbMaxWiimotes);
 
 			// Start polling and tell the observers when there Wiimote events
-			while (running.get() &&  connected > 0) {
-				
+			while (running.get() && connected > 0) {
+
 				/* Polling */
 				wiiuse.specialPoll(gather);
 
@@ -358,8 +421,8 @@ public class WiiUseApiManager extends Thread {
 					}
 				}
 				gather.clearEvents();
-				
-				/* deal with request done to wiiuse API*/
+
+				/* deal with request done to wiiuse API */
 				WiiUseApiRequest req = requests.poll();
 				if (req != null) {// there is a request for the wiiuse api
 					int id = req.getId();
@@ -427,6 +490,23 @@ public class WiiUseApiManager extends Thread {
 					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_RESYNC) {
 						/* set resync request */
 						wiiuse.reSync(req.getId());
+					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ASPECT_RATIO_4_3) {
+						/* set screen aspect ratio to 4/3 */
+						wiiuse.setScreenRatio43(req.getId());
+					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ASPECT_RATIO_16_9) {
+						/* set screen aspect ratio to 16/9 */
+						wiiuse.setScreenRatio169(req.getId());
+					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_SENSOR_BAR_ABOVE) {
+						/* set sensor bar above the screen */
+						wiiuse.setSensorBarAboveScreen(req.getId());
+					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_SENSOR_BAR_BELOW) {
+						/* set sensor bar above the screen */
+						wiiuse.setSensorBarBelowScreen(req.getId());
+					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_SET_VIRTUAL_RESOLUTION) {
+						/* set virtual resolution */
+						wiiuse.setVirtualScreenResolution(req.getId(),
+								((TwoIntValueRequest) req).getIntValue(),
+								((TwoIntValueRequest) req).getSecondIntValue());
 					} else {
 						System.out.println("Bad request to Wiiuse API !!!!!");
 					}

@@ -158,6 +158,40 @@ public class WiiUseApi {
      * @param id the id of the wiimote concerned
      */
     native void deactivateContinuous(int id);
+        
+    /**
+     * Notify wiiuse that your screen has an aspect ratio of 4/3.
+     * @param id the id of the wiimote of which we want the status.
+     */
+    native void setScreenRatio43(int id);
+    
+    /**
+     * Notify wiiuse that your screen has an aspect ratio of 16/9.
+     * @param id the id of the wiimote of which we want the status.
+     */
+    native void setScreenRatio169(int id);
+    
+    /**
+     * Notify wiiuse that the sensor bar is above your screen.
+     * @param id the id of the wiimote of which we want the status.
+     */
+    native void setSensorBarAboveScreen(int id);
+    
+    /**
+     * Notify wiiuse that the sensor bar is below your screen.
+     * @param id the id of the wiimote of which we want the status.
+     */
+    native void setSensorBarBelowScreen(int id);
+        
+    /**
+     * Set virtual screen resolution. It is used to automatically 
+     * compute the position of a cursor on this virtual screen
+     *  using the sensor bar. These results come in the IREvent.
+     * @param id the id of the wiimote of which we want the status.
+     * @param x x resolution.
+     * @param y y resolution.
+     */
+    native void setVirtualScreenResolution(int id, int x, int y);
 	
 	/**
 	 * Get status and values from the wiimotes and send it through callbacks.
@@ -171,6 +205,8 @@ public class WiiUseApi {
 	 * 
 	 * @param gath the object where we store all the new events.
 	 */
-	native void specialPoll(EventsGatherer gath);	   
+	native void specialPoll(EventsGatherer gath);
+	
+		
 
 }

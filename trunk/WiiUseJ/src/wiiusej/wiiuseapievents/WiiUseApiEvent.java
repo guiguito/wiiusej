@@ -25,7 +25,13 @@ public abstract class WiiUseApiEvent extends WiimoteEvent{
 	
 	public static int GENERIC_EVENT = 1;
 	public static int STATUS_EVENT = 2;
-	public static int DISCONNECTION_EVENT = 3;	
+	public static int DISCONNECTION_EVENT = 3;
+	public static int WIIUSE_NUNCHUK_INSERTED = 4;	
+	public static int WIIUSE_NUNCHUK_REMOVED = 5;
+	public static int WIIUSE_CLASSIC_CTRL_INSERTED = 6;
+	public static int WIIUSE_CLASSIC_CTRL_REMOVED = 7;
+	public static int WIIUSE_GUITAR_HERO_3_CTRL_INSERTED = 8;
+	public static int WIIUSE_GUITAR_HERO_3_CTRL_REMOVED = 9;
 	
 	/* Event Type */
 	private int eventType;

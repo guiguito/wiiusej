@@ -16,28 +16,81 @@
  */
 package wiiusej.wiiuseapievents;
 
-import wiiusej.values.Point2DInteger;
+import wiiusej.values.IRSource;
 
 /**
  * Class which represents an IR event.
  * 
  * @author guiguito
  */
-public class IREvent extends WiimoteEvent{
+public class IREvent extends WiimoteEvent {
 
 	/* IR Tracking */
-	private Point2DInteger[] IRPoints;
+	private IRSource[] IRPoints;
 	private short indexPoints = 0;
+	private int x;
+	private int y;
+	private int z;// distance from the sensor bar
+	private int ax;
+	private int ay;
+	private int xVRes;
+	private int yVRes;
+	private int xOffset;
+	private int yOffset;
+	private short sensorBarPostion;
+	private short screenAsPectRatio;
+
+	static private short WIIUSE_IR_ABOVE = 0;
+	static private short WIIUSE_IR_BELOW = 1;
+	static private short WIIUSE_SCREEN_RATIO_4_3 = 0;
+	static private short WIIUSE_SCREEN_RATIO_16_9 = 1;
 
 	private static short NB_POINTS = 4;// number of points IR can track
-	
+
 	/**
-	 * Constructor for an infrared event.
-	 * @param id id of the wiimote concerned.
+	 * Constructor of IREvent with full infos.
+	 * 
+	 * @param id
+	 *            d of the wiimote concerned.
+	 * @param x
+	 *            calculated X coordinate.
+	 * @param y
+	 *            calculated Y coordinate.
+	 * @param z
+	 *            calculated distance.
+	 * @param ax
+	 *            absolute X coordinate.
+	 * @param ay
+	 *            absolute Y coordinate
+	 * @param xVRes
+	 *            IR virtual screen x resolution.
+	 * @param yVRes
+	 *            IR virtual screen y resolution.
+	 * @param xOffset
+	 *            IR X correction offset.
+	 * @param yOffset
+	 *            IR Y correction offset.
+	 * @param sensorBarPostion
+	 *            aspect ratio of the screen.
+	 * @param screenAsPectRatio
+	 *            IR sensor bar position.
 	 */
-	public IREvent(int id) {
+	public IREvent(int id, int x, int y, int z, int ax, int ay, int xVRes,
+			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
+			short screenAsPectRatio) {
 		super(id);
-		IRPoints = new Point2DInteger[NB_POINTS];
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.ax = ax;
+		this.ay = ay;
+		this.xVRes = xVRes;
+		this.yVRes = yVRes;
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
+		this.sensorBarPostion = sensorBarPostion;
+		this.screenAsPectRatio = screenAsPectRatio;
+		IRPoints = new IRSource[NB_POINTS];
 	}
 
 	/**
@@ -45,7 +98,7 @@ public class IREvent extends WiimoteEvent{
 	 * 
 	 * @return the list of 2D points
 	 */
-	public Point2DInteger[] getIRPoints() {
+	public IRSource[] getIRPoints() {
 		return java.util.Arrays.copyOfRange(IRPoints, 0, indexPoints);
 	}
 
@@ -56,11 +109,143 @@ public class IREvent extends WiimoteEvent{
 	 *            x value
 	 * @param y
 	 *            y value
+	 * @param rxx
+	 *            raw X coordinate (0-1023).
+	 * @param ryy
+	 *            raw Y coordinate (0-1023).
+	 * @param si
+	 *            size of the IR dot (0-15).
 	 */
-	public void addIRpoint(int x, int y) {
-		IRPoints[indexPoints] = new Point2DInteger(x, y);
+	public void addIRpoint(int x, int y, short rx, short ry, short size) {
+		IRPoints[indexPoints] = new IRSource(x, y, rx, ry, size);
 		indexPoints++;
 		return;
+	}
+
+	/**
+	 * Return calculated X coordinate.
+	 * 
+	 * @return the x
+	 */
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * Return calculated Y coordinate.
+	 * 
+	 * @return the y
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * Return calculated distance.
+	 * 
+	 * @return the z
+	 */
+	public int getZ() {
+		return z;
+	}
+
+	/**
+	 * Return absolute X coordinate.
+	 * 
+	 * @return the ax
+	 */
+	public int getAx() {
+		return ax;
+	}
+
+	/**
+	 * Return absolute Y coordinate.
+	 * 
+	 * @return the ay
+	 */
+	public int getAy() {
+		return ay;
+	}
+
+	/**
+	 * Return IR virtual screen x resolution.
+	 * 
+	 * @return the xVRes
+	 */
+	public int getXVRes() {
+		return xVRes;
+	}
+
+	/**
+	 * Return IR virtual screen y resolution.
+	 * 
+	 * @return the yVRes
+	 */
+	public int getYVRes() {
+		return yVRes;
+	}
+
+	/**
+	 * Return IR X correction offset.
+	 * 
+	 * @return the xOffset
+	 */
+	public int getXOffset() {
+		return xOffset;
+	}
+
+	/**
+	 * Return IR Y correction offset.
+	 * 
+	 * @return the yOffset
+	 */
+	public int getYOffset() {
+		return yOffset;
+	}
+
+	/**
+	 * Return true if the sensor bar is above.
+	 * 
+	 * @return true if the sensor bar is above.
+	 */
+	public boolean isSensorBarAbove() {
+		return sensorBarPostion == WIIUSE_IR_ABOVE;
+	}
+
+	/**
+	 * Return true if the sensor bar is below.
+	 * 
+	 * @return true if the sensor bar is below.
+	 */
+	public boolean isSensorBarBelow() {
+		return sensorBarPostion == WIIUSE_IR_BELOW;
+	}
+
+	/**
+	 * Return true if screen aspect ratio set is 4/3.
+	 * 
+	 * @return true if screen aspect ratio set is 4/3.
+	 */
+	public boolean isScreenAspectRatio43() {
+		return screenAsPectRatio == WIIUSE_SCREEN_RATIO_4_3;
+	}
+
+	/**
+	 * Return true if screen aspect ratio set is 16/9.
+	 * 
+	 * @return true if screen aspect ratio set is 16/9.
+	 */
+	public boolean isScreenAspectRatio169() {
+		return screenAsPectRatio == WIIUSE_SCREEN_RATIO_16_9;
+	}
+
+	/**
+	 * Return aspect ratio of the screen.
+	 * 
+	 * @return the screenAsPectRatio
+	 */
+	public short getScreenAsPectRatio() {
+		return screenAsPectRatio;
 	}
 
 	@Override
@@ -69,6 +254,25 @@ public class IREvent extends WiimoteEvent{
 		/* Display IR Tracking */
 		out += "/******** IR Tracking ********/\n";
 		out += "--- Active : true\n";
+		out += "--- calculated X coordinate : " + x + "\n";
+		out += "--- calculated Y coordinate : " + y + "\n";
+		out += "--- calculated distance : " + z + "\n";
+		out += "--- absolute X coordinate : " + ax + "\n";
+		out += "--- absolute Y coordinate : " + ay + "\n";
+		out += "--- IR virtual screen x resolution : " + xVRes + "\n";
+		out += "--- IR virtual screen y resolution : " + yVRes + "\n";
+		out += "--- IR X correction offset : " + xOffset + "\n";
+		out += "--- IR Y correction offset : " + yOffset + "\n";
+		if (isScreenAspectRatio43()) {
+			out += "--- aspect ratio of the screen : 4/3\n";
+		} else if (isScreenAspectRatio169()) {
+			out += "--- aspect ratio of the screen : 16/9\n";
+		}
+		if (isSensorBarAbove()) {
+			out += "--- IR sensor bar position. : Above\n";
+		} else if (isSensorBarBelow()) {
+			out += "--- IR sensor bar position. : Below\n";
+		}
 		out += "--- Seen points\n";
 		for (int i = 0; i < IRPoints.length; i++) {
 			if (IRPoints[i] != null) {
@@ -77,5 +281,4 @@ public class IREvent extends WiimoteEvent{
 		}
 		return out;
 	}
-
 }
