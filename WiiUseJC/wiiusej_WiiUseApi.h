@@ -153,6 +153,46 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
 
 /*
  * Class:     wiiusej_WiiUseApi
+ * Method:    setScreenRatio43
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio43
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setScreenRatio169
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio169
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setSensorBarAboveScreen
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarAboveScreen
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setSensorBarBelowScreen
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarBelowScreen
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setVirtualScreenResolution
+ * Signature: (III)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setVirtualScreenResolution
+  (JNIEnv *, jobject, jint, jint, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
  * Method:    getStatus
  * Signature: (I)V
  */
