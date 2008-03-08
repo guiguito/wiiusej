@@ -16,7 +16,6 @@
  */
 package wiiusej.wiiuseapievents;
 
-
 /**
  * Class that is a bean to be filled by the wiiuse API.
  * 
@@ -77,6 +76,7 @@ public class GenericEvent extends WiiUseApiEvent {
 
 	/**
 	 * Get buttons event.
+	 * 
 	 * @return the buttons event.
 	 */
 	public ButtonsEvent getButtonsEvent() {
@@ -85,6 +85,7 @@ public class GenericEvent extends WiiUseApiEvent {
 
 	/**
 	 * Get IR event.
+	 * 
 	 * @return the IR event if there is one or null.
 	 */
 	public IREvent getIREvent() {
@@ -93,6 +94,7 @@ public class GenericEvent extends WiiUseApiEvent {
 
 	/**
 	 * Get motion sensing event.
+	 * 
 	 * @return the motion sensing event if there is one or null.
 	 */
 	public MotionSensingEvent getMotionSensingEvent() {
@@ -100,19 +102,61 @@ public class GenericEvent extends WiiUseApiEvent {
 	}
 	
 	/**
-	 * Add an IR point to the generic event.
-	 * Create an IR Event if it's not created yet.
-	 * @param x x coordinates.
-	 * @param y y coordinates
+	 * Prepare an IR event to populate.
+	 * 
+	 * @param x
+	 *            calculated X coordinate.
+	 * @param y
+	 *            calculated Y coordinate.
+	 * @param z
+	 *            calculated distance.
+	 * @param ax
+	 *            absolute X coordinate.
+	 * @param ay
+	 *            absolute Y coordinate
+	 * @param xVRes
+	 *            IR virtual screen x resolution.
+	 * @param yVRes
+	 *            IR virtual screen y resolution.
+	 * @param xOffset
+	 *            IR X correction offset.
+	 * @param yOffset
+	 *            IR Y correction offset.
+	 * @param sensorBarPostion
+	 *            aspect ratio of the screen.
+	 * @param screenAsPectRatio
+	 *            IR sensor bar position.
 	 */
-	public void addIRpoint(int x,int y){
-		//@TODO add points size
-		if (infraredEvent == null){
-			infraredEvent = new IREvent(getWiimoteId());
+	public void prepareIRevent(int x, int y, int z, int ax, int ay, int xVRes,
+			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
+			short screenAsPectRatio) {
+		if (infraredEvent == null) {
+			infraredEvent = new IREvent(getWiimoteId(), x, y, z, ax, ay, xVRes,
+					yVRes, xOffset, yOffset, sensorBarPostion,
+					screenAsPectRatio);
 		}
-		infraredEvent.addIRpoint(x, y);
 	}
-	
+
+	/**
+	 * Add an IR point to the generic event. Create an IR Event if it's not
+	 * created yet.
+	 * 
+	 * @param x
+	 *            x coordinates.
+	 * @param y
+	 *            y coordinates
+	 * @param rxx
+	 *            raw X coordinate (0-1023).
+	 * @param ryy
+	 *            raw Y coordinate (0-1023).
+	 * @param si
+	 *            size of the IR dot (0-15).
+	 */
+	public void addIRpoint(int x, int y, short rx, short ry, short size) {
+		if (infraredEvent != null)
+			infraredEvent.addIRpoint(x, y, rx, ry, size);
+	}
+
 	/**
 	 * Set the Motion Sensing Event.
 	 * 
@@ -128,13 +172,18 @@ public class GenericEvent extends WiiUseApiEvent {
 	 *            gravity force on y axis
 	 * @param z
 	 *            gravity force on z axis
+	 * @param xx
+	 *            raw acceleration on x axis
+	 * @param yy
+	 *            raw acceleration on y axis
+	 * @param zz
+	 *            raw acceleration on z axis
 	 */
-	public void setMotionSensingEvent(float r, float p, float ya, float x, float y,
-			float z){
-		motionSensingEvent = new MotionSensingEvent(getWiimoteId(), r, p, ya, x, y, z);
+	public void setMotionSensingEvent(float r, float p, float ya, float x,
+			float y, float z, short xx, short yy, short zz) {
+		motionSensingEvent = new MotionSensingEvent(getWiimoteId(), r, p, ya,
+				x, y, z, xx, yy, zz);
 	}
-	
-	
 
 	@Override
 	public String toString() {
@@ -147,19 +196,19 @@ public class GenericEvent extends WiiUseApiEvent {
 
 		if (infraredEvent != null) {
 			out += infraredEvent;
-		}else{
+		} else {
 			out += "/******** IR Tracking ********/\n";
 			out += "--- Active : false\n";
 		}
 
 		if (motionSensingEvent != null) {
 			out += motionSensingEvent;
-		}else{
+		} else {
 			out += "/******** Motion sensing ********/\n";
 			out += "--- Motion sensing : false \n";
 		}
 
 		return out;
 	}
-	
+
 }

@@ -153,6 +153,54 @@ public class StatusEvent extends WiiUseApiEvent {
 	public short getLeds() {
 		return leds;
 	}
+	
+	/**
+	 * Get led1 status.
+	 * @return true if the led is set.
+	 */
+	public boolean isLed1Set(){
+		if ((leds & WIIMOTE_LED_1) > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Get led2 status.
+	 * @return true if the led is set.
+	 */
+	public boolean isLed2Set(){
+		if ((leds & WIIMOTE_LED_2) > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Get led3 status.
+	 * @return true if the led is set.
+	 */
+	public boolean isLed3Set(){
+		if ((leds & WIIMOTE_LED_3) > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Get led4 status.
+	 * @return true if the led is set.
+	 */
+	public boolean isLed4Set(){
+		if ((leds & WIIMOTE_LED_4) > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 	/**
 	 * Tell if the speaker is enable for this wiimote

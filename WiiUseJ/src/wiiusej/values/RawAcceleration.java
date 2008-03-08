@@ -16,40 +16,60 @@
  */
 package wiiusej.values;
 
-import java.awt.geom.Point2D;
-
 /**
- * Class used for IR sources.
+ * Represents raw acceleration on each axis.
  * @author guiguito
  */
-public class Point2DInteger extends Point2D {
-	private int x;
-	private int y;
+public class RawAcceleration {
 	
-	public Point2DInteger(int xx, int yy) {
-		super();
-		setLocation(xx,yy);
+	private short x;
+	private short y;
+	private short z;
+	
+	/**
+	 * Default constructor;
+	 */
+	public RawAcceleration() {
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+	
+	/**
+	 * Constructor with raw acceleration on each axis.
+	 * @param xx x value
+	 * @param yy x value
+	 * @param zz x value
+	 */
+	public RawAcceleration(short xx, short yy, short zz) {
+		x = xx;
+		y = yy;
+		z = zz;
 	}
 
-	@Override
-	public double getX() {
+	/**
+	 * @return the x
+	 */
+	public short getX() {
 		return x;
 	}
-	
-	@Override
-	public double getY() {
+	/**
+	 * @return the y
+	 */
+	public short getY() {
 		return y;
 	}
 
-	@Override
-	public void setLocation(double xx, double yy) {
-		this.x = (int)xx;
-		this.y = (int)yy;
+	/**
+	 * @return the z
+	 */
+	public short getZ() {
+		return z;
 	}
 	
 	@Override
 	public String toString() {
-		return "("+x+","+y+")";
+		return "Raw acceleration : ("+x+", "+y+","+z+")";
 	}
 
 }

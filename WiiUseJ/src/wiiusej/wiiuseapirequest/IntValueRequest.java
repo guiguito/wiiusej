@@ -26,7 +26,8 @@ public class IntValueRequest extends WiiUseApiRequest {
 	private int intValue;
 
 	/**
-	 * Constructor setting the id of the wiimote concerned.
+	 * Constructor setting the id of the wiimote 
+	 * concerned and the type of the request.
 	 * 
 	 * @param id
 	 *            the id of the wiimote concerned.
@@ -36,14 +37,16 @@ public class IntValueRequest extends WiiUseApiRequest {
 	}
 
 	/**
-	 * Constructor setting the id of the wiimote concerned.
+	 * Constructor setting the id of the wiimote 
+	 * concerned, the type of the request 
+	 * and the int value.
 	 * 
 	 * @param id
 	 *            the id of the wiimote concerned.
 	 * @param type
 	 *            type of the request
 	 * @param th
-	 *            threshold in degrees
+	 *            the int value.
 	 */
 	public IntValueRequest(int id, int type, int th) {
 		super(id, type);
