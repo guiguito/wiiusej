@@ -44,7 +44,7 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 	/* variables declarations */
 	int found, connected, i;
 	short leds;
-	
+
 	nbMaxWiiMotes = nbConnects;
 
 	/* initialize wiimotes array with the maximum number of wiimotes */
@@ -220,7 +220,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
  * @param id id of the wiimote concerned
  * @param value alpha smoothing value
  */
-JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSmoothAlpha
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAlphaSmoothing
 (JNIEnv *env, jobject obj, jint id, jfloat val) {
 	wiiuse_set_smooth_alpha(wiimotes[id-1], val);
 }
@@ -274,6 +274,55 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
 }
 
 /**
+ * Notify wiiuse that your screen has an aspect ratio of 4/3.
+ * @param id the id of the wiimote concerned
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio43
+(JNIEnv *env, jobject obj, jint id) {
+	wiiuse_set_aspect_ratio(wiimotes[id-1], WIIUSE_ASPECT_4_3);
+}
+
+/**
+ * Notify wiiuse that your screen has an aspect ratio of 16/9.
+ * @param id the id of the wiimote concerned
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio169
+(JNIEnv *env, jobject obj, jint id) {
+	wiiuse_set_aspect_ratio(wiimotes[id-1], WIIUSE_ASPECT_4_3);
+}
+
+/**
+ * Notify wiiuse that the sensor bar is above your screen.
+ * @param id the id of the wiimote concerned
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarAboveScreen
+(JNIEnv *env, jobject obj, jint id) {
+	wiiuse_set_ir_position(wiimotes[id-1], WIIUSE_IR_ABOVE);
+}
+
+/**
+ * Notify wiiuse that the sensor bar is below your screen.
+ * @param id the id of the wiimote concerned
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarBelowScreen
+(JNIEnv *env, jobject obj, jint id) {
+	wiiuse_set_ir_position(wiimotes[id-1], WIIUSE_IR_BELOW);
+}
+
+/**
+ * Set virtual screen resolution. It is used to automatically 
+ * compute the position of a cursor on this virtual screen
+ *  using the sensor bar. These results come in the IREvent.
+ * @param id the id of the wiimote concerned
+ * @param x x resolution.
+ * @param y y resolution.
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setVirtualScreenResolution
+(JNIEnv *env, jobject obj, jint id, jint x, jint y) {
+	wiiuse_set_ir_vres(wiimotes[id-1], x, y);
+}
+
+/**
  * Get status from the wiimotes and send it through call backs.
  * 
  * @param id the id of the wiimote. Must be 1 or 2.
@@ -319,17 +368,32 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				 */
 				if (WIIUSE_USING_IR(wiimotes[i])) {
 					int a = 0;
+					
+					mid = (*env)->GetMethodID(env, cls, "prepareIRevent",
+							"(IIIIIIIIISS)V");
+					if (mid == 0) {
+						return;
+					}
+					(*env)->CallVoidMethod(env, gath, mid,
+										   wiimotes[i]->ir.x, wiimotes[i]->ir.y, wiimotes[i]->ir.z,
+										   wiimotes[i]->ir.ax, wiimotes[i]->ir.ay,
+										   wiimotes[i]->ir.vres[0], wiimotes[i]->ir.vres[1],
+										   wiimotes[i]->ir.offset[0], wiimotes[i]->ir.offset[1],
+										   wiimotes[i]->ir.pos, wiimotes[i]->ir.aspect);					
+					
 					mid = (*env)->GetMethodID(env, cls, "addIRPointToPreparedWiiMoteEvent",
-							"(II)V");
+							"(IISSS)V");
 					if (mid == 0) {
 						return;
 					}
 					/* go through each of the 4 possible IR sources */
 					for (; a < 4; a++) {
 						/* check if the source is visible */
-						if (wiimotes[i]->ir.dot[a].visible) {							
+						if (wiimotes[i]->ir.dot[a].visible) {
 							(*env)->CallVoidMethod(env, gath, mid,
-									wiimotes[i]->ir.dot[a].rx, wiimotes[i]->ir.dot[a].ry);
+									wiimotes[i]->ir.dot[a].x, wiimotes[i]->ir.dot[a].y,
+									wiimotes[i]->ir.dot[a].rx, wiimotes[i]->ir.dot[a].ry,
+									wiimotes[i]->ir.dot[a].size);
 						}
 					}
 				}
@@ -338,15 +402,16 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				if (WIIUSE_USING_ACC(wiimotes[i])) {
 					/* set orientation and gravity force */
 					mid = (*env)->GetMethodID(env, cls,
-							"addMotionSensingValues", "(FFFFFF)V");
+							"addMotionSensingValues", "(FFFFFFSSS)V");
 					if (mid == 0) {
 						return;
 					}
 					(*env)->CallVoidMethod(env, gath, mid,
 							wiimotes[i]->orient.roll, wiimotes[i]->orient.pitch, wiimotes[i]->orient.yaw,
-							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z);
+							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z,
+							wiimotes[i]->accel.x, wiimotes[i]->accel.y, wiimotes[i]->accel.z);
 				}
-				
+
 				/* add generic event to java object used to gather events in c environment */
 				mid = (*env)->GetMethodID(env, cls, "addWiimoteEvent",
 						"()V");
@@ -357,35 +422,35 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				break;
 
 				case WIIUSE_STATUS:
-								/* a status event occured */
-								mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZFIFZZZZ)V");
-								if (mid == 0) {
-									return;
-								}
-								/* LEDS */
-								if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
-								if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
-								if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
-								if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
-				
-								(*env)->CallVoidMethod(env, gath, mid,
-										wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
-										wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
-										wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
-										wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
-										wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
-										WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
-										WIIUSE_USING_ACC(wiimotes[i]));
+				/* a status event occured */
+				mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZFIFZZZZ)V");
+				if (mid == 0) {
+					return;
+				}
+				/* LEDS */
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
+
+				(*env)->CallVoidMethod(env, gath, mid,
+						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
+						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
+						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
+						wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
+						wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
+						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
+						WIIUSE_USING_ACC(wiimotes[i]));
 
 				break;
 
 				case WIIUSE_DISCONNECT:
-								/* the wiimote disconnected */
-								mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
-								if (mid == 0) {
-									return;
-								}
-								(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				/* the wiimote disconnected */
+				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
 				break;
 
 				default:
