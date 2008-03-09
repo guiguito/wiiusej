@@ -279,6 +279,7 @@ public class IREvent extends WiimoteEvent {
 				out += IRPoints[i].toString();
 			}
 		}
+		out += "\n";
 		return out;
 	}
 }

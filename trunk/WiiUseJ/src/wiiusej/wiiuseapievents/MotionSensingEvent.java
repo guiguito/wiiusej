@@ -25,18 +25,33 @@ import wiiusej.values.RawAcceleration;
  * 
  * @author guiguito
  */
-public class MotionSensingEvent extends WiimoteEvent{
+public class MotionSensingEvent extends WiimoteEvent {
 
 	/* Motion Sensing */
 	private Orientation orientation;
 	private GForce gforce;
 	private RawAcceleration acceleration;
 
+	private float orientationThreshold = 0;
+	private int accelerationThreshold = 0;
+	private float alphaSmoothing = 0;
+	private boolean isSmoothingActive = false;
+
 	/**
 	 * Constructor for a Motion Sensing Event.
 	 * 
 	 * @param id
 	 *            id of the wiimote concerned.
+	 * @param orientationThreshold
+	 *            value of the minimum angle between two events with the
+	 *            accelerometer
+	 * @param accelerationThreshold
+	 *            value of the value variation between two events with the
+	 *            accelerometer
+	 * @param smoothingState
+	 *            true if smoothing flag is activated
+	 * @param alphaSmooth
+	 *            value of the alpha smoothing parameter
 	 * @param r
 	 *            roll
 	 * @param p
@@ -56,9 +71,15 @@ public class MotionSensingEvent extends WiimoteEvent{
 	 * @param zz
 	 *            raw acceleration on z axis
 	 */
-	public MotionSensingEvent(int id, float r, float p, float ya, float x, float y,
+	public MotionSensingEvent(int id, float orientationThreshold,
+			int accelerationThreshold, boolean smoothingState,
+			float alphaSmooth, float r, float p, float ya, float x, float y,
 			float z, short xx, short yy, short zz) {
 		super(id);
+		this.orientationThreshold = orientationThreshold;
+		this.accelerationThreshold = accelerationThreshold;
+		this.isSmoothingActive = smoothingState;
+		this.alphaSmoothing = alphaSmooth;
 		setOrientationAndGforce(r, p, ya, x, y, z, xx, yy, zz);
 	}
 
@@ -77,7 +98,7 @@ public class MotionSensingEvent extends WiimoteEvent{
 	 *            gravity force on y axis
 	 * @param z
 	 *            gravity force on z axis
-     * @param xx
+	 * @param xx
 	 *            raw acceleration on x axis
 	 * @param yy
 	 *            raw acceleration on y axis
@@ -106,7 +127,7 @@ public class MotionSensingEvent extends WiimoteEvent{
 	public GForce getGforce() {
 		return gforce;
 	}
-	
+
 	/**
 	 * Get the raw acceleration.
 	 * 
@@ -116,12 +137,55 @@ public class MotionSensingEvent extends WiimoteEvent{
 		return acceleration;
 	}
 
+	/**
+	 * Get orientation threshold.
+	 * 
+	 * @return the orientationThreshold
+	 */
+	public float getOrientationThreshold() {
+		return orientationThreshold;
+	}
+
+	/**
+	 * Get acceleration threshold.
+	 * 
+	 * @return the accelerationThreshold
+	 */
+	public int getAccelerationThreshold() {
+		return accelerationThreshold;
+	}
+
+	/**
+	 * Get alpha smoothing.
+	 * 
+	 * @return the alphaSmoothing
+	 */
+	public float getAlphaSmoothing() {
+		return alphaSmoothing;
+	}
+
+	/**
+	 * Tell if the option SMOOTHING is activated.
+	 * 
+	 * @return the isSmoothingActive
+	 */
+	public boolean isSmoothingActive() {
+		return isSmoothingActive;
+	}
+
 	@Override
 	public String toString() {
 		String out = "";
 		/* Motion sensing */
 		out += "/******** Motion sensing ********/\n";
 		out += "--- Motion sensing : true \n";
+		out += "--- Orientation threshold value ? : " + orientationThreshold
+				+ "\n";
+		out += "--- Acceleration threshold value ? : " + accelerationThreshold
+				+ "\n";
+		out += "--- Alpha smoothing threshold value ? : " + alphaSmoothing
+				+ "\n";
+		out += "--- Smoothing ? : " + isSmoothingActive + "\n";
 		out += "--- " + orientation + "\n";
 		out += "--- " + gforce + "\n";
 		out += "--- " + acceleration + "\n";

@@ -43,12 +43,11 @@ public class Tests implements WiimoteListener {
 	private static int DISPLAY_EACH_VALUE = 1;
 	private static int DUMP = 2;
 	private static int MOVE_MOUSE = 3;
-	private static int ORIENT_THRESH_CONT = 4;
 	private static int TEST_LEDS = 5;
 
 	private Wiimote wiimote;
 
-	int dump = DISPLAY_EACH_VALUE;
+	int dump = DUMP;
 
 	public Tests(Wiimote wim) {
 		wiimote = wim;
@@ -232,13 +231,13 @@ public class Tests implements WiimoteListener {
 			System.out.println(e);
 			/* Activate all */
 			if (e.isButtonAJustPressed()) {
-				System.out.println("IR Activated");
+				System.out.println("IR, rumble and motion sensing Activated");
 				wiimote.activateIRTRacking();
 				wiimote.activateMotionSensing();
 				wiimote.activateRumble();
 			}
 			if (e.isButtonBJustPressed()) {
-				System.out.println("IR Deactivated");
+				System.out.println("IR, rumble and motion sensing Deactivated");
 				wiimote.deactivateIRTRacking();
 				wiimote.deactivateMotionSensing();
 				wiimote.deactivateRumble();
@@ -281,42 +280,6 @@ public class Tests implements WiimoteListener {
 				System.out.println("LEAVING TEST");
 				wiimote.disconnect();
 			}
-		} else if (dump == ORIENT_THRESH_CONT) {
-			wiimote.activateMotionSensing();
-			if (e.isButtonOneJustPressed()) {
-				System.out.println("Continous activated");
-				wiimote.activateContinuous();
-			}
-			if (e.isButtonTwoJustPressed()) {
-				System.out.println("Continous deactivated");
-				wiimote.deactivateContinuous();
-			}
-			if (e.isButtonAJustPressed()) {
-				System.out.println("Smoothing activated");
-				wiimote.activateSmoothing();
-			}
-			if (e.isButtonBJustPressed()) {
-				System.out.println("Smoothing deactivated");
-				wiimote.deactivateSmoothing();
-			}
-			if (e.isButtonPlusJustPressed()) {
-				System.out.println("Threshold orientation 10 degrees");
-				wiimote.setOrientationThreshold(10);
-			}
-			if (e.isButtonMinusJustPressed()) {
-				System.out.println("Threshold orientation 0.5 degrees");
-				wiimote.setOrientationThreshold((float) 0.5);
-			}
-
-			// @TODO add accelereation threshold test, add alpha smoothing test
-
-			System.out.println(e);
-
-			/* leave test */
-			if (e.isButtonHomeJustPressed()) {
-				System.out.println("LEAVING TEST");
-				wiimote.disconnect();
-			}
 		} else if (dump == TEST_LEDS) {
 			wiimote.activateMotionSensing();
 			if (e.isButtonUpJustPressed()) {
@@ -342,11 +305,7 @@ public class Tests implements WiimoteListener {
 	}
 
 	public void onIrEvent(IREvent e) {
-		if (dump == DISPLAY_EACH_VALUE) {
-			System.out.println(e);
-		} else if (dump == DUMP) {
-			System.out.println(e);
-		} else if (dump == MOVE_MOUSE) {
+		if (dump == MOVE_MOUSE) {
 			IRSource[] list = e.getIRPoints();
 			if (list.length > 0) {
 				int x1 = (int) list[0].getX();
@@ -356,15 +315,9 @@ public class Tests implements WiimoteListener {
 				int mousey = (int) Math.round(((double) y1 / 768.0) * 1024.0);
 				robot.mouseMove(mousex, mousey);
 			}
-		} else if (dump == ORIENT_THRESH_CONT) {
-
-			// @TODO add acceleration threshold test, add alpha smoothing test
-		} else if (dump == TEST_LEDS) {
-			wiimote.activateMotionSensing();
-
+		} else {
+			System.out.println(e);
 		}
-
-		System.out.println("");
 	}
 
 	public void onMotionSensingEvent(MotionSensingEvent e) {
@@ -376,10 +329,10 @@ public class Tests implements WiimoteListener {
 		// Display status variables
 		System.out.println(e);
 	}
-	
+
 	public void onDisconnectionEvent(DisconnectionEvent e) {
-		System.out.println(e.getWiimoteId()
-				+ " notify it's been disconnected !!");
+		System.out.println(" wiimote " + e.getWiimoteId()
+				+ "has been disconnected !!");
 	}
 
 	/**
