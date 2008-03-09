@@ -109,11 +109,11 @@ public class IREvent extends WiimoteEvent {
 	 *            x value
 	 * @param y
 	 *            y value
-	 * @param rxx
+	 * @param rx
 	 *            raw X coordinate (0-1023).
-	 * @param ryy
+	 * @param ry
 	 *            raw Y coordinate (0-1023).
-	 * @param si
+	 * @param size
 	 *            size of the IR dot (0-15).
 	 */
 	public void addIRpoint(int x, int y, short rx, short ry, short size) {

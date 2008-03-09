@@ -107,11 +107,11 @@ public class EventsGatherer {
 	 *            x coordinates
 	 * @param y
 	 *            y coordinates
-	 * @param rxx
+	 * @param rx
 	 *            raw X coordinate (0-1023).
-	 * @param ryy
+	 * @param ry
 	 *            raw Y coordinate (0-1023).
-	 * @param si
+	 * @param size
 	 *            size of the IR dot (0-15).
 	 */
 	public void addIRPointToPreparedWiiMoteEvent(int x, int y, short rx,
@@ -221,7 +221,7 @@ public class EventsGatherer {
 	/**
 	 * Return an array containing the events.
 	 * 
-	 * @return
+	 * @return events received
 	 */
 	public WiiUseApiEvent[] getEvents() {
 		return java.util.Arrays.copyOfRange(events, 0, index);

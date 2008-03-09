@@ -306,11 +306,11 @@ public class WiiUseApiManager extends Thread {
 		requests.add(new FloatValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ALPHA_SMOOTHING_REQUEST, th));
 	}
-
+	
+	//@TODO not used yet !!
 	/**
 	 * Try to resync with the wiimote by starting a new handshake.
 	 * 
-	 * @TODO not used yet !!
 	 * @param id
 	 *            id of the wiimote
 	 */
