@@ -47,7 +47,7 @@ public class Tests implements WiimoteListener {
 
 	private Wiimote wiimote;
 
-	int dump = DUMP;
+	int dump = DISPLAY_EACH_VALUE;
 
 	public Tests(Wiimote wim) {
 		wiimote = wim;
