@@ -55,7 +55,8 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements WiimoteList
      */
     public ButtonsEventPanel() {
         Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
-        wiimoteImage = toolkit.createImage("img\\wiimote.png");
+        java.net.URL url = ButtonsEventPanel.class.getResource("/img/wiimote.png");
+        wiimoteImage = toolkit.createImage(url);
         shape = new java.awt.geom.Ellipse2D.Double(0, 0, 13, 13);
         initComponents();
     }
