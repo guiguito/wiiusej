@@ -17,8 +17,9 @@
 package wiiusej.wiiuseapievents;
 
 /**
- * Class used to represent a status event.
- * This class is used to know what are the settings of the wiimote.
+ * Class used to represent a status event. This class is used to know what are
+ * the settings of the wiimote.
+ * 
  * @author guiguito
  */
 public class StatusEvent extends WiiUseApiEvent {
@@ -29,7 +30,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	private static short WIIMOTE_LED_4 = 8;
 
 	/* ATTACHMENT CONSTANTS */
-	
+
 	private static short EXP_NONE = 0;
 	private static short EXP_NUNCHUK = 1;
 	private static short EXP_CLASSIC = 2;
@@ -48,15 +49,7 @@ public class StatusEvent extends WiiUseApiEvent {
 
 	private boolean isRumbleActive = false;
 
-	private float orientationThreshold = 0;
-
-	private int accelerationThreshold = 0;
-
-	private float alphaSmoothing = 0;
-
 	private boolean isContinuousActive = false;
-
-	private boolean isSmoothingActive = false;
 
 	private boolean isIrActive = false;
 
@@ -89,18 +82,8 @@ public class StatusEvent extends WiiUseApiEvent {
 	 *            attachment status
 	 * @param rumbleState
 	 *            true if rumble is active
-	 * @param orientationThreshold
-	 *            value of the minimum angle between two events with the
-	 *            accelerometer
-	 * @param accelerationThreshold
-	 *            value of the value variation between two events with the
-	 *            accelerometer
-	 * @param alphaSmooth
-	 *            value of the alpha smoothing parameter
 	 * @param continuousState
 	 *            true if continuous flag is activated
-	 * @param smoothingState
-	 *            true if smoothing flag is activated
 	 * @param irState
 	 *            true if ir is active
 	 * @param motionSensingState
@@ -108,9 +91,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 */
 	public StatusEvent(int id, boolean connect, float batt, short led,
 			boolean speak, int attach, boolean rumbleState,
-			float orientationThreshold, int accelerationThreshold,
-			float alphaSmooth, boolean continuousState, boolean smoothingState,
-			boolean irState, boolean motionSensingState) {
+			boolean continuousState, boolean irState, boolean motionSensingState) {
 		super(id, WiiUseApiEvent.STATUS_EVENT);
 		connected = connect;
 		this.batteryLevel = batt;
@@ -118,11 +99,7 @@ public class StatusEvent extends WiiUseApiEvent {
 		this.isSpeakerEnabled = speak;
 		this.attachment = attach;
 		isRumbleActive = rumbleState;
-		this.orientationThreshold = orientationThreshold;
-		this.accelerationThreshold = accelerationThreshold;
-		alphaSmoothing = alphaSmooth;
 		isContinuousActive = continuousState;
-		isSmoothingActive = smoothingState;
 		isIrActive = irState;
 		isMotionSensingActive = motionSensingState;
 	}
@@ -153,51 +130,55 @@ public class StatusEvent extends WiiUseApiEvent {
 	public short getLeds() {
 		return leds;
 	}
-	
+
 	/**
 	 * Get led1 status.
+	 * 
 	 * @return true if the led is set.
 	 */
-	public boolean isLed1Set(){
-		if ((leds & WIIMOTE_LED_1) > 0){
+	public boolean isLed1Set() {
+		if ((leds & WIIMOTE_LED_1) > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Get led2 status.
+	 * 
 	 * @return true if the led is set.
 	 */
-	public boolean isLed2Set(){
-		if ((leds & WIIMOTE_LED_2) > 0){
+	public boolean isLed2Set() {
+		if ((leds & WIIMOTE_LED_2) > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Get led3 status.
+	 * 
 	 * @return true if the led is set.
 	 */
-	public boolean isLed3Set(){
-		if ((leds & WIIMOTE_LED_3) > 0){
+	public boolean isLed3Set() {
+		if ((leds & WIIMOTE_LED_3) > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Get led4 status.
+	 * 
 	 * @return true if the led is set.
 	 */
-	public boolean isLed4Set(){
-		if ((leds & WIIMOTE_LED_4) > 0){
+	public boolean isLed4Set() {
+		if ((leds & WIIMOTE_LED_4) > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -230,48 +211,12 @@ public class StatusEvent extends WiiUseApiEvent {
 	}
 
 	/**
-	 * Get orientation threshold.
-	 * 
-	 * @return the orientationThreshold
-	 */
-	public float getOrientationThreshold() {
-		return orientationThreshold;
-	}
-
-	/**
-	 * Get acceleration threshold.
-	 * 
-	 * @return the accelerationThreshold
-	 */
-	public int getAccelerationThreshold() {
-		return accelerationThreshold;
-	}
-
-	/**
-	 * Get alpha smoothing.
-	 * 
-	 * @return the alphaSmoothing
-	 */
-	public float getAlphaSmoothing() {
-		return alphaSmoothing;
-	}
-
-	/**
 	 * Tell if the CONTINUOUS option is activated.
 	 * 
 	 * @return the isContinuousActive
 	 */
 	public boolean isContinuousActive() {
 		return isContinuousActive;
-	}
-
-	/**
-	 * Tell if the option SMOOTHING is activated.
-	 * 
-	 * @return the isSmoothingActive
-	 */
-	public boolean isSmoothingActive() {
-		return isSmoothingActive;
 	}
 
 	/**
@@ -304,14 +249,7 @@ public class StatusEvent extends WiiUseApiEvent {
 		out += "--- Speaker enabled : " + isSpeakerEnabled + "\n";
 		out += "--- Attachment ? : " + attachment + "\n";
 		out += "--- Rumble ? : " + isRumbleActive + "\n";
-		out += "--- Orientation threshold value ? : " + orientationThreshold
-				+ "\n";
-		out += "--- Acceleration threshold value ? : " + accelerationThreshold
-				+ "\n";
-		out += "--- Alpha smoothing threshold value ? : " + alphaSmoothing
-				+ "\n";
 		out += "--- Continuous ? : " + isContinuousActive + "\n";
-		out += "--- Smoothing ? : " + isSmoothingActive + "\n";
 		out += "--- IR active ? : " + isIrActive + "\n";
 		out += "--- Motion sensing active ? : " + isMotionSensingActive + "\n";
 		return out;

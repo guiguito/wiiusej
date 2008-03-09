@@ -92,11 +92,11 @@ public class EventsGatherer {
 	 * @param screenAsPectRatio
 	 *            IR sensor bar position.
 	 */
-	public void prepareIRevent(int x, int y, int z, int ax, int ay,
-			int xVRes, int yVRes, int xOffset, int yOffset,
-			short sensorBarPostion, short screenAsPectRatio) {
-		genericEvent.prepareIRevent(x, y, z, ax, ay, xVRes,
-				yVRes, xOffset, yOffset, sensorBarPostion, screenAsPectRatio);
+	public void prepareIRevent(int x, int y, int z, int ax, int ay, int xVRes,
+			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
+			short screenAsPectRatio) {
+		genericEvent.prepareIRevent(x, y, z, ax, ay, xVRes, yVRes, xOffset,
+				yOffset, sensorBarPostion, screenAsPectRatio);
 
 	}
 
@@ -124,6 +124,16 @@ public class EventsGatherer {
 	/**
 	 * Set orientation and gravity force of the prepared event.
 	 * 
+	 * @param orientationThreshold
+	 *            value of the minimum angle between two events with the
+	 *            accelerometer
+	 * @param accelerationThreshold
+	 *            value of the value variation between two events with the
+	 *            accelerometer
+	 * @param smoothingState
+	 *            true if smoothing flag is activated
+	 * @param alphaSmooth
+	 *            value of the alpha smoothing parameter
 	 * @param r
 	 *            roll
 	 * @param p
@@ -143,10 +153,14 @@ public class EventsGatherer {
 	 * @param zz
 	 *            raw acceleration on z axis
 	 */
-	public void addMotionSensingValues(float r, float p, float ya, float x,
-			float y, float z, short xx, short yy, short zz) {
+	public void addMotionSensingValues(float orientationThreshold,
+			int accelerationThreshold, boolean smoothingState,
+			float alphaSmooth, float r, float p, float ya, float x, float y,
+			float z, short xx, short yy, short zz) {
 		if (genericEvent != null) {
-			genericEvent.setMotionSensingEvent(r, p, ya, x, y, z, xx, yy, zz);
+			genericEvent.setMotionSensingEvent(orientationThreshold,
+					accelerationThreshold, smoothingState, alphaSmooth, r, p,
+					ya, x, y, z, xx, yy, zz);
 		}
 	}
 
@@ -177,18 +191,8 @@ public class EventsGatherer {
 	 *            attachment status
 	 * @param rumbleState
 	 *            true if rumble is active
-	 * @param orientationThreshold
-	 *            value of the minimum angle between two events with the
-	 *            accelerometer
-	 * @param accelerationThreshold
-	 *            value of the value variation between two events with the
-	 *            accelerometer
-	 * @param alphaSmooth
-	 *            value of the alpha smoothing parameter
 	 * @param continuousState
 	 *            true if continuous flag is activated
-	 * @param smoothingState
-	 *            true if smoothing flag is activated
 	 * @param irState
 	 *            true if ir is active
 	 * @param motionSensingState
@@ -196,13 +200,10 @@ public class EventsGatherer {
 	 */
 	public void addStatusEvent(int id, boolean connect, float batt, short led,
 			boolean speak, int attach, boolean rumbleState,
-			float orientationThreshold, int accelerationThreshold,
-			float alphaSmooth, boolean continuousState, boolean smoothingState,
-			boolean irState, boolean motionSensingState) {
+			boolean continuousState, boolean irState, boolean motionSensingState) {
 		StatusEvent evt = new StatusEvent(id, connect, batt, led, speak,
-				attach, rumbleState, orientationThreshold,
-				accelerationThreshold, alphaSmooth, continuousState,
-				smoothingState, irState, motionSensingState);
+				attach, rumbleState, continuousState, irState,
+				motionSensingState);
 		addEvent(evt);
 	}
 

@@ -100,7 +100,7 @@ public class GenericEvent extends WiiUseApiEvent {
 	public MotionSensingEvent getMotionSensingEvent() {
 		return motionSensingEvent;
 	}
-	
+
 	/**
 	 * Prepare an IR event to populate.
 	 * 
@@ -160,6 +160,16 @@ public class GenericEvent extends WiiUseApiEvent {
 	/**
 	 * Set the Motion Sensing Event.
 	 * 
+	 * @param orientationThreshold
+	 *            value of the minimum angle between two events with the
+	 *            accelerometer
+	 * @param accelerationThreshold
+	 *            value of the value variation between two events with the
+	 *            accelerometer
+	 * @param smoothingState
+	 *            true if smoothing flag is activated
+	 * @param alphaSmooth
+	 *            value of the alpha smoothing parameter
 	 * @param r
 	 *            roll
 	 * @param p
@@ -179,10 +189,13 @@ public class GenericEvent extends WiiUseApiEvent {
 	 * @param zz
 	 *            raw acceleration on z axis
 	 */
-	public void setMotionSensingEvent(float r, float p, float ya, float x,
-			float y, float z, short xx, short yy, short zz) {
-		motionSensingEvent = new MotionSensingEvent(getWiimoteId(), r, p, ya,
-				x, y, z, xx, yy, zz);
+	public void setMotionSensingEvent(float orientationThreshold,
+			int accelerationThreshold, boolean smoothingState,
+			float alphaSmooth, float r, float p, float ya, float x, float y,
+			float z, short xx, short yy, short zz) {
+		motionSensingEvent = new MotionSensingEvent(getWiimoteId(),
+				orientationThreshold, accelerationThreshold, smoothingState,
+				alphaSmooth, r, p, ya, x, y, z, xx, yy, zz);
 	}
 
 	@Override
