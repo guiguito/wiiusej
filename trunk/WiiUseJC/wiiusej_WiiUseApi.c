@@ -384,19 +384,19 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				 */
 				if (WIIUSE_USING_IR(wiimotes[i])) {
 					int a = 0;
-					
+
 					mid = (*env)->GetMethodID(env, cls, "prepareIRevent",
 							"(IIIIIIIIISS)V");
 					if (mid == 0) {
 						return;
 					}
 					(*env)->CallVoidMethod(env, gath, mid,
-										   wiimotes[i]->ir.x, wiimotes[i]->ir.y, wiimotes[i]->ir.z,
-										   wiimotes[i]->ir.ax, wiimotes[i]->ir.ay,
-										   wiimotes[i]->ir.vres[0], wiimotes[i]->ir.vres[1],
-										   wiimotes[i]->ir.offset[0], wiimotes[i]->ir.offset[1],
-										   wiimotes[i]->ir.pos, wiimotes[i]->ir.aspect);					
-					
+							wiimotes[i]->ir.x, wiimotes[i]->ir.y, wiimotes[i]->ir.z,
+							wiimotes[i]->ir.ax, wiimotes[i]->ir.ay,
+							wiimotes[i]->ir.vres[0], wiimotes[i]->ir.vres[1],
+							wiimotes[i]->ir.offset[0], wiimotes[i]->ir.offset[1],
+							wiimotes[i]->ir.pos, wiimotes[i]->ir.aspect);
+
 					mid = (*env)->GetMethodID(env, cls, "addIRPointToPreparedWiiMoteEvent",
 							"(IISSS)V");
 					if (mid == 0) {
@@ -418,11 +418,13 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				if (WIIUSE_USING_ACC(wiimotes[i])) {
 					/* set orientation and gravity force */
 					mid = (*env)->GetMethodID(env, cls,
-							"addMotionSensingValues", "(FFFFFFSSS)V");
+							"addMotionSensingValues", "(FIZFFFFFFFSSS)V");
 					if (mid == 0) {
 						return;
 					}
 					(*env)->CallVoidMethod(env, gath, mid,
+							wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
+							WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), wiimotes[i]->accel_calib.st_alpha,
 							wiimotes[i]->orient.roll, wiimotes[i]->orient.pitch, wiimotes[i]->orient.yaw,
 							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z,
 							wiimotes[i]->accel.x, wiimotes[i]->accel.y, wiimotes[i]->accel.z);
@@ -439,7 +441,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 
 				case WIIUSE_STATUS:
 				/* a status event occured */
-				mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZFIFZZZZ)V");
+				mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZZZZ)V");
 				if (mid == 0) {
 					return;
 				}
@@ -453,11 +455,8 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
 						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
 						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
-						wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
-						wiimotes[i]->accel_calib.st_alpha, WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
-						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), WIIUSE_USING_IR(wiimotes[i]),
-						WIIUSE_USING_ACC(wiimotes[i]));
-
+						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
+						WIIUSE_USING_IR(wiimotes[i]),WIIUSE_USING_ACC(wiimotes[i]));
 				break;
 
 				case WIIUSE_DISCONNECT:
