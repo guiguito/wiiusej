@@ -1,6 +1,7 @@
 #labels Featured,Phase-Deploy
 #How to test wiiuseJ quickly.
 
+=Step by step test=
 
 1) Download WiiUseJ 0.1 Windows.zip
 
