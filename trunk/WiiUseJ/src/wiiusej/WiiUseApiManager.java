@@ -100,8 +100,6 @@ public class WiiUseApiManager extends Thread {
 		nbMaxWiimotes = nb;
 		if (connected < 0) {
 			connected = wiiuse.doConnections(nb);
-			// @TODO
-			System.out.println(connected + " wiimote(s) connected !!!");
 			return connected;
 		} else {// library not loaded, no wiimotes connected
 			return 0;
@@ -119,7 +117,7 @@ public class WiiUseApiManager extends Thread {
 		wiimotes[id - 1] = null;
 		requests.add(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST));
-		System.out.println("Wiimote " + id + " disconnected !");
+		// System.out.println("Wiimote " + id + " disconnected !");
 	}
 
 	/**
@@ -135,6 +133,12 @@ public class WiiUseApiManager extends Thread {
 	 * Stop thread and shutdown wiiuse Api.
 	 */
 	public void shutdown() {
+		if (connected > 0) {
+			for (Wiimote wim : wiimotes) {
+				if (wim != null)
+					wim.disconnect();
+			}
+		}
 		running.set(false);
 		wiiuse.shutdownApi();
 	}
@@ -306,8 +310,7 @@ public class WiiUseApiManager extends Thread {
 		requests.add(new FloatValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ALPHA_SMOOTHING_REQUEST, th));
 	}
-	
-	//@TODO not used yet !!
+
 	/**
 	 * Try to resync with the wiimote by starting a new handshake.
 	 * 
@@ -433,8 +436,8 @@ public class WiiUseApiManager extends Thread {
 						connected--;
 						if (connected == 0) {// stop this thread if there is
 							// no more wiimotes connected.
-							System.out
-									.println("No more wiimotes connected !!!");
+							// System.out.println("No more wiimotes connected
+							// !!!");
 							shutdown();
 						}
 					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_STATUS_REQUEST) {

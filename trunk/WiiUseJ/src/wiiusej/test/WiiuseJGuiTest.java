@@ -60,6 +60,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         wiimote.setScreenAspectRatio169();
         wiimote.setSensorBarBelowScreen();
         getStatusButtonMousePressed(null);
+        this.addWindowListener(new CloseGuiTestCleanly(wiimote));
     }
 
     public void onButtonsEvent(ButtonsEvent arg0) {
@@ -220,6 +221,8 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         messageText = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("WiiuseJ Test GUI");
+        setName("WiiuseJ Test GUI"); // NOI18N
 
         leftPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 

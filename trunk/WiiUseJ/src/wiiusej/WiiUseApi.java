@@ -32,7 +32,7 @@ public class WiiUseApi {
 	
 	/**
 	 * Get the only instance of WiiUseApi.
-	 * @return
+	 * @return the only instace of WiiUseApi.
 	 */
 	static WiiUseApi getInstance(){
 		return instance;
@@ -55,7 +55,6 @@ public class WiiUseApi {
 	
 	/**
 	 * Shutdown Wiiuse API.
-	 * @return 0 if there is an error, 1 if everything is ok.
 	 */
 	native void shutdownApi();
 	
