@@ -6,6 +6,8 @@ To be updated very soon !!!!
 Quick doc : 
 
 
+{{{
+
 1) import wiiusej.jar in your java project.
 
 2) put the 2 dlls files libWiiUseJ.dll and wiiuse.dll at the root of your project.
@@ -21,5 +23,4 @@ Connect your wiimote to your bluetooth stack.
 
 ===> MyListener will receive events from the wiimotes is registered on.
 
-
-
+}}}
