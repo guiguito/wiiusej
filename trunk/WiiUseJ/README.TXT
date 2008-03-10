@@ -30,7 +30,7 @@ Some of the great aspects of this API are :
     
     
 WiiuseJ is made by Guilhem Duché : guiguito1@hotmail.com.
-You can contact me if you need more informations.    
+You can contact me if you need more information.    
     
 Go to : http://wiiusej.googlecode.com/   for further documentations.    
 
