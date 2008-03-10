@@ -24,6 +24,7 @@ import wiiusej.wiiuseapievents.GenericEvent;
 import wiiusej.wiiuseapievents.WiiUseApiEvent;
 import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapievents.WiimoteListener;
+import wiiusej.wiiuseapirequest.WiiUseApiRequest;
 
 /**
  * Class that represents a wiimote.
@@ -41,7 +42,7 @@ public class Wiimote implements WiiUseApiListener {
 	
 	
 	/**
-	 * Contructor.
+	 * Constructor.
 	 * @param idd id of the wiimote
 	 * @param manager manager wo built it.
 	 */
@@ -213,7 +214,12 @@ public class Wiimote implements WiiUseApiListener {
 		manager.setVirtualResolution(id, x ,y);
 	}
 
-	//TODO resync ?
+	/**
+	 * Try to resync the wiimote by starting a new handshake.
+	 */
+	public void reSync() {
+		manager.reSync(id);
+	}
 
 	/**
 	 * Ask for the status of the wiimote.
