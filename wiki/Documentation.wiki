@@ -1,10 +1,9 @@
 #labels Featured,Phase-Deploy
 #User documentation.
 
+=Quick doc=
 
 To be updated very soon !!!!
-
-Quick doc : 
 
 
 {{{
