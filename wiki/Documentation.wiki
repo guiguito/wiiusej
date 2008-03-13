@@ -84,3 +84,5 @@ public void onButtonsEvent(ButtonsEvent arg0) {
         }
     }
 }}}
+
+This sample app can be downloaded in the download section. It is a Netbeans project.
