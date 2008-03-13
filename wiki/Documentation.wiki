@@ -1,26 +1,39 @@
 #labels Featured,Phase-Deploy
 #User documentation.
 
-=Quick doc=
 
-To be updated very soon !!!!
 
+=Detailed documentation=
+
+
+WiiuseJ is very easy to use. 
+You have very few things to do get info from your wiimote(s).
+
+First make a class (for example MyClass) and  implements WiimoteListener with it.
+For example, in the following example, each method implemented receives the differents event Types : ButtonsEvent, IREvent, MotionSensingEvent, StatusEvent and DisconnectionEvent. In this case in each method we only display it.
 
 {{{
+public class MyClass implements WiimoteListener{
 
-1) import wiiusej.jar in your java project.
+    public void onButtonsEvent(ButtonsEvent arg0) {
+        System.out.println(arg0);
+    }
 
-2) put the 2 dlls files libWiiUseJ.dll and wiiuse.dll at the root of your project.
-Connect your wiimote to your bluetooth stack.
+    public void onIrEvent(IREvent arg0) {
+        System.out.println(arg0);
+    }
 
-3) In your code : Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(X);//x is the number of wiimotes to connect.
+    public void onMotionSensingEvent(MotionSensingEvent arg0) {
+        System.out.println(arg0);
+    }
 
-4) Make a class (MyListener) implementing the WiimoteListener interface.
+    public void onStatusEvent(StatusEvent arg0) {
+        System.out.println(arg0);
+    }
 
-5) wiimote[0].addWiiMoteEventListeners(new MyListener());//register my class as a listener of the first wiimote.
+    public void onDisconnectionEvent(DisconnectionEvent arg0) {
+        System.out.println(arg0);
+    }
 
-
-
-===> MyListener will receive events from the wiimotes is registered on.
-
+}
 }}}
