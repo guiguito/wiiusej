@@ -64,12 +64,14 @@ public class WiiUseApiManager extends Thread {
 	 * 
 	 * @param nb
 	 *            try to connect nb wiimotes
+	 * @param rumble
+	 * 			make the connected wiimotes rumble
 	 * @return an array with connected wiimotes or NULL.
 	 */
-	public synchronized static Wiimote[] getWiimotes(int nb) {
+	public synchronized static Wiimote[] getWiimotes(int nb, boolean rumble) {
 		WiiUseApiManager manager = getInstance();
 		if (manager.connected < 0) {
-			int nbWiimotes = manager.connectWiimotes(nb);
+			int nbWiimotes = manager.connectWiimotes(nb, rumble);
 			manager.wiimotes = new Wiimote[nbWiimotes];
 			for (int i = 1; i <= nbWiimotes; i++) {
 				Wiimote wim = new Wiimote(i, manager);
@@ -94,12 +96,14 @@ public class WiiUseApiManager extends Thread {
 	 * 
 	 * @param nb
 	 *            try to connect nb wiimotes
+	 * @param rumble
+	 * 			make the connected wiimotes rumble            
 	 * @return 0 if nothing connected or the number of wiimotes connected.
 	 */
-	private int connectWiimotes(int nb) {
+	private int connectWiimotes(int nb, boolean rumble) {
 		nbMaxWiimotes = nb;
 		if (connected < 0) {
-			connected = wiiuse.doConnections(nb);
+			connected = wiiuse.doConnections(nb, rumble);
 			return connected;
 		} else {// library not loaded, no wiimotes connected
 			return 0;

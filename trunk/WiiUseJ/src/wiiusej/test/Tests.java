@@ -339,7 +339,7 @@ public class Tests implements WiimoteListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(4);
+		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(4, true);
 		if (wiimotes.length > 0) {
 			System.out.println(wiimotes[0]);
 			Tests tests = new Tests(wiimotes[0]);
