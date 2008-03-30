@@ -29,7 +29,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1);
+        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
         if (wiimotes.length>0){
             WiiuseJGuiTest gui = new WiiuseJGuiTest(wiimotes[0]);
             gui.setDefaultCloseOperation(gui.EXIT_ON_CLOSE);

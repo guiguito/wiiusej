@@ -131,6 +131,7 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
 
     public void onButtonsEvent(ButtonsEvent arg0) {
         //nothing
+    	repaint();
     }
 
     public void onIrEvent(IREvent arg0) {
