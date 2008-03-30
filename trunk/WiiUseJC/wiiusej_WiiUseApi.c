@@ -15,10 +15,9 @@
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef WIN32
-#include <unistd.h>
-#define WIIUSE_PATH		"./wiiuse.so"
+	#include <unistd.h>
 #else
-#define WIIUSE_PATH		"wiiuse.dll"
+	
 #endif
 
 #include "wiiusej_WiiUseApi.h"
@@ -51,11 +50,13 @@ static int nbMaxWiiMotes=0;
  * Try to connect to 2 wiimotes.
  * Make them rumble to show they are connected.
  * @param nbConnects number of connections maximum.
+ * @param rumble
+ * 			make the connected wiimotes rumble.
  * @return 0 if there is an error otherwise it returns 
  * 			the number of wiimotes connected..
  */
 JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
-(JNIEnv *env, jobject obj, jint nbConnects) {
+(JNIEnv *env, jobject obj, jint nbConnects, jboolean rumble) {
 
 	/* variables declarations */
 	int found, connected, i;
@@ -99,17 +100,17 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
 		else if (i%4==2) leds |= WIIMOTE_LED_3;
 		else if (i%4==3) leds |= WIIMOTE_LED_4;
 		wiiuse_set_leds(wiimotes[i], leds);
-		wiiuse_rumble(wiimotes[i], 1);
+		if (rumble) wiiuse_rumble(wiimotes[i], 1);
 	}
-
-#ifndef WIN32
-	usleep(200000);
-#else
-	Sleep(200);
-#endif
-
-	for (i=0;i<nbMaxWiiMotes;i++) {
-		wiiuse_rumble(wiimotes[i], 0);
+	if (rumble) {
+		#ifndef WIN32
+			usleep(200000);
+		#else
+			Sleep(200);
+		#endif	
+		for (i=0;i<nbMaxWiiMotes;i++) {
+			wiiuse_rumble(wiimotes[i], 0);
+		}
 	}
 
 	//no pb connecting leave	

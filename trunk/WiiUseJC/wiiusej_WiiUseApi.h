@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     wiiusej_WiiUseApi
  * Method:    doConnections
- * Signature: (I)I
+ * Signature: (IZ)I
  */
 JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject, jint, jboolean);
 
 /*
  * Class:     wiiusej_WiiUseApi
