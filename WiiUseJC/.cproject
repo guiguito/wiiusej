@@ -47,16 +47,17 @@
 <option id="gnu.c.link.option.userobjs.704698117" name="Other objects" superClass="gnu.c.link.option.userobjs" valueType="userObjs">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/WiiUseJavaC/wiiusej_WiiUseApi.def}&quot;"/>
 </option>
-<option id="gnu.c.link.option.paths.1987293490" superClass="gnu.c.link.option.paths" valueType="libPaths">
+<option id="gnu.c.link.option.paths.1987293490" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/WiiUseJavaC/lib}&quot;"/>
 </option>
-<option id="gnu.c.link.option.libs.2064083849" superClass="gnu.c.link.option.libs" valueType="libs">
+<option id="gnu.c.link.option.libs.2064083849" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="wiiuse"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.c.linker.input.86691693" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 <additionalInput kind="additionalinput" paths="$(LIBS)"/>
 </inputType>
+<outputType id="cdt.managedbuild.tool.gnu.c.linker.mingw.so.debug.output.1574816302" outputPrefix="" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.so.debug.output"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.so.debug.863168128" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.so.debug">
 <option defaultValue="true" id="gnu.cpp.link.mingw.so.debug.option.shared.503834207" name="Shared (-shared)" superClass="gnu.cpp.link.mingw.so.debug.option.shared" valueType="boolean"/>
