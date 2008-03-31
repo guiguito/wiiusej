@@ -9,7 +9,8 @@
 WiiuseJ is very easy to use. You have very few things to do get info from your wiimote(s).
 
 
-First, make a project. Import wiiusej.jar and in it put the 2 dlls files at the root of your project.
+First, make a project. Import wiiusej.jar and put the 2 dlls files at the root of your project (or the two .so files if you are under linux).
+
 
 
 Then make a class (for example MyClass) implementing WiimoteListener with it.
