@@ -10,7 +10,7 @@
 2) put the 2 dlls files libWiiUseJ.dll and wiiuse.dll at the root of your project.
 Connect your wiimote to your bluetooth stack.
 
-3) In your code : Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(X);//x is the number of wiimotes to connect.
+3) In your code : Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(X, true);//x is the number of wiimotes to connect. True : make it rumble the first time you get the wiimotes.
 
 4) Make a class (MyListener) implementing the WiimoteListener interface.
 
