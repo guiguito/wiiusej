@@ -48,7 +48,7 @@ Next you can make a main. Like this :
 
 {{{
     public static void main(String[] args) {
-        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1);
+        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
         Wiimote wiimote = wiimotes[0];
         wiimote.activateIRTRacking();
         wiimote.activateMotionSensing();
@@ -57,7 +57,7 @@ Next you can make a main. Like this :
 }}}
 
 
-Here you ask to try to connect to 1 wiimote. You can ask for more if more are connected. It returns you an array with the connected wiimote. Then you can manipulate each wiimote and activate IR tracking, motion tracking and set up other parameters if you want... Check javadoc for more details.
+Here you ask to try to connect to 1 wiimote (and make it rumble, the first time you call this method). You can ask for more if more are connected. It returns you an array with the connected wiimote. Then you can manipulate each wiimote and activate IR tracking, motion tracking and set up other parameters if you want... Check javadoc for more details.
 
 
 {{{
