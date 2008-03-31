@@ -3,7 +3,7 @@
 
 =Step by step test=
 
-1) Download WiiUseJ 0.1 Windows.zip
+1) Download WiiUseJ 0.11.zip
 
 
 2) Unzip all the files in the same folder (ex: c:\temp)
