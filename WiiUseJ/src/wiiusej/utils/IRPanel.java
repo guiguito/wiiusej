@@ -98,7 +98,7 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
 
         //draw points
         int i = 0;
-        while (xCoordinates[i] != -1 && yCoordinates[i] != -1 && i < nbPoints) {
+        while (i < nbPoints) {
             double x = xCoordinates[i];
             double y = yCoordinates[i];
 

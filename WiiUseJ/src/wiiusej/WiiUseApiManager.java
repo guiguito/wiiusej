@@ -47,11 +47,10 @@ public class WiiUseApiManager extends Thread {
 
 	private int connected = -1;
 
-	private int nbMaxWiimotes = -1;
-
 	private AtomicBoolean running = new AtomicBoolean(false);
 
-	private ConcurrentLinkedQueue<WiiUseApiRequest> requests = new ConcurrentLinkedQueue<WiiUseApiRequest>();
+	private WiiUseApiRequestsManager requestManager = WiiUseApiRequestsManager
+			.getInstance();
 
 	public static WiiUseApiManager getInstance() {
 		return instance;
@@ -65,12 +64,12 @@ public class WiiUseApiManager extends Thread {
 	 * @param nb
 	 *            try to connect nb wiimotes
 	 * @param rumble
-	 * 			make the connected wiimotes rumble
+	 *            make the connected wiimotes rumble
 	 * @return an array with connected wiimotes or NULL.
 	 */
 	public synchronized static Wiimote[] getWiimotes(int nb, boolean rumble) {
 		WiiUseApiManager manager = getInstance();
-		if (manager.connected < 0) {
+		if (manager.connected <= 0 && !manager.running.get()) {
 			int nbWiimotes = manager.connectWiimotes(nb, rumble);
 			manager.wiimotes = new Wiimote[nbWiimotes];
 			for (int i = 1; i <= nbWiimotes; i++) {
@@ -84,8 +83,10 @@ public class WiiUseApiManager extends Thread {
 			return new Wiimote[0];
 		}
 
-		if (!manager.isAlive())
+		if (!manager.isAlive()){
 			manager.start();
+			manager.requestManager.start();
+		}
 
 		return manager.wiimotes;
 	}
@@ -97,12 +98,11 @@ public class WiiUseApiManager extends Thread {
 	 * @param nb
 	 *            try to connect nb wiimotes
 	 * @param rumble
-	 * 			make the connected wiimotes rumble            
+	 *            make the connected wiimotes rumble
 	 * @return 0 if nothing connected or the number of wiimotes connected.
 	 */
 	private int connectWiimotes(int nb, boolean rumble) {
-		nbMaxWiimotes = nb;
-		if (connected < 0) {
+		if (connected <= 0) {
 			connected = wiiuse.doConnections(nb, rumble);
 			return connected;
 		} else {// library not loaded, no wiimotes connected
@@ -119,7 +119,13 @@ public class WiiUseApiManager extends Thread {
 	public void closeConnection(int id) {
 		removeWiiUseApiListener(wiimotes[id - 1]);
 		wiimotes[id - 1] = null;
-		requests.add(new WiiUseApiRequest(id,
+		connected--;
+		if (connected == 0) {// stop this thread if there is
+			// no more wiimotes connected.
+			//stop thread
+			shutdown();
+		}
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST));
 		// System.out.println("Wiimote " + id + " disconnected !");
 	}
@@ -154,7 +160,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void activateRumble(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ACTIVATE_RUMBLE_REQUEST));
 	}
 
@@ -165,7 +171,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void deactivateRumble(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_DEACTIVATE_RUMBLE_REQUEST));
 	}
 
@@ -176,7 +182,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void activateIRTRacking(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ACTIVATE_IR_TRACKING_REQUEST));
 	}
 
@@ -187,7 +193,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void deactivateIRTRacking(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_DEACTIVATE_IR_TRACKING_REQUEST));
 	}
 
@@ -198,7 +204,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void activateMotionSensing(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ACTIVATE_MOTION_SENSING_REQUEST));
 	}
 
@@ -209,7 +215,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void deactivateMotionSensing(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_DEACTIVATE_MOTION_SENSING_REQUEST));
 	}
 
@@ -220,7 +226,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void activateSmoothing(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ACTIVATE_SMOOTHING_REQUEST));
 	}
 
@@ -231,7 +237,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void deactivateSmoothing(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_DEACTIVATE_SMOOTHING_REQUEST));
 	}
 
@@ -242,7 +248,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote.
 	 */
 	public void activateContinuous(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ACTIVATE_CONTINUOUS_REQUEST));
 	}
 
@@ -253,7 +259,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void deactivateContinuous(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_DEACTIVATE_CONTINUOUS_REQUEST));
 	}
 
@@ -272,8 +278,8 @@ public class WiiUseApiManager extends Thread {
 	 *            status of led4. True : ON, False : OFF
 	 */
 	public void setLeds(int id, boolean l1, boolean l2, boolean l3, boolean l4) {
-		requests.add(new LedsRequest(id, WiiUseApiRequest.WIIUSE_LEDS_REQUEST,
-				l1, l2, l3, l4));
+		requestManager.addRequests(new LedsRequest(id,
+				WiiUseApiRequest.WIIUSE_LEDS_REQUEST, l1, l2, l3, l4));
 	}
 
 	/**
@@ -285,7 +291,7 @@ public class WiiUseApiManager extends Thread {
 	 *            threshold in degrees
 	 */
 	public void setOrientationThreshold(int id, float th) {
-		requests.add(new FloatValueRequest(id,
+		requestManager.addRequests(new FloatValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ORIENT_THRESHOLHD_REQUEST, th));
 	}
 
@@ -298,7 +304,7 @@ public class WiiUseApiManager extends Thread {
 	 *            threshold
 	 */
 	public void setAccelerationThreshold(int id, int th) {
-		requests.add(new IntValueRequest(id,
+		requestManager.addRequests(new IntValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ACCEL_THRESHOLHD_REQUEST, th));
 	}
 
@@ -311,7 +317,7 @@ public class WiiUseApiManager extends Thread {
 	 *            threshold
 	 */
 	public void setAlphaSmoothing(int id, float th) {
-		requests.add(new FloatValueRequest(id,
+		requestManager.addRequests(new FloatValueRequest(id,
 				WiiUseApiRequest.WIIUSE_ALPHA_SMOOTHING_REQUEST, th));
 	}
 
@@ -322,7 +328,8 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void reSync(int id) {
-		requests.add(new WiiUseApiRequest(id, WiiUseApiRequest.WIIUSE_RESYNC));
+		requestManager.addRequests(new WiiUseApiRequest(id,
+				WiiUseApiRequest.WIIUSE_RESYNC));
 	}
 
 	/**
@@ -332,7 +339,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void setScreenAspectRatio43(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ASPECT_RATIO_4_3));
 	}
 
@@ -343,7 +350,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void setScreenAspectRatio169(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_ASPECT_RATIO_16_9));
 	}
 
@@ -354,7 +361,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void setSensorBarAboveScreen(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_SENSOR_BAR_ABOVE));
 	}
 
@@ -365,7 +372,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void setSensorBarBelowScreen(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_SENSOR_BAR_BELOW));
 	}
 
@@ -382,7 +389,7 @@ public class WiiUseApiManager extends Thread {
 	 *            y resolution
 	 */
 	public void setVirtualResolution(int id, int x, int y) {
-		requests.add(new TwoIntValueRequest(id,
+		requestManager.addRequests(new TwoIntValueRequest(id,
 				WiiUseApiRequest.WIIUSE_SET_VIRTUAL_RESOLUTION, x, y));
 	}
 
@@ -393,7 +400,7 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote
 	 */
 	public void getStatus(int id) {
-		requests.add(new WiiUseApiRequest(id,
+		requestManager.addRequests(new WiiUseApiRequest(id,
 				WiiUseApiRequest.WIIUSE_STATUS_REQUEST));
 	}
 
@@ -403,13 +410,16 @@ public class WiiUseApiManager extends Thread {
 		if (connected > 0) {
 			running.set(true);
 
-			EventsGatherer gather = new EventsGatherer(nbMaxWiimotes);
+			EventsGatherer gather = new EventsGatherer(connected);
 
-			// Start polling and tell the observers when there Wiimote events
+			// Start polling and tell the observers when there are Wiimote
+			// events
 			while (running.get() && connected > 0) {
 
 				/* Polling */
-				wiiuse.specialPoll(gather);
+				synchronized (wiiuse) {
+					wiiuse.specialPoll(gather);
+				}
 
 				/* deal with events gathered in Wiiuse API */
 				for (WiiUseApiEvent evt : gather.getEvents()) {
@@ -428,96 +438,6 @@ public class WiiUseApiManager extends Thread {
 					}
 				}
 				gather.clearEvents();
-
-				/* deal with request done to wiiuse API */
-				WiiUseApiRequest req = requests.poll();
-				if (req != null) {// there is a request for the wiiuse api
-					int id = req.getId();
-					if (req.getRequestType() == WiiUseApiRequest.WIIUSE_CLOSE_CONNECTION_REQUEST) {
-						/* Close connections requests */
-						wiiuse.closeConnection(id);
-
-						connected--;
-						if (connected == 0) {// stop this thread if there is
-							// no more wiimotes connected.
-							// System.out.println("No more wiimotes connected
-							// !!!");
-							shutdown();
-						}
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_STATUS_REQUEST) {
-						/* Status requests */
-						wiiuse.getStatus(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACTIVATE_RUMBLE_REQUEST) {
-						/* Activate Rumble requests */
-						wiiuse.activateRumble(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_DEACTIVATE_RUMBLE_REQUEST) {
-						/* Deactivate Rumble requests */
-						wiiuse.deactivateRumble(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACTIVATE_IR_TRACKING_REQUEST) {
-						/* Activate IR Tracking requests */
-						wiiuse.activateIRTracking(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_DEACTIVATE_IR_TRACKING_REQUEST) {
-						/* Deactivate IR Tracking requests */
-						wiiuse.deactivateIRTracking(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACTIVATE_MOTION_SENSING_REQUEST) {
-						/* Activate Motion sensing requests */
-						wiiuse.activateMotionSensing(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_DEACTIVATE_MOTION_SENSING_REQUEST) {
-						/* Deactivate Motion sensing requests */
-						wiiuse.deactivateMotionSensing(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_LEDS_REQUEST) {
-						/* leds requests */
-						LedsRequest reqLed = (LedsRequest) req;
-						wiiuse.setLeds(id, reqLed.isLed1(), reqLed.isLed2(),
-								reqLed.isLed3(), reqLed.isLed4());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACTIVATE_SMOOTHING_REQUEST) {
-						/* Activate smoothing requests */
-						wiiuse.activateSmoothing(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_DEACTIVATE_SMOOTHING_REQUEST) {
-						/* Deactivate smoothing requests */
-						wiiuse.deactivateSmoothing(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACTIVATE_CONTINUOUS_REQUEST) {
-						/* Activate continuous requests */
-						wiiuse.activateContinuous(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_DEACTIVATE_CONTINUOUS_REQUEST) {
-						/* Deactivate continuous requests */
-						wiiuse.deactivateContinuous(id);
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ORIENT_THRESHOLHD_REQUEST) {
-						/* set orientation threshold request */
-						wiiuse.setOrientThreshold(req.getId(),
-								((FloatValueRequest) req).getFloatValue());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ACCEL_THRESHOLHD_REQUEST) {
-						/* set acceleration threshold request */
-						wiiuse.setAccelThreshold(req.getId(),
-								((IntValueRequest) req).getIntValue());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ALPHA_SMOOTHING_REQUEST) {
-						/* set alpha smoothing request */
-						wiiuse.setAlphaSmoothing(req.getId(),
-								((FloatValueRequest) req).getFloatValue());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_RESYNC) {
-						/* set resync request */
-						wiiuse.reSync(req.getId());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ASPECT_RATIO_4_3) {
-						/* set screen aspect ratio to 4/3 */
-						wiiuse.setScreenRatio43(req.getId());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_ASPECT_RATIO_16_9) {
-						/* set screen aspect ratio to 16/9 */
-						wiiuse.setScreenRatio169(req.getId());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_SENSOR_BAR_ABOVE) {
-						/* set sensor bar above the screen */
-						wiiuse.setSensorBarAboveScreen(req.getId());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_SENSOR_BAR_BELOW) {
-						/* set sensor bar above the screen */
-						wiiuse.setSensorBarBelowScreen(req.getId());
-					} else if (req.getRequestType() == WiiUseApiRequest.WIIUSE_SET_VIRTUAL_RESOLUTION) {
-						/* set virtual resolution */
-						wiiuse.setVirtualScreenResolution(req.getId(),
-								((TwoIntValueRequest) req).getIntValue(),
-								((TwoIntValueRequest) req).getSecondIntValue());
-					} else {
-						System.out.println("Bad request to Wiiuse API !!!!!");
-					}
-				}
 			}
 		} else {
 			if (connected <= 0) {
