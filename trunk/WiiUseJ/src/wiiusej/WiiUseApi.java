@@ -39,7 +39,28 @@ public class WiiUseApi {
 	static WiiUseApi getInstance() {
 		return instance;
 	}
-
+	
+	/**
+	 * Connect to a wiimote or wiimotes once an address is known.
+	 * @param nbWiimotes The number of wiimotes.
+	 * @return The number of wiimotes that successfully connected.
+	 */
+	synchronized native int connect(int nbWiimotes);
+	
+	/**
+	 * Find a wiimote or wiimotes.
+	 * @param nbMaxWiimotes The number of wiimotes.
+	 * @param timeout The number of seconds before the search times out.
+	 * @return The number of wiimotes found.
+	 */
+	synchronized native int find(int nbMaxWiimotes, int timeout);
+	
+	/**
+	 * Initialize an array of wiimote structures (for the C side of the library).
+	 * @param nbPossibleWiimotes size of the array.
+	 */
+	synchronized native void init(int nbPossibleWiimotes);
+	
 	/**
 	 * Try to connect to 2 wiimotes. Make them rumble to show they are
 	 * connected.
@@ -52,7 +73,7 @@ public class WiiUseApi {
 	 *         wiimotes connected.
 	 */
 	synchronized native int doConnections(int nb, boolean rumble);
-
+	
 	/**
 	 * Close connection to the wiimote with the given id.
 	 * 
@@ -126,8 +147,8 @@ public class WiiUseApi {
 	 * @param led4
 	 *            status of led4: True=ON, False=OFF
 	 */
-	synchronized native void setLeds(int id, boolean led1, boolean led2, boolean led3,
-			boolean led4);
+	synchronized native void setLeds(int id, boolean led1, boolean led2,
+			boolean led3, boolean led4);
 
 	/**
 	 * Set how many degrees an angle must change to generate an event.
@@ -255,11 +276,39 @@ public class WiiUseApi {
 	synchronized native void getStatus(int id);
 
 	/**
+	 * Set the normal and expansion handshake timeouts.
+	 * 
+	 * @param id
+	 *            the id of the wiimote concerned.
+	 * @param nbWiimote
+	 *            Number of wiimotes connected.
+	 * @param normalTimeout
+	 *            The timeout in milliseconds for a normal read.
+	 * @param expansionTimeout
+	 *            The timeout in millisecondsd to wait for an expansion
+	 *            handshake.
+	 */
+	synchronized native void setTimeout(int id, int nbWiimote,
+			short normalTimeout, short expansionTimeout);
+	
+	/**
+	 * Set the IR sensitivity.
+	 * 
+	 * @param id
+	 *            the id of the wiimote concerned.
+	 * @param level
+	 *            1-5, same as Wii system sensitivity setting. If the level is <
+	 *            1, then level will be set to 1. If the level is > 5, then
+	 *            level will be set to 5.
+	 */
+	synchronized native void setIrSensitivity(int id, int level);
+	
+	/**
 	 * Check for new Events and Get it.
 	 * 
 	 * @param gath
 	 *            the object where we store all the new events.
 	 */
-	 native void specialPoll(EventsGatherer gath);
+	synchronized native void specialPoll(EventsGatherer gath);
 
 }

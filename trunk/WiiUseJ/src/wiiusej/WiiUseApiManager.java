@@ -386,6 +386,11 @@ public class WiiUseApiManager extends Thread {
 
 				/* Polling */
 				wiiuse.specialPoll(gather);
+				try {
+					wiiuse.notify();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 
 				/* deal with events gathered in Wiiuse API */
 				for (WiiUseApiEvent evt : gather.getEvents()) {
