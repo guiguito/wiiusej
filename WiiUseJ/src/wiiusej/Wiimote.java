@@ -19,12 +19,11 @@ package wiiusej;
 import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiuseapievents.DisconnectionEvent;
-import wiiusej.wiiuseapievents.StatusEvent;
 import wiiusej.wiiuseapievents.GenericEvent;
+import wiiusej.wiiuseapievents.StatusEvent;
 import wiiusej.wiiuseapievents.WiiUseApiEvent;
 import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapievents.WiimoteListener;
-import wiiusej.wiiuseapirequest.WiiUseApiRequest;
 
 /**
  * Class that represents a wiimote.
