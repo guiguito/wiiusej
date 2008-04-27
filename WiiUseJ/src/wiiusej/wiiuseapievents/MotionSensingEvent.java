@@ -58,6 +58,10 @@ public class MotionSensingEvent extends WiimoteEvent {
 	 *            pitch
 	 * @param ya
 	 *            yaw
+	 * @param ar
+	 *            absolute roll
+	 * @param ap
+	 *            absolute pitch
 	 * @param x
 	 *            gravity force on x axis
 	 * @param y
@@ -73,14 +77,14 @@ public class MotionSensingEvent extends WiimoteEvent {
 	 */
 	public MotionSensingEvent(int id, float orientationThreshold,
 			int accelerationThreshold, boolean smoothingState,
-			float alphaSmooth, float r, float p, float ya, float x, float y,
-			float z, short xx, short yy, short zz) {
+			float alphaSmooth, float r, float p, float ya, float ar, float ap,
+			float x, float y, float z, short xx, short yy, short zz) {
 		super(id);
 		this.orientationThreshold = orientationThreshold;
 		this.accelerationThreshold = accelerationThreshold;
 		this.isSmoothingActive = smoothingState;
 		this.alphaSmoothing = alphaSmooth;
-		setOrientationAndGforce(r, p, ya, x, y, z, xx, yy, zz);
+		setOrientationAndGforce(r, p, ya, ar, ap, x, y, z, xx, yy, zz);
 	}
 
 	/**
@@ -92,6 +96,10 @@ public class MotionSensingEvent extends WiimoteEvent {
 	 *            pitch
 	 * @param ya
 	 *            yaw
+	 * @param ar
+	 *            absolute roll
+	 * @param ap
+	 *            absolute pitch
 	 * @param x
 	 *            gravity force on x axis
 	 * @param y
@@ -105,9 +113,9 @@ public class MotionSensingEvent extends WiimoteEvent {
 	 * @param zz
 	 *            raw acceleration on z axis
 	 */
-	private void setOrientationAndGforce(float r, float p, float ya, float x,
-			float y, float z, short xx, short yy, short zz) {
-		this.orientation = new Orientation(r, p, ya);
+	private void setOrientationAndGforce(float r, float p, float ya, float ar,
+			float ap, float x, float y, float z, short xx, short yy, short zz) {
+		this.orientation = new Orientation(r, p, ya, ar, ap);
 		this.gforce = new GForce(x, y, z);
 		this.acceleration = new RawAcceleration(xx, yy, zz);
 	}

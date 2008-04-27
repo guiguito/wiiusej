@@ -176,6 +176,10 @@ public class GenericEvent extends WiiUseApiEvent {
 	 *            pitch
 	 * @param ya
 	 *            yaw
+	 * @param ar
+	 *            absolute roll
+	 * @param ap
+	 *            absolute pitch
 	 * @param x
 	 *            gravity force on x axis
 	 * @param y
@@ -191,11 +195,11 @@ public class GenericEvent extends WiiUseApiEvent {
 	 */
 	public void setMotionSensingEvent(float orientationThreshold,
 			int accelerationThreshold, boolean smoothingState,
-			float alphaSmooth, float r, float p, float ya, float x, float y,
-			float z, short xx, short yy, short zz) {
+			float alphaSmooth, float r, float p, float ya, float ar, float ap,
+			float x, float y, float z, short xx, short yy, short zz) {
 		motionSensingEvent = new MotionSensingEvent(getWiimoteId(),
 				orientationThreshold, accelerationThreshold, smoothingState,
-				alphaSmooth, r, p, ya, x, y, z, xx, yy, zz);
+				alphaSmooth, r, p, ya, ar, ap, x, y, z, xx, yy, zz);
 	}
 
 	@Override

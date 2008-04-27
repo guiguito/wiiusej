@@ -18,59 +18,100 @@ package wiiusej.values;
 
 /**
  * Class that represents the orientation of the wiimote.
+ * 
  * @author guiguito
  */
 public class Orientation {
-	
-		private float roll;
-		private float pitch;
-		private float yaw;
-		
-		/**
-		 * Default constructor.
-		 */
-		public Orientation(){
-			roll = 0;
-			pitch = 0;
-			yaw = 0;
-		}
-		
-		/**
-		 * Contructor with raw, pitch , yaw.
-		 * @param r raw
-		 * @param p pitch
-		 * @param y yaw
-		 */
-		public Orientation(float r, float p, float y){
-			roll = r;
-			pitch = p;
-			yaw = y;
-		}
-		
-		/**
-		 * @return the roll
-		 */
-		public float getRoll() {
-			return roll;
-		}
 
-		/**
-		 * @return the pitch
-		 */
-		public float getPitch() {
-			return pitch;
-		}
+	private float roll;
+	private float pitch;
+	private float yaw;
+	private float a_roll;
+	private float a_pitch;
 
-		/**
-		 * @return the yaw
-		 */
-		public float getYaw() {
-			return yaw;
-		}
-		
-		@Override
-		public String toString() {
-			return "Orientation : (roll: "+roll+", pitch: "+pitch+", yaw: "+yaw+")";			
-		}
-	
+	/**
+	 * Default constructor.
+	 */
+	public Orientation() {
+		roll = 0;
+		pitch = 0;
+		yaw = 0;
+		a_roll = 0;
+		a_pitch = 0;
+	}
+
+	/**
+	 * Contructor with raw, pitch , yaw.
+	 * 
+	 * @param r
+	 *            roll (can be smoothed)
+	 * @param p
+	 *            pitch (can be smoothed)
+	 * @param y
+	 *            yaw
+	 * @param ar
+	 *            absolute roll
+	 * @param ap
+	 *            absolute pitch
+	 */
+	public Orientation(float r, float p, float y, float ar, float ap) {
+		roll = r;
+		pitch = p;
+		yaw = y;
+		a_roll = ar;
+		a_pitch = ap;
+	}
+
+	/**
+	 * Get the roll (can be smoothed).
+	 * 
+	 * @return the roll
+	 */
+	public float getRoll() {
+		return roll;
+	}
+
+	/**
+	 * Get the pitch (can be smoothed).
+	 * 
+	 * @return the pitch
+	 */
+	public float getPitch() {
+		return pitch;
+	}
+
+	/**
+	 * Get the yaw.
+	 * 
+	 * @return the yaw
+	 */
+	public float getYaw() {
+		return yaw;
+	}
+
+	/**
+	 * Get absolute roll (can not be smoothed).
+	 * 
+	 * @return the a_roll
+	 */
+	public float getARoll() {
+		return a_roll;
+	}
+
+	/**
+	 * Get absolute pitch (can not be smoothed).
+	 * 
+	 * @return the a_pitch
+	 */
+	public float getAPitch() {
+		return a_pitch;
+	}
+
+	@Override
+	public String toString() {
+		return "Orientation : (roll: " + roll + ", pitch: " + pitch + ", yaw: "
+				+ yaw + ", absolute roll: " + a_roll + ", absolute pitch: "
+				+ a_pitch + ")";
+	}
+
 }
