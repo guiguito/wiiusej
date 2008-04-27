@@ -9,6 +9,30 @@ extern "C" {
 #endif
 /*
  * Class:     wiiusej_WiiUseApi
+ * Method:    connect
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_connect
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    find
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_find
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    init
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_init
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
  * Method:    doConnections
  * Signature: (IZ)I
  */
@@ -198,6 +222,22 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setVirtualScreenResolution
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
   (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setTimeout
+ * Signature: (IISS)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setTimeout
+  (JNIEnv *, jobject, jint, jint, jshort, jshort);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setIrSensitivity
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setIrSensitivity
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     wiiusej_WiiUseApi

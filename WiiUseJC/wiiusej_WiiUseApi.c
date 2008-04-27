@@ -47,6 +47,36 @@ static int nbMaxWiiMotes=0;
 /****************** GENERAL FUNCTIONS DEFINITIONS *************************/
 
 /**
+ * Connect to a wiimote or wiimotes once an address is known.
+ * @param nbWiimotes The number of wiimotes.
+ * @return The number of wiimotes that successfully connected.
+ */
+JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_connect
+  (JNIEnv *env, jobject obj, jint nbWiimotes){
+	return wiiuse_connect(wiimotes, nbWiimotes);
+}
+
+/**
+ * Find a wiimote or wiimotes.
+ * @param nbMaxWiimotes The number of wiimotes.
+ * @param timeout The number of seconds before the search times out.
+ * @return The number of wiimotes found.
+ */
+JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_find
+  (JNIEnv *env, jobject obj, jint nbMaxWiimotes, jint timeout){
+	return wiiuse_find(wiimotes, nbMaxWiimotes, timeout);
+}
+
+/**
+ * Initialize an array of wiimote structures (for the C side of the library).
+ * @param nbPossibleWiimotes size of the array.
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_init
+  (JNIEnv *env, jobject obj, jint nbPossibleWiimotes){
+	wiimotes = wiiuse_init(nbPossibleWiimotes);
+}
+
+/**
  * Try to connect to 2 wiimotes.
  * Make them rumble to show they are connected.
  * @param nbConnects number of connections maximum.
@@ -227,9 +257,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
 (JNIEnv *env, jobject obj, jint id, jint val) {
-	/*
-	 wiiuse_set_accel_threshold(wiimotes[id-1], val);
-	 */
+	wiiuse_set_accel_threshold(wiimotes[id-1], val);	
 }
 
 /**
@@ -350,6 +378,40 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 }
 
 /**
+ * Set the normal and expansion handshake timeouts.
+ * 
+ * @param id
+ *            the id of the wiimote concerned.
+ * @param nbWiimote
+ *            Number of wiimotes connected.
+ * @param normalTimeout
+ *            The timeout in milliseconds for a normal read.
+ * @param expansionTimeout
+ *            The timeout in millisecondsd to wait for an expansion
+ *            handshake.
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setTimeout
+  (JNIEnv *env, jobject obj, jint id, jint nbWiimote, jshort normalTimeout, jshort expansionTimeout){
+	wiiuse_set_timeout(wiimotes, nbWiimote, normalTimeout, expansionTimeout);
+}
+
+/**
+ * Set the IR sensitivity.
+ * 
+ * @param id
+ *            the id of the wiimote concerned.
+ * @param level
+ *            1-5, same as Wii system sensitivity setting. If the level is <
+ *            1, then level will be set to 1. If the level is > 5, then
+ *            level will be set to 5.
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setIrSensitivity
+  (JNIEnv *env, jobject obj, jint id, jint level){
+	wiiuse_set_ir_sensitivity(wiimotes[id-1], level);
+}
+
+
+/**
  * Get status and values from the wiimotes and send it through callbacks.
  * @param wim the wiimote object to fill with the datas.
  */
@@ -361,7 +423,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 	short leds = 0;
 	jclass cls = (*env)->GetObjectClass(env, gath);
 	jmethodID mid;
-
+	
 	if (wiiuse_poll(wiimotes, nbMaxWiiMotes)) {
 		/*
 		 *	This happens if something happened on any wiimote.
@@ -427,10 +489,11 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 							wiimotes[i]->orient_threshold, wiimotes[i]->accel_threshold,
 							WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING), wiimotes[i]->accel_calib.st_alpha,
 							wiimotes[i]->orient.roll, wiimotes[i]->orient.pitch, wiimotes[i]->orient.yaw,
+							wiimotes[i]->orient.a_roll, wiimotes[i]->orient.a_pitch,
 							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z,
 							wiimotes[i]->accel.x, wiimotes[i]->accel.y, wiimotes[i]->accel.z);
 				}
-
+ 
 				/* add generic event to java object used to gather events in c environment */
 				mid = (*env)->GetMethodID(env, cls, "addWiimoteEvent",
 						"()V");
