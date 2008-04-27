@@ -51,18 +51,18 @@ public class WiiUseApi {
 	 * @return 0 if there is an error otherwise it returns the number of
 	 *         wiimotes connected.
 	 */
-	native int doConnections(int nb, boolean rumble);
+	synchronized native int doConnections(int nb, boolean rumble);
 
 	/**
 	 * Close connection to the wiimote with the given id.
 	 * 
 	 */
-	native void closeConnection(int id);
+	synchronized native void closeConnection(int id);
 
 	/**
 	 * Shutdown Wiiuse API.
 	 */
-	native void shutdownApi();
+	synchronized native void shutdownApi();
 
 	/**
 	 * Activate rumble on the wiimote with the given id.
@@ -70,7 +70,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote.
 	 */
-	native void activateRumble(int id);
+	synchronized native void activateRumble(int id);
 
 	/**
 	 * Deactivate rumble on the wiimote with the given id.
@@ -78,7 +78,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote.
 	 */
-	native void deactivateRumble(int id);
+	synchronized native void deactivateRumble(int id);
 
 	/**
 	 * Activate IR Tracking on the wiimote with the given id.
@@ -86,7 +86,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote.
 	 */
-	native void activateIRTracking(int id);
+	synchronized native void activateIRTracking(int id);
 
 	/**
 	 * Deactivate IR Tracking on the wiimote with the given id.
@@ -94,7 +94,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote.
 	 */
-	native void deactivateIRTracking(int id);
+	synchronized native void deactivateIRTracking(int id);
 
 	/**
 	 * Activate motion sensing on the wiimote with the given id.
@@ -102,7 +102,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote.
 	 */
-	native void activateMotionSensing(int id);
+	synchronized native void activateMotionSensing(int id);
 
 	/**
 	 * Deactivate motion sensing on the wiimote with the given id.
@@ -110,7 +110,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote.
 	 */
-	native void deactivateMotionSensing(int id);
+	synchronized native void deactivateMotionSensing(int id);
 
 	/**
 	 * Set wiimote leds status.
@@ -126,7 +126,7 @@ public class WiiUseApi {
 	 * @param led4
 	 *            status of led4: True=ON, False=OFF
 	 */
-	native void setLeds(int id, boolean led1, boolean led2, boolean led3,
+	synchronized native void setLeds(int id, boolean led1, boolean led2, boolean led3,
 			boolean led4);
 
 	/**
@@ -137,7 +137,7 @@ public class WiiUseApi {
 	 * @param angle
 	 *            minimum angle detected by an event
 	 */
-	native void setOrientThreshold(int id, float angle);
+	synchronized native void setOrientThreshold(int id, float angle);
 
 	/**
 	 * Set how much acceleration must change to generate an event.
@@ -147,7 +147,7 @@ public class WiiUseApi {
 	 * @param value
 	 *            minimum value detected by an event
 	 */
-	native void setAccelThreshold(int id, int value);
+	synchronized native void setAccelThreshold(int id, int value);
 
 	/**
 	 * Set alpha smoothing parameter for the given id.
@@ -157,7 +157,7 @@ public class WiiUseApi {
 	 * @param value
 	 *            alpha smoothing value
 	 */
-	native void setAlphaSmoothing(int id, float value);
+	synchronized native void setAlphaSmoothing(int id, float value);
 
 	/**
 	 * Try to resync with the wiimote by starting a new handshake.
@@ -165,7 +165,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            id of the wiimote concerned
 	 */
-	native void reSync(int id);
+	synchronized native void reSync(int id);
 
 	/**
 	 * Make the the accelerometers give smoother results. This is set by
@@ -174,7 +174,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote concerned
 	 */
-	native void activateSmoothing(int id);
+	synchronized native void activateSmoothing(int id);
 
 	/**
 	 * Make the the accelerometers give raw results.
@@ -182,7 +182,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote concerned
 	 */
-	native void deactivateSmoothing(int id);
+	synchronized native void deactivateSmoothing(int id);
 
 	/**
 	 * Make the wiimote generate an event each time we poll. Not set by default.
@@ -190,7 +190,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote concerned
 	 */
-	native void activateContinuous(int id);
+	synchronized native void activateContinuous(int id);
 
 	/**
 	 * Make the wiimote generate an event only when there is one.
@@ -198,7 +198,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote concerned
 	 */
-	native void deactivateContinuous(int id);
+	synchronized native void deactivateContinuous(int id);
 
 	/**
 	 * Notify wiiuse that your screen has an aspect ratio of 4/3.
@@ -206,7 +206,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote of which we want the status.
 	 */
-	native void setScreenRatio43(int id);
+	synchronized native void setScreenRatio43(int id);
 
 	/**
 	 * Notify wiiuse that your screen has an aspect ratio of 16/9.
@@ -214,7 +214,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote of which we want the status.
 	 */
-	native void setScreenRatio169(int id);
+	synchronized native void setScreenRatio169(int id);
 
 	/**
 	 * Notify wiiuse that the sensor bar is above your screen.
@@ -222,7 +222,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote of which we want the status.
 	 */
-	native void setSensorBarAboveScreen(int id);
+	synchronized native void setSensorBarAboveScreen(int id);
 
 	/**
 	 * Notify wiiuse that the sensor bar is below your screen.
@@ -230,7 +230,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote of which we want the status.
 	 */
-	native void setSensorBarBelowScreen(int id);
+	synchronized native void setSensorBarBelowScreen(int id);
 
 	/**
 	 * Set virtual screen resolution. It is used to automatically compute the
@@ -244,7 +244,7 @@ public class WiiUseApi {
 	 * @param y
 	 *            y resolution.
 	 */
-	native void setVirtualScreenResolution(int id, int x, int y);
+	synchronized native void setVirtualScreenResolution(int id, int x, int y);
 
 	/**
 	 * Get status and values from the wiimotes and send it through callbacks.
@@ -252,7 +252,7 @@ public class WiiUseApi {
 	 * @param id
 	 *            the id of the wiimote of which we want the status.
 	 */
-	native void getStatus(int id);
+	synchronized native void getStatus(int id);
 
 	/**
 	 * Check for new Events and Get it.
@@ -260,6 +260,6 @@ public class WiiUseApi {
 	 * @param gath
 	 *            the object where we store all the new events.
 	 */
-	native void specialPoll(EventsGatherer gath);
+	 native void specialPoll(EventsGatherer gath);
 
 }
