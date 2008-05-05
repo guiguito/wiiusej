@@ -39,41 +39,36 @@ public class WiiUseApi {
 	static WiiUseApi getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Connect to a wiimote or wiimotes once an address is known.
-	 * @param nbWiimotes The number of wiimotes.
+	 * 
+	 * @param nbWiimotes
+	 *            The number of wiimotes.
 	 * @return The number of wiimotes that successfully connected.
 	 */
 	synchronized native int connect(int nbWiimotes);
-	
+
 	/**
 	 * Find a wiimote or wiimotes.
-	 * @param nbMaxWiimotes The number of wiimotes.
-	 * @param timeout The number of seconds before the search times out.
+	 * 
+	 * @param nbMaxWiimotes
+	 *            The number of wiimotes.
+	 * @param timeout
+	 *            The number of seconds before the search times out.
 	 * @return The number of wiimotes found.
 	 */
 	synchronized native int find(int nbMaxWiimotes, int timeout);
-	
+
 	/**
-	 * Initialize an array of wiimote structures (for the C side of the library).
-	 * @param nbPossibleWiimotes size of the array.
+	 * Initialize an array of wiimote structures (for the C side of the
+	 * library).
+	 * 
+	 * @param nbPossibleWiimotes
+	 *            size of the array.
 	 */
 	synchronized native void init(int nbPossibleWiimotes);
-	
-	/**
-	 * Try to connect to 2 wiimotes. Make them rumble to show they are
-	 * connected.
-	 * 
-	 * @param nb
-	 *            number of wiimotes to connect
-	 * @param rumble
-	 *            make the connected wiimotes rumble
-	 * @return 0 if there is an error otherwise it returns the number of
-	 *         wiimotes connected.
-	 */
-	synchronized native int doConnections(int nb, boolean rumble);
-	
+
 	/**
 	 * Close connection to the wiimote with the given id.
 	 * 
@@ -81,9 +76,21 @@ public class WiiUseApi {
 	synchronized native void closeConnection(int id);
 
 	/**
-	 * Shutdown Wiiuse API.
+	 * Get unique id of a wiimote in the wiimotes array. Please make sure you
+	 * call an existing index with a wiimote initialized at this index, other
+	 * wise you'll get a wrong value.
+	 * 
+	 * @param index
+	 *            index of the wiimote in the wiimotes array.
+	 * @return the unid of the wiimote, or a wrong value if the index was false.
+	 * 
 	 */
-	synchronized native void shutdownApi();
+	synchronized native int getUnId(int index);
+
+	/**
+	 * CleanUp Wiiuse API.
+	 */
+	synchronized native void cleanUp();
 
 	/**
 	 * Activate rumble on the wiimote with the given id.
@@ -280,17 +287,15 @@ public class WiiUseApi {
 	 * 
 	 * @param id
 	 *            the id of the wiimote concerned.
-	 * @param nbWiimote
-	 *            Number of wiimotes connected.
 	 * @param normalTimeout
 	 *            The timeout in milliseconds for a normal read.
 	 * @param expansionTimeout
 	 *            The timeout in millisecondsd to wait for an expansion
 	 *            handshake.
 	 */
-	synchronized native void setTimeout(int id, int nbWiimote,
-			short normalTimeout, short expansionTimeout);
-	
+	synchronized native void setTimeout(int id, short normalTimeout,
+			short expansionTimeout);
+
 	/**
 	 * Set the IR sensitivity.
 	 * 
@@ -302,13 +307,13 @@ public class WiiUseApi {
 	 *            level will be set to 5.
 	 */
 	synchronized native void setIrSensitivity(int id, int level);
-	
+
 	/**
 	 * Check for new Events and Get it.
 	 * 
 	 * @param gath
 	 *            the object where we store all the new events.
 	 */
-	synchronized native void specialPoll(EventsGatherer gath);
+	native void specialPoll(EventsGatherer gath);
 
 }

@@ -126,14 +126,18 @@ public class GenericEvent extends WiiUseApiEvent {
 	 *            aspect ratio of the screen.
 	 * @param screenAsPectRatio
 	 *            IR sensor bar position.
+	 * @param irSensitivity
+	 *            Sensitivity of the infrared camera.
+	 * @param distance
+	 *            Pixel Distance between first two dots
 	 */
 	public void prepareIRevent(int x, int y, int z, int ax, int ay, int xVRes,
 			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
-			short screenAsPectRatio) {
+			short screenAsPectRatio, short irSensitivity, float distance) {
 		if (infraredEvent == null) {
 			infraredEvent = new IREvent(getWiimoteId(), x, y, z, ax, ay, xVRes,
 					yVRes, xOffset, yOffset, sensorBarPostion,
-					screenAsPectRatio);
+					screenAsPectRatio, irSensitivity, distance);
 		}
 	}
 
