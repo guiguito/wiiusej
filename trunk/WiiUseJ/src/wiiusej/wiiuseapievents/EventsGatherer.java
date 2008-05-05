@@ -91,12 +91,17 @@ public class EventsGatherer {
 	 *            aspect ratio of the screen.
 	 * @param screenAsPectRatio
 	 *            IR sensor bar position.
+	 * @param irSensitivity
+	 *            Sensitivity of the infrared camera.
+	 * @param distance
+	 *            Pixel Distance between first two dots
 	 */
 	public void prepareIRevent(int x, int y, int z, int ax, int ay, int xVRes,
 			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
-			short screenAsPectRatio) {
+			short screenAsPectRatio, short irSensitivity, float distance) {
 		genericEvent.prepareIRevent(x, y, z, ax, ay, xVRes, yVRes, xOffset,
-				yOffset, sensorBarPostion, screenAsPectRatio);
+				yOffset, sensorBarPostion, screenAsPectRatio, irSensitivity,
+				distance);
 
 	}
 
@@ -159,8 +164,8 @@ public class EventsGatherer {
 	 */
 	public void addMotionSensingValues(float orientationThreshold,
 			int accelerationThreshold, boolean smoothingState,
-			float alphaSmooth, float r, float p, float ya, float ar, float ap, float x, float y,
-			float z, short xx, short yy, short zz) {
+			float alphaSmooth, float r, float p, float ya, float ar, float ap,
+			float x, float y, float z, short xx, short yy, short zz) {
 		if (genericEvent != null) {
 			genericEvent.setMotionSensingEvent(orientationThreshold,
 					accelerationThreshold, smoothingState, alphaSmooth, r, p,

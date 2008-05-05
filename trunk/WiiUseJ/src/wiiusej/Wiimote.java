@@ -26,40 +26,50 @@ import wiiusej.wiiuseapievents.WiiUseApiListener;
 import wiiusej.wiiuseapievents.WiimoteListener;
 
 /**
- * Class that represents a wiimote.
- * You can register as an observer of this wiimote to listen events from it.
- * You manage it.
+ * Class that represents a wiimote. You can register as an observer of this
+ * wiimote to listen events from it. You manage it.
+ * 
  * @author guiguito
  */
 public class Wiimote implements WiiUseApiListener {
 
-	private int id = -1;//wiimote id
-	
+	private int id = -1;// wiimote id
+
 	private EventListenerList listeners = new EventListenerList();
-	
+
 	private WiiUseApiManager manager;
-	
-	
+
 	/**
 	 * Constructor.
-	 * @param idd id of the wiimote
-	 * @param manager manager wo built it.
+	 * 
+	 * @param idd
+	 *            id of the wiimote
+	 * @param manager
+	 *            manager wo built it.
 	 */
-	public Wiimote(int idd, WiiUseApiManager manager){
+	public Wiimote(int idd, WiiUseApiManager manager) {
 		id = idd;
 		this.manager = manager;
 	}
-	
+
+	/**
+	 * Get the unique id of the wiimote.
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
 	/**
 	 * Disconnect this wiimote.
 	 */
-	public void disconnect(){
+	public void disconnect() {
 		deactivateIRTRacking();
 		deactivateMotionSensing();
 		deactivateRumble();
 		manager.closeConnection(id);
 	}
-	
+
 	/**
 	 * Activate the rumble.
 	 */
@@ -73,7 +83,7 @@ public class Wiimote implements WiiUseApiListener {
 	public void deactivateRumble() {
 		manager.deactivateRumble(id);
 	}
-	
+
 	/**
 	 * Activate IR Tracking.
 	 */
@@ -87,7 +97,7 @@ public class Wiimote implements WiiUseApiListener {
 	public void deactivateIRTRacking() {
 		manager.deactivateIRTRacking(id);
 	}
-	
+
 	/**
 	 * Activate motion sensing.
 	 */
@@ -101,7 +111,7 @@ public class Wiimote implements WiiUseApiListener {
 	public void deactivateMotionSensing() {
 		manager.deactivateMotionSensing(id);
 	}
-	
+
 	/**
 	 * Activate smoothing.
 	 */
@@ -128,9 +138,9 @@ public class Wiimote implements WiiUseApiListener {
 	 */
 	public void deactivateContinuous() {
 		manager.deactivateContinuous(id);
-		
+
 	}
-	
+
 	/**
 	 * Set leds status.
 	 * 
@@ -148,69 +158,74 @@ public class Wiimote implements WiiUseApiListener {
 	}
 
 	/**
-	 * Set the orientation threshold (minimum angle between two degrees with accelerometer).
+	 * Set the orientation threshold (minimum angle between two degrees with
+	 * accelerometer).
+	 * 
 	 * @param th
 	 *            threshold in degrees
 	 */
 	public void setOrientationThreshold(float th) {
-		manager.setOrientationThreshold(id,th);
+		manager.setOrientationThreshold(id, th);
 	}
-	
+
 	/**
 	 * Set the acceleration threshold .
+	 * 
 	 * @param th
 	 *            threshold
 	 */
 	public void setAccelerationThreshold(int th) {
-		manager.setAccelerationThreshold(id,th);
+		manager.setAccelerationThreshold(id, th);
 	}
-	
+
 	/**
 	 * Set the alpha smoothing value.
+	 * 
 	 * @param th
 	 *            threshold
 	 */
 	public void setAlphaSmoothingValue(float th) {
-		manager.setAlphaSmoothing(id,th);
+		manager.setAlphaSmoothing(id, th);
 	}
-	
+
 	/**
 	 * Set the screen aspect ratio to be considered as 4/3.
 	 */
 	public void setScreenAspectRatio43() {
 		manager.setScreenAspectRatio43(id);
 	}
-	
+
 	/**
 	 * Set the screen aspect ratio to be considered as 16/9.
 	 */
 	public void setScreenAspectRatio169() {
 		manager.setScreenAspectRatio169(id);
 	}
-	
+
 	/**
 	 * Set the sensor bar to be considered above the screen.
 	 */
 	public void setSensorBarAboveScreen() {
 		manager.setSensorBarAboveScreen(id);
 	}
-	
+
 	/**
 	 * Set the sensor bar to be considered below the screen.
 	 */
 	public void setSensorBarBelowScreen() {
 		manager.setSensorBarBelowScreen(id);
 	}
-	
+
 	/**
-	 * Set the screen resolution of the you are pointing at 
-	 * with your wiimote.
+	 * Set the screen resolution of the you are pointing at with your wiimote.
 	 * 
-	 * @param x x resolution.
-	 * @param y y resolution.
+	 * @param x
+	 *            x resolution.
+	 * @param y
+	 *            y resolution.
 	 */
 	public void setVirtualResolution(int x, int y) {
-		manager.setVirtualResolution(id, x ,y);
+		manager.setVirtualResolution(id, x, y);
 	}
 
 	/**
@@ -221,39 +236,55 @@ public class Wiimote implements WiiUseApiListener {
 	}
 
 	/**
-	 * Ask for the status of the wiimote.
-	 * The result will be received in a status event object.
-	 * Implements onStatusEvent on wiimote listener to get it.
+	 * Ask for the status of the wiimote. The result will be received in a
+	 * status event object. Implements onStatusEvent on wiimote listener to get
+	 * it.
 	 */
 	public void getStatus() {
 		manager.getStatus(id);
 	}
 	
 	/**
+	 * Set the IR sensitivity.
+	 * 
+	 * @param level
+	 *            1-5, same as Wii system sensitivity setting. If the level is <
+	 *            1, then level will be set to 1. If the level is > 5, then
+	 *            level will be set to 5.
+	 */
+	public void setIrSensitivity(int level) {
+		manager.setIrSensitivity(id, level);
+	}
+
+	/**
 	 * Method called when a WiiUseApiEvent occurs.
-	 * @param e the WiiUseApiEvent.
+	 * 
+	 * @param e
+	 *            the WiiUseApiEvent.
 	 */
 	public void onWiiUseApiEvent(WiiUseApiEvent e) {
-		if (e.getWiimoteId() == id){			
-			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT){
-				notifyWiiMoteEventListeners((GenericEvent)e);
-			}else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT
-					||e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED
-					||e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED
-					||e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED
-					||e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED
-					||e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED
-					||e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED){
-				notifyStatusEventListeners((StatusEvent)e);
-			}else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT){
-				notifyDisconnectionEventListeners((DisconnectionEvent)e);
-			}			
-		}		
-	}	
-	
+		if (e.getWiimoteId() == id) {
+			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT) {
+				notifyWiiMoteEventListeners((GenericEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT
+					|| e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED
+					|| e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED
+					|| e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED
+					|| e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED
+					|| e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED
+					|| e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED) {
+				notifyStatusEventListeners((StatusEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
+				notifyDisconnectionEventListeners((DisconnectionEvent) e);
+			}
+		}
+	}
+
 	/**
 	 * Add a WiimoteListener to the listeners list.
-	 * @param listener a WiimoteListener
+	 * 
+	 * @param listener
+	 *            a WiimoteListener
 	 */
 	public void addWiiMoteEventListeners(WiimoteListener listener) {
 		listeners.add(WiimoteListener.class, listener);
@@ -261,7 +292,9 @@ public class Wiimote implements WiiUseApiListener {
 
 	/**
 	 * Remove a WiimoteListener from the listeners list.
-	 * @param listener a WiimoteListener
+	 * 
+	 * @param listener
+	 *            a WiimoteListener
 	 */
 	public void removeWiiMoteEventListeners(WiimoteListener listener) {
 		listeners.remove(WiimoteListener.class, listener);
@@ -269,6 +302,7 @@ public class Wiimote implements WiiUseApiListener {
 
 	/**
 	 * Get the list of WiimoteListener.
+	 * 
 	 * @return the list of WiimoteListener.
 	 */
 	public WiimoteListener[] getWiiMoteEventListeners() {
@@ -276,47 +310,52 @@ public class Wiimote implements WiiUseApiListener {
 	}
 
 	/**
-	 * Notify WiimoteListeners that an event occured.
-	 * Notify in first the listeners for Buttons Events.
-	 * In second the listeners for IR Events.
-	 * In third the listeners for Motion sensing events.
-	 * @param evt WiimoteEvent occured
+	 * Notify WiimoteListeners that an event occured. Notify in first the
+	 * listeners for Buttons Events. In second the listeners for IR Events. In
+	 * third the listeners for Motion sensing events.
+	 * 
+	 * @param evt
+	 *            WiimoteEvent occured
 	 */
-	private void notifyWiiMoteEventListeners(GenericEvent evt) {		
-		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
+	private void notifyWiiMoteEventListeners(GenericEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
 			listener.onButtonsEvent(evt.getButtonsEvent());
-			if (evt.isThereIrEvent()){
-				listener.onIrEvent(evt.getIREvent());				
+			if (evt.isThereIrEvent()) {
+				listener.onIrEvent(evt.getIREvent());
 			}
-			if (evt.isThereMotionSensingEvent()){
-				listener.onMotionSensingEvent(evt.getMotionSensingEvent());				
+			if (evt.isThereMotionSensingEvent()) {
+				listener.onMotionSensingEvent(evt.getMotionSensingEvent());
 			}
 		}
 	}
-	
+
 	/**
 	 * Notify WiimoteListener that a status event occured.
-	 * @param evt status event occured
+	 * 
+	 * @param evt
+	 *            status event occured
 	 */
-	private void notifyStatusEventListeners(StatusEvent evt) {		
-		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
+	private void notifyStatusEventListeners(StatusEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
 			listener.onStatusEvent(evt);
 		}
 	}
-	
+
 	/**
 	 * Notify WiimoteListener that a status event occured.
-	 * @param evt status event occured
+	 * 
+	 * @param evt
+	 *            status event occured
 	 */
-	private void notifyDisconnectionEventListeners(DisconnectionEvent evt) {		
-		for (WiimoteListener listener : getWiiMoteEventListeners()) {			
+	private void notifyDisconnectionEventListeners(DisconnectionEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
 			listener.onDisconnectionEvent(evt);
 		}
 	}
-	
+
 	@Override
-	public String toString() {		
-		return "Wiimote with ID : "+id;
-	}	
+	public String toString() {
+		return "Wiimote with ID : " + id;
+	}
 
 }

@@ -39,6 +39,8 @@ public class IREvent extends WiimoteEvent {
 	private int yOffset;
 	private short sensorBarPostion;
 	private short screenAsPectRatio;
+	private short irSensitivity;
+	private float distance;
 
 	static private short WIIUSE_IR_ABOVE = 0;
 	static private short WIIUSE_IR_BELOW = 1;
@@ -74,10 +76,14 @@ public class IREvent extends WiimoteEvent {
 	 *            aspect ratio of the screen.
 	 * @param screenAsPectRatio
 	 *            IR sensor bar position.
+	 * @param irSensitivity
+	 *            Sensitivity of the infrared camera.
+	 * @param distance
+	 *            Pixel Distance between first two dots
 	 */
 	public IREvent(int id, int x, int y, int z, int ax, int ay, int xVRes,
 			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
-			short screenAsPectRatio) {
+			short screenAsPectRatio, short irSensitivity, float distance) {
 		super(id);
 		this.x = x;
 		this.y = y;
@@ -90,6 +96,8 @@ public class IREvent extends WiimoteEvent {
 		this.yOffset = yOffset;
 		this.sensorBarPostion = sensorBarPostion;
 		this.screenAsPectRatio = screenAsPectRatio;
+		this.irSensitivity = irSensitivity;
+		this.distance = distance;
 		IRPoints = new IRSource[NB_POINTS];
 	}
 
@@ -246,6 +254,27 @@ public class IREvent extends WiimoteEvent {
 	 */
 	public short getScreenAsPectRatio() {
 		return screenAsPectRatio;
+	}
+
+	/**
+	 * The sensitivity of the IR camera can be turned up or down depending on
+	 * your needs. Like the Wii, wiiusej and wiiuse can set the camera
+	 * sensitivity to a degree between 1 (lowest) and 5 (highest). The default
+	 * is 3.
+	 * 
+	 * @return the irSensitivity
+	 */
+	public short getIrSensitivity() {
+		return irSensitivity;
+	}
+
+	/**
+	 * Pixel distance between first 2 dots.
+	 * 
+	 * @return the distance between first 2 dots.
+	 */
+	public float getDistance() {
+		return distance;
 	}
 
 	@Override

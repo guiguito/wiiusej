@@ -24,10 +24,10 @@ package wiiusej.wiiuseapievents;
  */
 public class StatusEvent extends WiiUseApiEvent {
 
-	private static short WIIMOTE_LED_1 = 1;
-	private static short WIIMOTE_LED_2 = 2;
-	private static short WIIMOTE_LED_3 = 4;
-	private static short WIIMOTE_LED_4 = 8;
+	protected static short WIIMOTE_LED_1 = 1;
+	protected static short WIIMOTE_LED_2 = 2;
+	protected static short WIIMOTE_LED_3 = 4;
+	protected static short WIIMOTE_LED_4 = 8;
 
 	/* ATTACHMENT CONSTANTS */
 
@@ -130,6 +130,19 @@ public class StatusEvent extends WiiUseApiEvent {
 	public short getLeds() {
 		return leds;
 	}
+	
+	/**
+	 * Tells if the given led is turned on according to the leds status int.
+	 * @param led the int encoding a led.
+	 * @return true if the led is turned on false otherwise.
+	 */
+	private boolean ledStatusCheck(short led) {
+		if ((leds & led) > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Get led1 status.
@@ -137,11 +150,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if the led is set.
 	 */
 	public boolean isLed1Set() {
-		if ((leds & WIIMOTE_LED_1) > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return ledStatusCheck(WIIMOTE_LED_1);
 	}
 
 	/**
@@ -150,11 +159,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if the led is set.
 	 */
 	public boolean isLed2Set() {
-		if ((leds & WIIMOTE_LED_2) > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return ledStatusCheck(WIIMOTE_LED_2);
 	}
 
 	/**
@@ -163,11 +168,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if the led is set.
 	 */
 	public boolean isLed3Set() {
-		if ((leds & WIIMOTE_LED_3) > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return ledStatusCheck(WIIMOTE_LED_3);
 	}
 
 	/**
@@ -176,11 +177,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if the led is set.
 	 */
 	public boolean isLed4Set() {
-		if ((leds & WIIMOTE_LED_4) > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return ledStatusCheck(WIIMOTE_LED_4);
 	}
 
 	/**

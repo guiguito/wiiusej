@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiuseapievents.EventsGatherer;
+import wiiusej.wiiuseapievents.StatusEvent;
 import wiiusej.wiiuseapievents.WiiUseApiEvent;
 import wiiusej.wiiuseapievents.WiiUseApiListener;
 
@@ -63,10 +64,38 @@ public class WiiUseApiManager extends Thread {
 		if (manager.connected <= 0 && !manager.running.get()) {
 			int nbWiimotes = manager.connectWiimotes(nb, rumble);
 			manager.wiimotes = new Wiimote[nbWiimotes];
-			for (int i = 1; i <= nbWiimotes; i++) {
-				Wiimote wim = new Wiimote(i, manager);
-				manager.wiimotes[i - 1] = wim;
-				manager.addWiiUseApiListener(wim);
+			for (int i = 0; i < nbWiimotes; i++) {
+				Wiimote wim = new Wiimote(WiiUseApi.getInstance().getUnId(i),
+						manager);
+				manager.wiimotes[i] = wim;
+				manager.addWiiUseApiListener(wim);				
+			}
+			//Set leds on wiimote
+			for (Wiimote wiimote : manager.wiimotes) {
+				int id = wiimote.getId();
+				short leds = 0;
+				if (id%4==0){
+					wiimote.setLeds(true, true, true, true);
+				}else if (id%4==1){
+					wiimote.setLeds(true, false, false, false);
+				}else if (id%4==2){
+					wiimote.setLeds(true, true, false, false);
+				}else if (id%4==3){
+					wiimote.setLeds(true, true, true, false);
+				}			
+			}
+			//make the connected wiimotes rumble
+			if (rumble) {
+				for (Wiimote wiimote : manager.wiimotes) {		
+					wiimote.activateRumble();
+				}
+				try {
+					sleep(500);
+				} catch (InterruptedException e) {					
+				}
+				for (Wiimote wiimote : manager.wiimotes) {
+					wiimote.deactivateRumble();
+				}
 			}
 		}
 
@@ -92,7 +121,10 @@ public class WiiUseApiManager extends Thread {
 	 */
 	private int connectWiimotes(int nb, boolean rumble) {
 		if (connected <= 0) {
-			connected = wiiuse.doConnections(nb, rumble);
+			int nbWiimotesFound;
+			wiiuse.init(nb);
+			nbWiimotesFound = wiiuse.find(nb, 3);
+			connected = wiiuse.connect(nbWiimotesFound);
 			return connected;
 		} else {// library not loaded, no wiimotes connected
 			return 0;
@@ -106,17 +138,26 @@ public class WiiUseApiManager extends Thread {
 	 *            id of the wiimote to disconnect.
 	 */
 	public void closeConnection(int id) {
-		removeWiiUseApiListener(wiimotes[id - 1]);
-		wiimotes[id - 1] = null;
-		connected--;
-		if (connected == 0) {// stop this thread if there is
-			// no more wiimotes connected.
-			// stop thread
-			shutdown();
+		int index = 0;
+		boolean found = false;
+		while (index < wiimotes.length && !found) {
+			if (wiimotes[index].getId() == id) {// we have a wiimote with this
+				// id
+				// remove the wiimote
+				removeWiiUseApiListener(wiimotes[index]);
+				wiimotes[index] = null;
+				connected--;
+				if (connected == 0) {// stop this thread if there is
+					// no more wiimotes connected.
+					// stop thread
+					shutdown();
+				}
+				/* Close connection in wiiuse */
+				wiiuse.closeConnection(index);
+			}
+			index++;
 		}
 
-		/* Close connections requests */
-		wiiuse.closeConnection(id);
 	}
 
 	/**
@@ -139,7 +180,7 @@ public class WiiUseApiManager extends Thread {
 			}
 		}
 		running.set(false);
-		wiiuse.shutdownApi();
+		wiiuse.cleanUp();
 	}
 
 	/**
@@ -372,6 +413,35 @@ public class WiiUseApiManager extends Thread {
 		wiiuse.getStatus(id);
 	}
 
+	/**
+	 * Set the normal and expansion handshake timeouts.
+	 * 
+	 * @param id
+	 *            the id of the wiimote concerned.
+	 * @param normalTimeout
+	 *            The timeout in milliseconds for a normal read.
+	 * @param expansionTimeout
+	 *            The timeout in millisecondsd to wait for an expansion
+	 *            handshake.
+	 */
+	public void setTimeout(int id, short normalTimeout, short expansionTimeout) {
+		wiiuse.setTimeout(id, normalTimeout, expansionTimeout);
+	}
+
+	/**
+	 * Set the IR sensitivity.
+	 * 
+	 * @param id
+	 *            the id of the wiimote concerned.
+	 * @param level
+	 *            1-5, same as Wii system sensitivity setting. If the level is <
+	 *            1, then level will be set to 1. If the level is > 5, then
+	 *            level will be set to 5.
+	 */
+	public void setIrSensitivity(int id, int level) {
+		wiiuse.setIrSensitivity(id, level);
+	}
+
 	@Override
 	public void run() {
 
@@ -386,11 +456,6 @@ public class WiiUseApiManager extends Thread {
 
 				/* Polling */
 				wiiuse.specialPoll(gather);
-				try {
-					wiiuse.notify();
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
 
 				/* deal with events gathered in Wiiuse API */
 				for (WiiUseApiEvent evt : gather.getEvents()) {
@@ -457,6 +522,13 @@ public class WiiUseApiManager extends Thread {
 		for (WiiUseApiListener listener : getWiiUseApiListeners()) {
 			listener.onWiiUseApiEvent(evt);
 		}
+	}
+
+	/**
+	 * Called by the garbage collector at the end.
+	 */
+	protected void finalize() throws Throwable {
+		shutdown();
 	}
 
 }
