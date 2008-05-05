@@ -15,9 +15,9 @@
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef WIN32
-	#include <unistd.h>
+#include <unistd.h>
 #else
-	
+
 #endif
 
 #include "wiiusej_WiiUseApi.h"
@@ -31,6 +31,15 @@
 #define WIIMOTE_STATE_CONNECTED			0x04
 #define WIIMOTE_IS_SET(wm, s)			((wm->state & (s)) == (s))
 #define WIIMOTE_IS_FLAG_SET(wm, s)		((wm->flags & (s)) == (s))
+#define WIIUSE_GET_IR_SENSITIVITY_CORRECTED(wm, lvl)									\
+			do {														\
+				if ((wm->state & 0x0200) == 0x0200) 		*lvl = 1;	\
+				else if ((wm->state & 0x0400) == 0x0400) 	*lvl = 2;	\
+				else if ((wm->state & 0x0800) == 0x0800) 	*lvl = 3;	\
+				else if ((wm->state & 0x1000) == 0x1000) 	*lvl = 4;	\
+				else if ((wm->state & 0x2000) == 0x2000) 	*lvl = 5;	\
+				else									*lvl = 0;		\
+			} while (0)
 
 /********************* VARIABLES DECLARATIONS *****************************/
 
@@ -41,8 +50,7 @@
  *	will get one of these ids.
  */
 static wiimote** wiimotes;
-
-static int nbMaxWiiMotes=0;
+static int nbMaxWiimotes;
 
 /****************** GENERAL FUNCTIONS DEFINITIONS *************************/
 
@@ -52,7 +60,7 @@ static int nbMaxWiiMotes=0;
  * @return The number of wiimotes that successfully connected.
  */
 JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_connect
-  (JNIEnv *env, jobject obj, jint nbWiimotes){
+(JNIEnv *env, jobject obj, jint nbWiimotes) {
 	return wiiuse_connect(wiimotes, nbWiimotes);
 }
 
@@ -63,7 +71,7 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_connect
  * @return The number of wiimotes found.
  */
 JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_find
-  (JNIEnv *env, jobject obj, jint nbMaxWiimotes, jint timeout){
+(JNIEnv *env, jobject obj, jint nbMaxWiimotes, jint timeout) {
 	return wiiuse_find(wiimotes, nbMaxWiimotes, timeout);
 }
 
@@ -72,79 +80,9 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_find
  * @param nbPossibleWiimotes size of the array.
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_init
-  (JNIEnv *env, jobject obj, jint nbPossibleWiimotes){
+(JNIEnv *env, jobject obj, jint nbPossibleWiimotes) {
 	wiimotes = wiiuse_init(nbPossibleWiimotes);
-}
-
-/**
- * Try to connect to 2 wiimotes.
- * Make them rumble to show they are connected.
- * @param nbConnects number of connections maximum.
- * @param rumble
- * 			make the connected wiimotes rumble.
- * @return 0 if there is an error otherwise it returns 
- * 			the number of wiimotes connected..
- */
-JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
-(JNIEnv *env, jobject obj, jint nbConnects, jboolean rumble) {
-
-	/* variables declarations */
-	int found, connected, i;
-	short leds;
-
-	nbMaxWiiMotes = nbConnects;
-
-	/* initialize wiimotes array with the maximum number of wiimotes */
-	wiimotes = wiiuse_init(nbMaxWiiMotes);
-
-	/*
-	 *	Find wiimote devices
-	 *	Now we need to find some wiimotes.
-	 *	Give the function the wiimote array we created, and tell it there
-	 *	are 2 wiimotes we are interested in.
-	 *	Set the timeout to be 5 seconds.
-	 *	This will return the number of actual wiimotes that are in discovery mode.
-	 */
-	found = wiiuse_find(wiimotes, nbMaxWiiMotes, 5);
-	if (!found) return 0;
-
-	/*
-	 *	Connect to the wiimotes
-	 *	Now that we found some wiimotes, connect to them.
-	 *	Give the function the wiimote array and the number of wiimote devices we found.
-	 *	This will return the number of established connections to the found wiimotes.
-	 */
-	connected = wiiuse_connect(wiimotes, nbMaxWiiMotes);
-	if (!connected) return 0;
-
-	//no problems during connection show that wiimotes are connected
-
-	/*
-	 *	Now set the LEDs and rumble for a second so it's easy
-	 *	to tell which wiimotes are connected (just like the wii does).
-	 */
-	for (i=0;i<nbMaxWiiMotes;i++) {
-		leds = 0;
-		if (i%4==0) leds |= WIIMOTE_LED_1;
-		else if (i%4==1) leds |= WIIMOTE_LED_2;
-		else if (i%4==2) leds |= WIIMOTE_LED_3;
-		else if (i%4==3) leds |= WIIMOTE_LED_4;
-		wiiuse_set_leds(wiimotes[i], leds);
-		if (rumble) wiiuse_rumble(wiimotes[i], 1);
-	}
-	if (rumble) {
-		#ifndef WIN32
-			usleep(200000);
-		#else
-			Sleep(200);
-		#endif	
-		for (i=0;i<nbMaxWiiMotes;i++) {
-			wiiuse_rumble(wiimotes[i], 0);
-		}
-	}
-
-	//no pb connecting leave	
-	return connected;
+	nbMaxWiimotes = nbPossibleWiimotes;
 }
 
 /**
@@ -154,16 +92,27 @@ JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_closeConnection
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_disconnect(wiimotes[id-1]);
+	wiiuse_disconnect(wiimotes[id]);
+}
+
+/**
+ * Get unique id of a wiimote in the wiimotes array.
+ * Please make sure you call an existing index with a 
+ * wiimote initialized at this index,
+ * other wise you'll get a wrong value.
+ * @param index index of the wiimote in the wiimotes array. 
+ */
+JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_getUnId
+(JNIEnv *env, jobject obj, jint index) {
+	return wiimotes[index]->unid;
 }
 
 /**
  * Shutdown api.
  */
-JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_shutdownApi
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_cleanUp
 (JNIEnv *env, jobject obj) {
-	//wiiuse_shutdown();
-	wiiuse_cleanup(wiimotes, nbMaxWiiMotes);
+	wiiuse_cleanup(wiimotes, nbMaxWiimotes);
 }
 
 /**
@@ -172,7 +121,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_shutdownApi
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateRumble
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_rumble(wiimotes[id-1], 1);
+	wiiuse_rumble(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 1);
 }
 
 /**
@@ -181,7 +130,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateRumble
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateRumble
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_rumble(wiimotes[id-1], 0);
+	wiiuse_rumble(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 0);
 }
 
 /**
@@ -190,7 +139,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateRumble
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateIRTracking
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir(wiimotes[id-1], 1);
+	wiiuse_set_ir(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 1);
 }
 
 /**
@@ -199,7 +148,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateIRTracking
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateIRTracking
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir(wiimotes[id-1], 0);
+	wiiuse_set_ir(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 0);
 }
 
 /**
@@ -208,7 +157,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateIRTracking
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateMotionSensing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_motion_sensing(wiimotes[id-1], 1);
+	wiiuse_motion_sensing(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 1);
 }
 
 /**
@@ -217,7 +166,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateMotionSensing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateMotionSensing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_motion_sensing(wiimotes[id-1], 0);
+	wiiuse_motion_sensing(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 0);
 }
 
 /**
@@ -237,7 +186,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
 	if (led3) leds |= WIIMOTE_LED_3;
 	if (led4) leds |= WIIMOTE_LED_4;
 
-	wiiuse_set_leds(wiimotes[id-1], leds);
+	wiiuse_set_leds(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), leds);
 }
 
 /**
@@ -247,7 +196,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 (JNIEnv *env, jobject obj, jint id, jfloat thresh) {
-	wiiuse_set_orient_threshold(wiimotes[id-1], thresh);
+	wiiuse_set_orient_threshold(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), thresh);
 }
 
 /**
@@ -257,7 +206,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
 (JNIEnv *env, jobject obj, jint id, jint val) {
-	wiiuse_set_accel_threshold(wiimotes[id-1], val);	
+	wiiuse_set_accel_threshold(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), val);
 }
 
 /**
@@ -267,7 +216,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAlphaSmoothing
 (JNIEnv *env, jobject obj, jint id, jfloat val) {
-	wiiuse_set_smooth_alpha(wiimotes[id-1], val);
+	wiiuse_set_smooth_alpha(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), val);
 }
 
 /**
@@ -276,7 +225,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAlphaSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_reSync
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_resync(wiimotes[id-1]);
+	wiiuse_resync(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id));
 }
 
 /**
@@ -286,7 +235,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_reSync
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateSmoothing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], WIIUSE_SMOOTHING, 0);
+	wiiuse_set_flags(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), WIIUSE_SMOOTHING, 0);
 }
 
 /**
@@ -295,7 +244,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateSmoothing
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], 0, WIIUSE_SMOOTHING);
+	wiiuse_set_flags(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 0, WIIUSE_SMOOTHING);
 }
 
 /**
@@ -305,7 +254,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateSmoothing
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateContinuous
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], WIIUSE_CONTINUOUS, 0);
+	wiiuse_set_flags(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), WIIUSE_CONTINUOUS, 0);
 }
 
 /**
@@ -315,7 +264,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_activateContinuous
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_flags(wiimotes[id-1], 0, WIIUSE_CONTINUOUS);
+	wiiuse_set_flags(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), 0, WIIUSE_CONTINUOUS);
 }
 
 /**
@@ -324,7 +273,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_deactivateContinuous
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio43
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_aspect_ratio(wiimotes[id-1], WIIUSE_ASPECT_4_3);
+	wiiuse_set_aspect_ratio(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), WIIUSE_ASPECT_4_3);
 }
 
 /**
@@ -333,7 +282,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio43
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio169
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_aspect_ratio(wiimotes[id-1], WIIUSE_ASPECT_4_3);
+	wiiuse_set_aspect_ratio(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), WIIUSE_ASPECT_4_3);
 }
 
 /**
@@ -342,7 +291,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setScreenRatio169
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarAboveScreen
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir_position(wiimotes[id-1], WIIUSE_IR_ABOVE);
+	wiiuse_set_ir_position(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), WIIUSE_IR_ABOVE);
 }
 
 /**
@@ -351,7 +300,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarAboveScreen
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarBelowScreen
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_set_ir_position(wiimotes[id-1], WIIUSE_IR_BELOW);
+	wiiuse_set_ir_position(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), WIIUSE_IR_BELOW);
 }
 
 /**
@@ -364,7 +313,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setSensorBarBelowScreen
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setVirtualScreenResolution
 (JNIEnv *env, jobject obj, jint id, jint x, jint y) {
-	wiiuse_set_ir_vres(wiimotes[id-1], x, y);
+	wiiuse_set_ir_vres(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), x, y);
 }
 
 /**
@@ -374,7 +323,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setVirtualScreenResolution
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 (JNIEnv *env, jobject obj, jint id) {
-	wiiuse_status(wiimotes[id-1]);
+	wiiuse_status(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id));
 }
 
 /**
@@ -382,8 +331,6 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
  * 
  * @param id
  *            the id of the wiimote concerned.
- * @param nbWiimote
- *            Number of wiimotes connected.
  * @param normalTimeout
  *            The timeout in milliseconds for a normal read.
  * @param expansionTimeout
@@ -391,8 +338,8 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
  *            handshake.
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setTimeout
-  (JNIEnv *env, jobject obj, jint id, jint nbWiimote, jshort normalTimeout, jshort expansionTimeout){
-	wiiuse_set_timeout(wiimotes, nbWiimote, normalTimeout, expansionTimeout);
+(JNIEnv *env, jobject obj, jint id, jshort normalTimeout, jshort expansionTimeout) {
+	wiiuse_set_timeout(wiimotes, nbMaxWiimotes, normalTimeout, expansionTimeout);
 }
 
 /**
@@ -406,10 +353,9 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setTimeout
  *            level will be set to 5.
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setIrSensitivity
-  (JNIEnv *env, jobject obj, jint id, jint level){
-	wiiuse_set_ir_sensitivity(wiimotes[id-1], level);
+(JNIEnv *env, jobject obj, jint id, jint level) {
+	wiiuse_set_ir_sensitivity(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), level);
 }
-
 
 /**
  * Get status and values from the wiimotes and send it through callbacks.
@@ -423,13 +369,13 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 	short leds = 0;
 	jclass cls = (*env)->GetObjectClass(env, gath);
 	jmethodID mid;
-	
-	if (wiiuse_poll(wiimotes, nbMaxWiiMotes)) {
+
+	if (wiiuse_poll(wiimotes, nbMaxWiimotes)) {
 		/*
 		 *	This happens if something happened on any wiimote.
 		 *	So go through each one and check if anything happened.
 		 */
-		for (i=0; i < nbMaxWiiMotes; ++i) {
+		for (i=0; i < nbMaxWiimotes; ++i) {
 			switch (wiimotes[i]->event) {
 				case WIIUSE_EVENT:
 				/* a generic event occured */
@@ -446,10 +392,11 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				 *	Also make sure that we see at least 1 dot.
 				 */
 				if (WIIUSE_USING_IR(wiimotes[i])) {
-					int a = 0;
+					int a;
+					WIIUSE_GET_IR_SENSITIVITY_CORRECTED(wiimotes[i], &a);
 
 					mid = (*env)->GetMethodID(env, cls, "prepareIRevent",
-							"(IIIIIIIIISS)V");
+							"(IIIIIIIIISSSF)V");
 					if (mid == 0) {
 						return;
 					}
@@ -458,7 +405,8 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 							wiimotes[i]->ir.ax, wiimotes[i]->ir.ay,
 							wiimotes[i]->ir.vres[0], wiimotes[i]->ir.vres[1],
 							wiimotes[i]->ir.offset[0], wiimotes[i]->ir.offset[1],
-							wiimotes[i]->ir.pos, wiimotes[i]->ir.aspect);
+							wiimotes[i]->ir.pos, wiimotes[i]->ir.aspect,
+							a , wiimotes[i]->ir.distance);
 
 					mid = (*env)->GetMethodID(env, cls, "addIRPointToPreparedWiiMoteEvent",
 							"(IISSS)V");
@@ -466,7 +414,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 						return;
 					}
 					/* go through each of the 4 possible IR sources */
-					for (; a < 4; a++) {
+					for (a=0; a < 4; a++) {
 						/* check if the source is visible */
 						if (wiimotes[i]->ir.dot[a].visible) {
 							(*env)->CallVoidMethod(env, gath, mid,
@@ -481,7 +429,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				if (WIIUSE_USING_ACC(wiimotes[i])) {
 					/* set orientation and gravity force */
 					mid = (*env)->GetMethodID(env, cls,
-							"addMotionSensingValues", "(FIZFFFFFFFSSS)V");
+							"addMotionSensingValues", "(FIZFFFFFFFFFSSS)V");
 					if (mid == 0) {
 						return;
 					}
@@ -493,7 +441,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z,
 							wiimotes[i]->accel.x, wiimotes[i]->accel.y, wiimotes[i]->accel.z);
 				}
- 
+
 				/* add generic event to java object used to gather events in c environment */
 				mid = (*env)->GetMethodID(env, cls, "addWiimoteEvent",
 						"()V");
@@ -524,6 +472,15 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				break;
 
 				case WIIUSE_DISCONNECT:
+				/* the wiimote disconnected */
+				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_UNEXPECTED_DISCONNECT:
 				/* the wiimote disconnected */
 				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
 				if (mid == 0) {

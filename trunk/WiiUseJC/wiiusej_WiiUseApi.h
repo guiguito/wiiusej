@@ -33,14 +33,6 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_init
 
 /*
  * Class:     wiiusej_WiiUseApi
- * Method:    doConnections
- * Signature: (IZ)I
- */
-JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_doConnections
-  (JNIEnv *, jobject, jint, jboolean);
-
-/*
- * Class:     wiiusej_WiiUseApi
  * Method:    closeConnection
  * Signature: (I)V
  */
@@ -49,10 +41,18 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_closeConnection
 
 /*
  * Class:     wiiusej_WiiUseApi
- * Method:    shutdownApi
+ * Method:    getUnId
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_wiiusej_WiiUseApi_getUnId
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    cleanUp
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_shutdownApi
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_cleanUp
   (JNIEnv *, jobject);
 
 /*
@@ -229,7 +229,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
  * Signature: (IISS)V
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setTimeout
-  (JNIEnv *, jobject, jint, jint, jshort, jshort);
+  (JNIEnv *, jobject, jint, jshort, jshort);
 
 /*
  * Class:     wiiusej_WiiUseApi
