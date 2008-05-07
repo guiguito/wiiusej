@@ -23,12 +23,11 @@ import java.awt.event.InputEvent;
 import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
 import wiiusej.values.IRSource;
-import wiiusej.wiiuseapievents.ButtonsEvent;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.WiimoteButtonsEvent;
 import wiiusej.wiiuseapievents.IREvent;
 import wiiusej.wiiuseapievents.MotionSensingEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
-import wiiusej.wiiuseapievents.GenericEvent;
 import wiiusej.wiiuseapievents.WiimoteListener;
 
 /**
@@ -61,7 +60,7 @@ public class Tests implements WiimoteListener {
 
 	private static int nb = 0;
 
-	public void onButtonsEvent(ButtonsEvent e) {
+	public void onButtonsEvent(WiimoteButtonsEvent e) {
 		if (dump == DISPLAY_EACH_VALUE) {
 			// System.out.println("*********** WIIMOTE ID : "+
 			// e.getWiimoteId() + " **************");

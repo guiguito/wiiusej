@@ -21,14 +21,15 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import wiiusej.utils.IRPanel;
+
 import wiiusej.Wiimote;
 import wiiusej.utils.AccelerationPanel;
-import wiiusej.utils.GForcePanel;
 import wiiusej.utils.ButtonsEventPanel;
+import wiiusej.utils.GForcePanel;
+import wiiusej.utils.IRPanel;
 import wiiusej.utils.OrientationPanel;
-import wiiusej.wiiuseapievents.ButtonsEvent;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.WiimoteButtonsEvent;
 import wiiusej.wiiuseapievents.IREvent;
 import wiiusej.wiiuseapievents.MotionSensingEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
@@ -63,7 +64,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         this.addWindowListener(new CloseGuiTestCleanly(wiimote));
     }
 
-    public void onButtonsEvent(ButtonsEvent arg0) {
+    public void onButtonsEvent(WiimoteButtonsEvent arg0) {
         if (robot != null) {
             if (arg0.isButtonAPressed()) {
                 robot.mousePress(InputEvent.BUTTON1_MASK);

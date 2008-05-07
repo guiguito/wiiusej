@@ -21,7 +21,7 @@ package wiiusej.wiiuseapievents;
  * 
  * @author guiguito
  */
-public abstract class WiiUseApiEvent extends WiimoteEvent{
+public abstract class WiiUseApiEvent extends GenericEvent{
 	
 	public static int GENERIC_EVENT = 1;
 	public static int STATUS_EVENT = 2;

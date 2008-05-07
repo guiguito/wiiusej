@@ -19,7 +19,7 @@ package wiiusej;
 import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiuseapievents.DisconnectionEvent;
-import wiiusej.wiiuseapievents.GenericEvent;
+import wiiusej.wiiuseapievents.WiimoteEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
 import wiiusej.wiiuseapievents.WiiUseApiEvent;
 import wiiusej.wiiuseapievents.WiiUseApiListener;
@@ -265,7 +265,7 @@ public class Wiimote implements WiiUseApiListener {
 	public void onWiiUseApiEvent(WiiUseApiEvent e) {
 		if (e.getWiimoteId() == id) {
 			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT) {
-				notifyWiiMoteEventListeners((GenericEvent) e);
+				notifyWiiMoteEventListeners((WiimoteEvent) e);
 			} else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT
 					|| e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED
 					|| e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED
@@ -315,9 +315,9 @@ public class Wiimote implements WiiUseApiListener {
 	 * third the listeners for Motion sensing events.
 	 * 
 	 * @param evt
-	 *            WiimoteEvent occured
+	 *            GenericEvent occured
 	 */
-	private void notifyWiiMoteEventListeners(GenericEvent evt) {
+	private void notifyWiiMoteEventListeners(WiimoteEvent evt) {
 		for (WiimoteListener listener : getWiiMoteEventListeners()) {
 			listener.onButtonsEvent(evt.getButtonsEvent());
 			if (evt.isThereIrEvent()) {

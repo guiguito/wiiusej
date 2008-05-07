@@ -23,7 +23,7 @@ import wiiusej.values.IRSource;
  * 
  * @author guiguito
  */
-public class IREvent extends WiimoteEvent {
+public class IREvent extends GenericEvent {
 
 	/* IR Tracking */
 	private IRSource[] IRPoints;
@@ -285,13 +285,15 @@ public class IREvent extends WiimoteEvent {
 		out += "--- Active : true\n";
 		out += "--- calculated X coordinate : " + x + "\n";
 		out += "--- calculated Y coordinate : " + y + "\n";
-		out += "--- calculated distance : " + z + "\n";
+		out += "--- calculated Z coordinate : " + z + "\n";
+		out += "--- calculated distance : " + distance + "\n";
 		out += "--- absolute X coordinate : " + ax + "\n";
 		out += "--- absolute Y coordinate : " + ay + "\n";
 		out += "--- IR virtual screen x resolution : " + xVRes + "\n";
 		out += "--- IR virtual screen y resolution : " + yVRes + "\n";
 		out += "--- IR X correction offset : " + xOffset + "\n";
 		out += "--- IR Y correction offset : " + yOffset + "\n";
+		out += "--- IR Sensitivity (between 1-5) : " + irSensitivity + "\n";
 		if (isScreenAspectRatio43()) {
 			out += "--- aspect ratio of the screen : 4/3\n";
 		} else if (isScreenAspectRatio169()) {
@@ -301,7 +303,7 @@ public class IREvent extends WiimoteEvent {
 			out += "--- IR sensor bar position. : Above\n";
 		} else if (isSensorBarBelow()) {
 			out += "--- IR sensor bar position. : Below\n";
-		}
+		}		
 		out += "--- Seen points\n";
 		for (int i = 0; i < IRPoints.length; i++) {
 			if (IRPoints[i] != null) {

@@ -25,8 +25,10 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+
 import wiiusej.wiiuseapievents.ButtonsEvent;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.WiimoteButtonsEvent;
 import wiiusej.wiiuseapievents.IREvent;
 import wiiusej.wiiuseapievents.MotionSensingEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
@@ -41,7 +43,7 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements WiimoteList
 
     private Image mImage;//image for double buffering
     private Image wiimoteImage;//image for double buffering
-    private ButtonsEvent buttons;
+    private WiimoteButtonsEvent buttons;
     private Color pressedColor = Color.RED;
     private Color heldColor = Color.ORANGE;
     private Color releasedColor = Color.YELLOW;
@@ -250,7 +252,7 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements WiimoteList
         }
     }
 
-    public void onButtonsEvent(ButtonsEvent arg0) {
+    public void onButtonsEvent(WiimoteButtonsEvent arg0) {
         setSize(wiimoteImage.getWidth(this), wiimoteImage.getHeight(this));
         buttons = arg0;
         repaint();
