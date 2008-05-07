@@ -14,7 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents;
+package wiiusej.wiiusejevents.wiiusejapievents;
+
+import wiiusej.wiiusejevents.GenericEvent;
 
 /**
  * This class describes the structure of an event from the WiiUse API event.

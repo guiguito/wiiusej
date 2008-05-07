@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.event.EventListenerList;
 
-import wiiusej.wiiuseapievents.EventsGatherer;
-import wiiusej.wiiuseapievents.StatusEvent;
-import wiiusej.wiiuseapievents.WiiUseApiEvent;
-import wiiusej.wiiuseapievents.WiiUseApiListener;
+import wiiusej.wiiusejevents.utils.EventsGatherer;
+import wiiusej.wiiusejevents.utils.WiiUseApiListener;
+import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
 
 /**
  * Class that manages the use of Wiiuse API.

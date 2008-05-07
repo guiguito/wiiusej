@@ -14,9 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents;
+package wiiusej.wiiusejevents.physicalevents;
 
 import wiiusej.values.IRSource;
+import wiiusej.wiiusejevents.GenericEvent;
 
 /**
  * Class which represents an IR event.

@@ -16,7 +16,7 @@
  */
 package wiiusej;
 
-import wiiusej.wiiuseapievents.EventsGatherer;
+import wiiusej.wiiusejevents.utils.EventsGatherer;
 
 /**
  * Singleton used to manipulate WiiUse Api.

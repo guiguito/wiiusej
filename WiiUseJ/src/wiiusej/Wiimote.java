@@ -18,12 +18,12 @@ package wiiusej;
 
 import javax.swing.event.EventListenerList;
 
-import wiiusej.wiiuseapievents.DisconnectionEvent;
-import wiiusej.wiiuseapievents.WiimoteEvent;
-import wiiusej.wiiuseapievents.StatusEvent;
-import wiiusej.wiiuseapievents.WiiUseApiEvent;
-import wiiusej.wiiuseapievents.WiiUseApiListener;
-import wiiusej.wiiuseapievents.WiimoteListener;
+import wiiusej.wiiusejevents.utils.WiiUseApiListener;
+import wiiusej.wiiusejevents.utils.WiimoteListener;
+import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.WiimoteEvent;
 
 /**
  * Class that represents a wiimote. You can register as an observer of this
