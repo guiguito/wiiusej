@@ -26,12 +26,12 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import wiiusej.values.GForce;
-import wiiusej.wiiuseapievents.DisconnectionEvent;
-import wiiusej.wiiuseapievents.WiimoteButtonsEvent;
-import wiiusej.wiiuseapievents.IREvent;
-import wiiusej.wiiuseapievents.MotionSensingEvent;
-import wiiusej.wiiuseapievents.StatusEvent;
-import wiiusej.wiiuseapievents.WiimoteListener;
+import wiiusej.wiiusejevents.physicalevents.IREvent;
+import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
+import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
+import wiiusej.wiiusejevents.utils.WiimoteListener;
+import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
 
 /**
  * This panel is used to watch gravity force values from a MotionSensingEvent.

@@ -14,32 +14,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents;
+package wiiusej.wiiusejevents.utils;
+
+import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
+
+
 
 /**
- * Event that represents the connection of a nunchuk to a wiimote.
+ * This is the interface to implement to listen to events from the wiiuse API.
+ * 
  * @author guiguito
- *
  */
-public class NunchukInsertedEvent extends WiiUseApiEvent {
-
+public interface WiiUseApiListener extends java.util.EventListener {
+	
 	/**
-	 * Construct the NunchukInsertedEvent setting up the id.
-	 * @param id id of the wiimote.
+	 * Method called when a WiiUseApiEvent occurs.
+	 * A WiiUseApiEvent can be :
+	 * 					- WiimoteEvent (Storing ButtonsEvent and
+	 * 					 eventually IREvent and MotionSensingEvent)
+	 * 					- StatusEvent
+	 * 					- DisconnectionEvent
+	 * @param e
 	 */
-	public NunchukInsertedEvent(int id) {
-		super(id, WIIUSE_NUNCHUK_INSERTED);
-	}
-
-	/* (non-Javadoc)
-	 * @see wiiusej.wiiusejevents.WiiUseApiEvent#toString()
-	 */
-	@Override
-	public String toString() {
-		String out = "";
-		/* Status */
-		out += "/*********** NUNCHUK INSERTED EVENT : WIIMOTE   ID :" + super.getWiimoteId() + " ********/\n";
-		return out;
-	}
-
+	void onWiiUseApiEvent(WiiUseApiEvent e);
+			
 }

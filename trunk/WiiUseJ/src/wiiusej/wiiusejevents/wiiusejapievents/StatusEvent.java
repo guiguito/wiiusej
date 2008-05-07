@@ -14,7 +14,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents;
+package wiiusej.wiiusejevents.wiiusejapievents;
+
 
 /**
  * Class used to represent a status event. This class is used to know what are

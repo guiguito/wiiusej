@@ -14,7 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents;
+package wiiusej.wiiusejevents.utils;
+
+import wiiusej.wiiusejevents.physicalevents.IREvent;
+import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
+import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
 
 /**
  * This is the interface to implement to listen to events from wiimotes.

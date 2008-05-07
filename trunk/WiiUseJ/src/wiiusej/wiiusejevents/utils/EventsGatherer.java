@@ -14,14 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents;
+package wiiusej.wiiusejevents.utils;
 
-import wiiusej.wiiusejevents.DisconnectionEvent;
-import wiiusej.wiiusejevents.NunchukInsertedEvent;
-import wiiusej.wiiusejevents.NunchukRemovedEvent;
-import wiiusej.wiiusejevents.StatusEvent;
-import wiiusej.wiiusejevents.WiiUseApiEvent;
-import wiiusej.wiiusejevents.WiimoteEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.NunchukInsertedEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.NunchukRemovedEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
+import wiiusej.wiiusejevents.wiiusejapievents.WiimoteEvent;
 
 /**
  * This class is used to gather events during a call to the Wiiuse API.
