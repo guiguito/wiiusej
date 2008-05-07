@@ -24,9 +24,10 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+
 import wiiusej.values.RawAcceleration;
-import wiiusej.wiiuseapievents.ButtonsEvent;
 import wiiusej.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiuseapievents.WiimoteButtonsEvent;
 import wiiusej.wiiuseapievents.IREvent;
 import wiiusej.wiiuseapievents.MotionSensingEvent;
 import wiiusej.wiiuseapievents.StatusEvent;
@@ -129,7 +130,7 @@ public class AccelerationPanel extends javax.swing.JPanel implements WiimoteList
         }
     }
 
-    public void onButtonsEvent(ButtonsEvent arg0) {
+    public void onButtonsEvent(WiimoteButtonsEvent arg0) {
     //nothing
     }
 

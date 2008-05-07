@@ -30,7 +30,7 @@ public interface WiimoteListener extends java.util.EventListener {
 	 * @param e the buttonEvent with the last informations 
 	 * 			about the buttons of the wiimote.
 	 */
-	void onButtonsEvent(ButtonsEvent e);
+	void onButtonsEvent(WiimoteButtonsEvent e);
 	
 	/**
 	 * Method called when an IR event occurs.

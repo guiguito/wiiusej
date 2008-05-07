@@ -25,7 +25,7 @@ public class EventsGatherer {
 
 	private WiiUseApiEvent[] events;
 	private int index = 0;
-	private GenericEvent genericEvent = null;
+	private WiimoteEvent genericEvent = null;
 
 	/**
 	 * Create EventsGatherer.
@@ -62,7 +62,7 @@ public class EventsGatherer {
 	 */
 	public void prepareWiiMoteEvent(int id, short buttonsJustPressed,
 			short buttonsJustReleased, short buttonsHeld) {
-		genericEvent = new GenericEvent(id, buttonsJustPressed,
+		genericEvent = new WiimoteEvent(id, buttonsJustPressed,
 				buttonsJustReleased, buttonsHeld);
 	}
 
@@ -224,6 +224,28 @@ public class EventsGatherer {
 	 */
 	public void addDisconnectionEvent(int id) {
 		DisconnectionEvent evt = new DisconnectionEvent(id);
+		addEvent(evt);
+	}
+	
+	/**
+	 * Add a NunchukInsertedEvent to the gatherer.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void addNunchukInsertedEvent(int id) {
+		NunchukInsertedEvent evt = new NunchukInsertedEvent(id);
+		addEvent(evt);
+	}
+	
+	/**
+	 * Add a NunchukRemovedEvent to the gatherer.
+	 * 
+	 * @param id
+	 *            id of the wiimote
+	 */
+	public void addNunchukRemovedEvent(int id) {
+		NunchukRemovedEvent evt = new NunchukRemovedEvent(id);
 		addEvent(evt);
 	}
 

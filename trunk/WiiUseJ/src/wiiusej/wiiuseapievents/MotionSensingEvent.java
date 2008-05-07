@@ -25,7 +25,7 @@ import wiiusej.values.RawAcceleration;
  * 
  * @author guiguito
  */
-public class MotionSensingEvent extends WiimoteEvent {
+public class MotionSensingEvent extends GenericEvent {
 
 	/* Motion Sensing */
 	private Orientation orientation;

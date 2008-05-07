@@ -17,26 +17,27 @@
 package wiiusej.wiiuseapievents;
 
 /**
- * Class representing a disconnection event.
+ * Event that represents the connection of a nunchuk to a wiimote.
  * @author guiguito
  */
-public class DisconnectionEvent extends WiiUseApiEvent {
+public class NunchukRemovedEvent extends WiiUseApiEvent {
 
 	/**
-	 * Construct the DisconnectionEvent setting up the id.
-	 * 
-	 * @param id
-	 *            the Wiimote id
+	 * Construct the NunchukInsertedEvent setting up the id.
+	 * @param id id of the wiimote.
 	 */
-	public DisconnectionEvent(int id) {
-		super(id,WiiUseApiEvent.DISCONNECTION_EVENT);
+	public NunchukRemovedEvent(int id) {
+		super(id, WIIUSE_NUNCHUK_REMOVED);
 	}
-		
+
+	/* (non-Javadoc)
+	 * @see wiiusej.wiiuseapievents.WiiUseApiEvent#toString()
+	 */
 	@Override
 	public String toString() {
 		String out = "";
 		/* Status */
-		out += "/*********** DISCONNECTION EVENT : WIIMOTE   ID :" + super.getWiimoteId() + " ********/\n";
+		out += "/*********** NUNCHUK REMOVED EVENT : WIIMOTE   ID :" + super.getWiimoteId() + " ********/\n";
 		return out;
 	}
 

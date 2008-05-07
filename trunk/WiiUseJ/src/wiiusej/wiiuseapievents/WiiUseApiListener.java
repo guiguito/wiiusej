@@ -28,7 +28,7 @@ public interface WiiUseApiListener extends java.util.EventListener {
 	/**
 	 * Method called when a WiiUseApiEvent occurs.
 	 * A WiiUseApiEvent can be :
-	 * 					- GenericEvent (Storing ButtonsEvent and
+	 * 					- WiimoteEvent (Storing ButtonsEvent and
 	 * 					 eventually IREvent and MotionSensingEvent)
 	 * 					- StatusEvent
 	 * 					- DisconnectionEvent

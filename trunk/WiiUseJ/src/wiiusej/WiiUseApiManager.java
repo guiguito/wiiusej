@@ -516,7 +516,7 @@ public class WiiUseApiManager extends Thread {
 	 * Notify WiiUseApiListeners that an event occured.
 	 * 
 	 * @param evt
-	 *            WiimoteEvent occured
+	 *            GenericEvent occured
 	 */
 	private void notifyWiiUseApiListener(WiiUseApiEvent evt) {
 		for (WiiUseApiListener listener : getWiiUseApiListeners()) {
