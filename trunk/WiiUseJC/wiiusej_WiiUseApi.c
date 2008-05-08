@@ -489,6 +489,24 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
 				break;
 
+				case WIIUSE_NUNCHUK_INSERTED:
+				/* the wiimote disconnected */
+				mid = (*env)->GetMethodID(env, cls, "addNunchukInsertedEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_NUNCHUK_REMOVED:
+				/* the wiimote disconnected */
+				mid = (*env)->GetMethodID(env, cls, "addNunchukRemovedEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
 				default:
 				break;
 			}
