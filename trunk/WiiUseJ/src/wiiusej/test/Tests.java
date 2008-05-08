@@ -27,8 +27,10 @@ import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
 import wiiusej.wiiusejevents.utils.WiimoteListener;
-import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 /**
  * This class used to test WiiuseJ.
@@ -333,6 +335,14 @@ public class Tests implements WiimoteListener {
 		System.out.println(" wiimote " + e.getWiimoteId()
 				+ "has been disconnected !!");
 	}
+	
+	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+		System.out.println(e);		
+	}
+
+	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+		System.out.println(e);		
+	}
 
 	/**
 	 * @param args
@@ -350,4 +360,5 @@ public class Tests implements WiimoteListener {
 		// timer.scheduleAtFixedRate(new LedsTask(), 0, 100);
 
 	}
+
 }

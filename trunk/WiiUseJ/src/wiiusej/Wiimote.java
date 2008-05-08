@@ -20,10 +20,12 @@ import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiusejevents.utils.WiiUseApiListener;
 import wiiusej.wiiusejevents.utils.WiimoteListener;
-import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.WiimoteEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.WiiUseApiEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.WiimoteEvent;
 
 /**
  * Class that represents a wiimote. You can register as an observer of this
@@ -54,6 +56,7 @@ public class Wiimote implements WiiUseApiListener {
 
 	/**
 	 * Get the unique id of the wiimote.
+	 * 
 	 * @return the id
 	 */
 	public int getId() {
@@ -243,7 +246,7 @@ public class Wiimote implements WiiUseApiListener {
 	public void getStatus() {
 		manager.getStatus(id);
 	}
-	
+
 	/**
 	 * Set the IR sensitivity.
 	 * 
@@ -266,17 +269,24 @@ public class Wiimote implements WiiUseApiListener {
 		if (e.getWiimoteId() == id) {
 			if (e.getEventType() == WiiUseApiEvent.GENERIC_EVENT) {
 				notifyWiiMoteEventListeners((WiimoteEvent) e);
-			} else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT
-					|| e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED
-					|| e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED
-					|| e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED
-					|| e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED
-					|| e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED
-					|| e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED) {
+			} else if (e.getEventType() == WiiUseApiEvent.STATUS_EVENT) {
 				notifyStatusEventListeners((StatusEvent) e);
 			} else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
 				notifyDisconnectionEventListeners((DisconnectionEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED) {
+				notifyNunchukInsertedEventListeners((NunchukInsertedEvent)e);
+			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED) {
+				notifyNunchukRemovedEventListeners((NunchukRemovedEvent)e);
 			}
+			/*
+			 * events not managed yet 
+			 * || e.getEventType() == WIIUSE_READ_DATA
+			 * WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED || e.getEventType() ==
+			 * WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED || e.getEventType() ==
+			 * WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED ||
+			 * e.getEventType() ==
+			 * WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED
+			 */
 		}
 	}
 
@@ -342,14 +352,38 @@ public class Wiimote implements WiiUseApiListener {
 	}
 
 	/**
-	 * Notify WiimoteListener that a status event occured.
+	 * Notify WiimoteListener that a disconnection event occured.
 	 * 
 	 * @param evt
-	 *            status event occured
+	 *            disconnection event occured
 	 */
 	private void notifyDisconnectionEventListeners(DisconnectionEvent evt) {
 		for (WiimoteListener listener : getWiiMoteEventListeners()) {
 			listener.onDisconnectionEvent(evt);
+		}
+	}
+
+	/**
+	 * Notify WiimoteListener that a NunchukInserted Event occured.
+	 * 
+	 * @param evt
+	 *            NunchukInserted Event occured
+	 */
+	private void notifyNunchukInsertedEventListeners(NunchukInsertedEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
+			listener.onNunchukInsertedEvent(evt);
+		}
+	}
+
+	/**
+	 * Notify WiimoteListener that a NunchukRemoved Event occured.
+	 * 
+	 * @param evt
+	 *            NunchukRemoved Event occured
+	 */
+	private void notifyNunchukRemovedEventListeners(NunchukRemovedEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
+			listener.onNunchukRemovedEvent(evt);
 		}
 	}
 
