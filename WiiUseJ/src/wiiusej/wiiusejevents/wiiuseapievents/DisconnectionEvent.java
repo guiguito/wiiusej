@@ -14,28 +14,31 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WiiuseJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wiiusej.wiiusejevents.utils;
-
-import wiiusej.wiiusejevents.wiiuseapievents.WiiUseApiEvent;
-
+package wiiusej.wiiusejevents.wiiuseapievents;
 
 
 /**
- * This is the interface to implement to listen to events from the wiiuse API.
- * 
+ * Class representing a disconnection event.
  * @author guiguito
  */
-public interface WiiUseApiListener extends java.util.EventListener {
-	
+public class DisconnectionEvent extends WiiUseApiEvent {
+
 	/**
-	 * Method called when a WiiUseApiEvent occurs.
-	 * A WiiUseApiEvent can be :
-	 * 					- WiimoteEvent (Storing ButtonsEvent and
-	 * 					 eventually IREvent and MotionSensingEvent)
-	 * 					- StatusEvent
-	 * 					- DisconnectionEvent
-	 * @param e
+	 * Construct the DisconnectionEvent setting up the id.
+	 * 
+	 * @param id
+	 *            the Wiimote id
 	 */
-	void onWiiUseApiEvent(WiiUseApiEvent e);
-			
+	public DisconnectionEvent(int id) {
+		super(id,WiiUseApiEvent.DISCONNECTION_EVENT);
+	}
+		
+	@Override
+	public String toString() {
+		String out = "";
+		/* Status */
+		out += "/*********** DISCONNECTION EVENT : WIIMOTE   ID :" + super.getWiimoteId() + " ********/\n";
+		return out;
+	}
+
 }

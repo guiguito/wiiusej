@@ -16,12 +16,12 @@
  */
 package wiiusej.wiiusejevents.utils;
 
-import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.NunchukInsertedEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.NunchukRemovedEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.WiimoteEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.WiiUseApiEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.WiimoteEvent;
 
 /**
  * This class is used to gather events during a call to the Wiiuse API.

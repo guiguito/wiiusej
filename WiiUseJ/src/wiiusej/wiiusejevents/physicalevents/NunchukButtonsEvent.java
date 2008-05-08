@@ -78,7 +78,7 @@ public class NunchukButtonsEvent extends ButtonsEvent {
 
 	@Override
 	public String toString() {
-		return "/******** Buttons for Nunchhuk Event ********/\n"
+		return "/******** Buttons for Nunchuk Event ********/\n"
 				+ super.toString();
 	}
 

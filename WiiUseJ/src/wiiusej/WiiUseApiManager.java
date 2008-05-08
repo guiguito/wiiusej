@@ -22,8 +22,8 @@ import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiusejevents.utils.EventsGatherer;
 import wiiusej.wiiusejevents.utils.WiiUseApiListener;
-import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.WiiUseApiEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.WiiUseApiEvent;
 
 /**
  * Class that manages the use of Wiiuse API.

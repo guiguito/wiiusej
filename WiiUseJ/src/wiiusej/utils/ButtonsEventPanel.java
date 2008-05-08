@@ -31,8 +31,10 @@ import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
 import wiiusej.wiiusejevents.utils.WiimoteListener;
-import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 /**
  * This panel is used to see what buttons are pressed.
@@ -275,6 +277,16 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements WiimoteList
         repaint();
     }
 
+	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

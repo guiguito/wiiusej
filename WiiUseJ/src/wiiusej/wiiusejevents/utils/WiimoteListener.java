@@ -19,8 +19,10 @@ package wiiusej.wiiusejevents.utils;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.DisconnectionEvent;
-import wiiusej.wiiusejevents.wiiusejapievents.StatusEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 /**
  * This is the interface to implement to listen to events from wiimotes.
@@ -71,5 +73,16 @@ public interface WiimoteListener extends java.util.EventListener {
 	 * @param e the disconnection event.
 	 */
 	void onDisconnectionEvent(DisconnectionEvent e);
-
+		
+	/**
+	 * This is the method called when a NunchukInsertedEvent occurs.
+	 * @param e the NunchukInsertedEvent.
+	 */
+	void onNunchukInsertedEvent(NunchukInsertedEvent e);
+	
+	/**
+	 * This is the method called when a NunchukRemovedEvent occurs.
+	 * @param e the NunchukRemovedEvent.
+	 */
+	void onNunchukRemovedEvent(NunchukRemovedEvent e);
 }
