@@ -144,15 +144,15 @@ public class WiiUseApi {
 	 * Set wiimote leds status.
 	 * 
 	 * @param id
-	 *            the id of the wiimote concerned
+	 *            the id of the wiimote concerned.
 	 * @param led1
-	 *            status of led1: True=ON, False=OFF
+	 *            status of led1: True=ON, False=OFF.
 	 * @param led2
-	 *            status of led2: True=ON, False=OFF
+	 *            status of led2: True=ON, False=OFF.
 	 * @param led3
-	 *            status of led3: True=ON, False=OFF
+	 *            status of led3: True=ON, False=OFF.
 	 * @param led4
-	 *            status of led4: True=ON, False=OFF
+	 *            status of led4: True=ON, False=OFF.
 	 */
 	synchronized native void setLeds(int id, boolean led1, boolean led2,
 			boolean led3, boolean led4);
@@ -161,9 +161,9 @@ public class WiiUseApi {
 	 * Set how many degrees an angle must change to generate an event.
 	 * 
 	 * @param id
-	 *            id of the wiimote concerned
+	 *            id of the wiimote concerned.
 	 * @param angle
-	 *            minimum angle detected by an event
+	 *            minimum angle detected by an event.
 	 */
 	synchronized native void setOrientThreshold(int id, float angle);
 
@@ -171,9 +171,9 @@ public class WiiUseApi {
 	 * Set how much acceleration must change to generate an event.
 	 * 
 	 * @param id
-	 *            id of the wiimote concerned
+	 *            id of the wiimote concerned.
 	 * @param value
-	 *            minimum value detected by an event
+	 *            minimum value detected by an event.
 	 */
 	synchronized native void setAccelThreshold(int id, int value);
 
@@ -181,9 +181,9 @@ public class WiiUseApi {
 	 * Set alpha smoothing parameter for the given id.
 	 * 
 	 * @param id
-	 *            id of the wiimote concerned
+	 *            id of the wiimote concerned.
 	 * @param value
-	 *            alpha smoothing value
+	 *            alpha smoothing value.
 	 */
 	synchronized native void setAlphaSmoothing(int id, float value);
 
@@ -191,7 +191,7 @@ public class WiiUseApi {
 	 * Try to resync with the wiimote by starting a new handshake.
 	 * 
 	 * @param id
-	 *            id of the wiimote concerned
+	 *            id of the wiimote concerned.
 	 */
 	synchronized native void reSync(int id);
 
@@ -200,7 +200,7 @@ public class WiiUseApi {
 	 * default.
 	 * 
 	 * @param id
-	 *            the id of the wiimote concerned
+	 *            the id of the wiimote concerned.
 	 */
 	synchronized native void activateSmoothing(int id);
 
@@ -208,7 +208,7 @@ public class WiiUseApi {
 	 * Make the the accelerometers give raw results.
 	 * 
 	 * @param id
-	 *            the id of the wiimote concerned
+	 *            the id of the wiimote concerned.
 	 */
 	synchronized native void deactivateSmoothing(int id);
 
@@ -216,7 +216,7 @@ public class WiiUseApi {
 	 * Make the wiimote generate an event each time we poll. Not set by default.
 	 * 
 	 * @param id
-	 *            the id of the wiimote concerned
+	 *            the id of the wiimote concerned.
 	 */
 	synchronized native void activateContinuous(int id);
 
@@ -224,7 +224,7 @@ public class WiiUseApi {
 	 * Make the wiimote generate an event only when there is one.
 	 * 
 	 * @param id
-	 *            the id of the wiimote concerned
+	 *            the id of the wiimote concerned.
 	 */
 	synchronized native void deactivateContinuous(int id);
 
@@ -308,6 +308,27 @@ public class WiiUseApi {
 	 */
 	synchronized native void setIrSensitivity(int id, int level);
 
+	/**
+	 * Set how many degrees an angle must change to generate an event for the nunchuk.
+	 * 
+	 * @param id
+	 *            id of the wiimote concerned.
+	 * @param angle
+	 *            minimum angle detected by an event.
+	 */
+	synchronized native void setNunchukOrientationThreshold(int id, float angle);
+	
+	/**
+	 * Set how much acceleration must change to generate an event for the nunchuk.
+	 * 
+	 * @param id
+	 *            id of the wiimote concerned.
+	 * @param value
+	 *            minimum value detected by an event.
+	 */
+	synchronized native void setNunchukAccelerationThreshold(int id, int value);
+	
+	
 	/**
 	 * Check for new Events and Get it.
 	 * 

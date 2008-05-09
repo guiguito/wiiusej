@@ -25,6 +25,7 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 
+import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
@@ -157,6 +158,10 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
     public void onMotionSensingEvent(MotionSensingEvent arg0) {
     //nothing
     }
+    
+    public void onExpansionEvent(ExpansionEvent e) {
+		// nothing
+	}
 
     public void onStatusEvent(StatusEvent arg0) {
     //nothing
@@ -173,13 +178,11 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
     }
     
 	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
-		// TODO Auto-generated method stub
-		
+		// nothing
 	}
 
 	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
-		// TODO Auto-generated method stub
-		
+		// nothing
 	}
 
     /** This method is called from within the constructor to

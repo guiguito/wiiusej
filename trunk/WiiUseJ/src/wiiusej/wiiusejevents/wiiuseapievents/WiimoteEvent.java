@@ -19,6 +19,7 @@ package wiiusej.wiiusejevents.wiiuseapievents;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
+import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
 
 /**
@@ -33,7 +34,7 @@ public class WiimoteEvent extends WiiUseApiEvent {
 	IREvent infraredEvent = null;
 	MotionSensingEvent motionSensingEvent = null;
 	ExpansionEvent expansionEvent = null;
-	
+
 	/**
 	 * Construct the Wiimote setting up the id.
 	 * 
@@ -80,7 +81,7 @@ public class WiimoteEvent extends WiiUseApiEvent {
 	public boolean isThereMotionSensingEvent() {
 		return motionSensingEvent != null;
 	}
-	
+
 	/**
 	 * Tell if there is an expansion Event.
 	 * 
@@ -116,7 +117,7 @@ public class WiimoteEvent extends WiiUseApiEvent {
 	public MotionSensingEvent getMotionSensingEvent() {
 		return motionSensingEvent;
 	}
-	
+
 	/**
 	 * Get the expansion event.
 	 * 
@@ -191,36 +192,36 @@ public class WiimoteEvent extends WiiUseApiEvent {
 	 * 
 	 * @param orientationThreshold
 	 *            value of the minimum angle between two events with the
-	 *            accelerometer
+	 *            accelerometer.
 	 * @param accelerationThreshold
 	 *            value of the value variation between two events with the
-	 *            accelerometer
+	 *            accelerometer.
 	 * @param smoothingState
-	 *            true if smoothing flag is activated
+	 *            true if smoothing flag is activated.
 	 * @param alphaSmooth
-	 *            value of the alpha smoothing parameter
+	 *            value of the alpha smoothing parameter.
 	 * @param r
-	 *            roll
+	 *            roll.
 	 * @param p
-	 *            pitch
+	 *            pitch.
 	 * @param ya
-	 *            yaw
+	 *            yaw.
 	 * @param ar
-	 *            absolute roll
+	 *            absolute roll.
 	 * @param ap
-	 *            absolute pitch
+	 *            absolute pitch.
 	 * @param x
-	 *            gravity force on x axis
+	 *            gravity force on x axis.
 	 * @param y
-	 *            gravity force on y axis
+	 *            gravity force on y axis.
 	 * @param z
-	 *            gravity force on z axis
+	 *            gravity force on z axis.
 	 * @param xx
-	 *            raw acceleration on x axis
+	 *            raw acceleration on x axis.
 	 * @param yy
-	 *            raw acceleration on y axis
+	 *            raw acceleration on y axis.
 	 * @param zz
-	 *            raw acceleration on z axis
+	 *            raw acceleration on z axis.
 	 */
 	public void setMotionSensingEvent(float orientationThreshold,
 			int accelerationThreshold, boolean smoothingState,
@@ -229,14 +230,82 @@ public class WiimoteEvent extends WiiUseApiEvent {
 		motionSensingEvent = new MotionSensingEvent(getWiimoteId(),
 				orientationThreshold, accelerationThreshold, smoothingState,
 				alphaSmooth, r, p, ya, ar, ap, x, y, z, xx, yy, zz);
-	}	
-	
-	public void setNunchukEvent(){
-		
 	}
-	
-	public void setClassicControllerEvent(){
-		//@TODO
+
+	/**
+	 * Set a NunchukEvent for the expansion event.
+	 * 
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
+	 * @param orientationThreshold
+	 *            value of the minimum angle between two events with the
+	 *            accelerometer.
+	 * @param accelerationThreshold
+	 *            value of the value variation between two events with the
+	 *            accelerometer.
+	 * @param smoothingState
+	 *            true if smoothing flag is activated.
+	 * @param alphaSmooth
+	 *            value of the alpha smoothing parameter.
+	 * @param r
+	 *            roll.
+	 * @param p
+	 *            pitch.
+	 * @param ya
+	 *            yaw.
+	 * @param ar
+	 *            absolute roll.
+	 * @param ap
+	 *            absolute pitch.
+	 * @param x
+	 *            gravity force on x axis.
+	 * @param y
+	 *            gravity force on y axis.
+	 * @param z
+	 *            gravity force on z axis.
+	 * @param xx
+	 *            raw acceleration on x axis.
+	 * @param yy
+	 *            raw acceleration on y axis.
+	 * @param zz
+	 *            raw acceleration on z axis.
+	 * @param angle
+	 *            angle the joystick is being held.
+	 * @param magnitude
+	 *            magnitude of the joystick (range 0-1).
+	 * @param max1
+	 *            maximum joystick value 1.
+	 * @param max2
+	 *            maximum joystick value 2.
+	 * @param min1
+	 *            minimum joystick value 1.
+	 * @param min2
+	 *            minimum joystick value 2.
+	 * @param center1
+	 *            center joystick value 1.
+	 * @param center2
+	 *            center joystick value 2.
+	 */
+	public void setNunchukEvent(short buttonsJustPressed,
+			short buttonsJustReleased, short buttonsHeld,
+			float orientationThreshold, int accelerationThreshold,
+			boolean smoothingState, float alphaSmooth, float r, float p,
+			float ya, float ar, float ap, float x, float y, float z, short xx,
+			short yy, short zz, int angle, int magnitude, short max1,
+			short max2, short min1, short min2, short center1, short center2) {
+		expansionEvent = new NunchukEvent(getWiimoteId(), buttonsJustPressed,
+				buttonsJustReleased, buttonsHeld, orientationThreshold,
+				accelerationThreshold, smoothingState, alphaSmooth, r, p, ya,
+				ar, ap, x, y, z, xx, yy, zz, angle, magnitude, max1, max2,
+				min1, min2, center1, center2);
+	}
+
+	public void setClassicControllerEvent() {
+		// @TODO
 	}
 
 	@Override
@@ -261,7 +330,7 @@ public class WiimoteEvent extends WiiUseApiEvent {
 			out += "/******** Motion sensing ********/\n";
 			out += "--- Motion sensing : false \n";
 		}
-		
+
 		if (expansionEvent != null) {
 			out += expansionEvent;
 		} else {
