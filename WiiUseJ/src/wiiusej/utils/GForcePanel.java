@@ -26,6 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import wiiusej.values.GForce;
+import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
@@ -37,178 +38,190 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 /**
  * This panel is used to watch gravity force values from a MotionSensingEvent.
- * @author  guiguito
+ * 
+ * @author guiguito
  */
 public class GForcePanel extends javax.swing.JPanel implements WiimoteListener {
 
-    private Image mImage;//image for double buffering
-    private Color xColor = Color.RED;
-    private Color yColor = Color.GREEN;
-    private Color zColor = Color.BLUE;
-    private Color backgroundColor = Color.WHITE;
-    private Color lineColor = Color.BLACK;
-    private ArrayList<GForce> values = new ArrayList<GForce>();
+	private Image mImage;// image for double buffering
+	private Color xColor = Color.RED;
+	private Color yColor = Color.GREEN;
+	private Color zColor = Color.BLUE;
+	private Color backgroundColor = Color.WHITE;
+	private Color lineColor = Color.BLACK;
+	private ArrayList<GForce> values = new ArrayList<GForce>();
 
-    /**
-     * Default constructor of the AccelerationPanel.
-     */
-    public GForcePanel() {
-        initComponents();
-    }
-    
-    /**
-     * Constructor used to choose the colors used by the AccelerationPanel.
-     * @param bgColor background color.
-     * @param xxColor color of the acceleration on X axis.
-     * @param yyColor color of the acceleration on Y axis.
-     * @param zzColor color of the acceleration on Z axis.
-     * @param lColor line color.
-     */
-    public GForcePanel(Color bgColor, Color xxColor, Color yyColor, Color zzColor, Color lColor) {
-        backgroundColor = bgColor;
-        xColor = xxColor;
-        yColor = yyColor;
-        zColor = zzColor;
-        lineColor = lColor;
-        initComponents();
-    }
+	/**
+	 * Default constructor of the AccelerationPanel.
+	 */
+	public GForcePanel() {
+		initComponents();
+	}
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Dimension d = getSize();
-        checkOffScreenImage();
-        Graphics offG = mImage.getGraphics();
-        offG.setColor(backgroundColor);
-        offG.fillRect(0, 0, d.width, d.height);
-        Graphics2D g2 = (Graphics2D) mImage.getGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	/**
+	 * Constructor used to choose the colors used by the AccelerationPanel.
+	 * 
+	 * @param bgColor
+	 *            background color.
+	 * @param xxColor
+	 *            color of the acceleration on X axis.
+	 * @param yyColor
+	 *            color of the acceleration on Y axis.
+	 * @param zzColor
+	 *            color of the acceleration on Z axis.
+	 * @param lColor
+	 *            line color.
+	 */
+	public GForcePanel(Color bgColor, Color xxColor, Color yyColor,
+			Color zzColor, Color lColor) {
+		backgroundColor = bgColor;
+		xColor = xxColor;
+		yColor = yyColor;
+		zColor = zzColor;
+		lineColor = lColor;
+		initComponents();
+	}
 
-        //draw medium line
-        double yMiddleFloat = getHeight() / 2.0;
-        int yMiddle = (int) Math.round(yMiddleFloat);
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Dimension d = getSize();
+		checkOffScreenImage();
+		Graphics offG = mImage.getGraphics();
+		offG.setColor(backgroundColor);
+		offG.fillRect(0, 0, d.width, d.height);
+		Graphics2D g2 = (Graphics2D) mImage.getGraphics();
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.setPaint(lineColor);
-        g2.drawLine(0, yMiddle, getWidth(), yMiddle);
+		// draw medium line
+		double yMiddleFloat = getHeight() / 2.0;
+		int yMiddle = (int) Math.round(yMiddleFloat);
 
-        GForce[] valuesArray = values.toArray(new GForce[0]);
-        double unit = yMiddleFloat / 5.0;
-        int previousX = 0;
-        int previousY = 0;
-        int previousZ = 0;
-        //draw curves
-        for (int i = 0; i < valuesArray.length && i < getWidth(); i++) {
-            GForce gforce = valuesArray[i];
-            //draw X
-            g2.setPaint(xColor);
-            int yDelta = (int) Math.round(unit * gforce.getX());
-            int y = -1 * yDelta + yMiddle;
-            g2.drawLine(i - 1, previousX, i, y);
-            g2.setTransform(new AffineTransform());
-            previousX = y;
-            //draw Y
-            g2.setPaint(yColor);
-            yDelta = (int) Math.round(unit * gforce.getY());
-            y = -1 * yDelta + yMiddle;
-            g2.drawLine(i - 1, previousY, i, y);
-            g2.setTransform(new AffineTransform());
-            previousY = y;
-            //draw Z
-            g2.setPaint(zColor);
-            yDelta = (int) Math.round(unit * gforce.getZ());
-            y = -1 * yDelta + yMiddle;
-            g2.drawLine(i - 1, previousZ, i, y);
-            g2.setTransform(new AffineTransform());
-            previousZ = y;
-        }
+		g2.setPaint(lineColor);
+		g2.drawLine(0, yMiddle, getWidth(), yMiddle);
 
-        //draw legend
-        g2.setPaint(xColor);
-        g2.drawLine(5, getHeight() - 10, 25, getHeight() - 10);
-        g2.setPaint(yColor);
-        g2.drawLine(60, getHeight() - 10, 80, getHeight() - 10);
-        g2.setPaint(zColor);
-        g2.drawLine(120, getHeight() - 10, 140, getHeight() - 10);
+		GForce[] valuesArray = values.toArray(new GForce[0]);
+		double unit = yMiddleFloat / 5.0;
+		int previousX = 0;
+		int previousY = 0;
+		int previousZ = 0;
+		// draw curves
+		for (int i = 0; i < valuesArray.length && i < getWidth(); i++) {
+			GForce gforce = valuesArray[i];
+			// draw X
+			g2.setPaint(xColor);
+			int yDelta = (int) Math.round(unit * gforce.getX());
+			int y = -1 * yDelta + yMiddle;
+			g2.drawLine(i - 1, previousX, i, y);
+			g2.setTransform(new AffineTransform());
+			previousX = y;
+			// draw Y
+			g2.setPaint(yColor);
+			yDelta = (int) Math.round(unit * gforce.getY());
+			y = -1 * yDelta + yMiddle;
+			g2.drawLine(i - 1, previousY, i, y);
+			g2.setTransform(new AffineTransform());
+			previousY = y;
+			// draw Z
+			g2.setPaint(zColor);
+			yDelta = (int) Math.round(unit * gforce.getZ());
+			y = -1 * yDelta + yMiddle;
+			g2.drawLine(i - 1, previousZ, i, y);
+			g2.setTransform(new AffineTransform());
+			previousZ = y;
+		}
 
-        g2.setPaint(lineColor);
-        g2.drawString("X", 30, getHeight() - 5);
-        g2.drawString("Y", 85, getHeight() - 5);
-        g2.drawString("Z", 145, getHeight() - 5);
-        g2.drawString("0", 2, yMiddle-5);
-        g2.drawString("5", 2, 10);
-        g2.drawString("-5", 2, getHeight()-15);
-        //put offscreen image on the screen
-        g.drawImage(mImage, 0, 0, null);
-    }
+		// draw legend
+		g2.setPaint(xColor);
+		g2.drawLine(5, getHeight() - 10, 25, getHeight() - 10);
+		g2.setPaint(yColor);
+		g2.drawLine(60, getHeight() - 10, 80, getHeight() - 10);
+		g2.setPaint(zColor);
+		g2.drawLine(120, getHeight() - 10, 140, getHeight() - 10);
 
-    /**
-     * check if the mImage variable has been initialized. If it's not the case it initializes it
-     * with the dimensions of the panel. mImage is for double buffering.
-     */
-    private void checkOffScreenImage() {
-        Dimension d = getSize();
-        if (mImage == null || mImage.getWidth(null) != d.width || mImage.getHeight(null) != d.height) {
-            mImage = createImage(d.width, d.height);
-        }
-    }
+		g2.setPaint(lineColor);
+		g2.drawString("X", 30, getHeight() - 5);
+		g2.drawString("Y", 85, getHeight() - 5);
+		g2.drawString("Z", 145, getHeight() - 5);
+		g2.drawString("0", 2, yMiddle - 5);
+		g2.drawString("5", 2, 10);
+		g2.drawString("-5", 2, getHeight() - 15);
+		// put offscreen image on the screen
+		g.drawImage(mImage, 0, 0, null);
+	}
 
-    public void onButtonsEvent(WiimoteButtonsEvent arg0) {
-    //nothing
-    }
+	/**
+	 * check if the mImage variable has been initialized. If it's not the case
+	 * it initializes it with the dimensions of the panel. mImage is for double
+	 * buffering.
+	 */
+	private void checkOffScreenImage() {
+		Dimension d = getSize();
+		if (mImage == null || mImage.getWidth(null) != d.width
+				|| mImage.getHeight(null) != d.height) {
+			mImage = createImage(d.width, d.height);
+		}
+	}
 
-    public void onIrEvent(IREvent arg0) {
-    //nothing
-    }
+	public void onButtonsEvent(WiimoteButtonsEvent arg0) {
+		// nothing
+	}
 
-    public void onMotionSensingEvent(MotionSensingEvent arg0) {
-        if (values.size() >= getWidth()) {
-            //if there are as many values as pixels in the width
-            //clear points
-            values.clear();
-        }
-        values.add(arg0.getGforce());
-        repaint();
-    }
+	public void onIrEvent(IREvent arg0) {
+		// nothing
+	}
 
-    public void onStatusEvent(StatusEvent arg0) {
-    //nothing
-    }
+	public void onMotionSensingEvent(MotionSensingEvent arg0) {
+		if (values.size() >= getWidth()) {
+			// if there are as many values as pixels in the width
+			// clear points
+			values.clear();
+		}
+		values.add(arg0.getGforce());
+		repaint();
+	}
 
-    public void onDisconnectionEvent(DisconnectionEvent arg0) {
-        //Clear points.
-        values.clear();
-        repaint();
-    }
+	public void onExpansionEvent(ExpansionEvent e) {
+		// nothing
+	}
+
+	public void onStatusEvent(StatusEvent arg0) {
+		// nothing
+	}
+
+	public void onDisconnectionEvent(DisconnectionEvent arg0) {
+		// Clear points.
+		values.clear();
+		repaint();
+	}
 
 	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
-		// TODO Auto-generated method stub
-		
+		// nothing
 	}
 
 	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
-		// TODO Auto-generated method stub
-		
+		// nothing
 	}
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-    }// </editor-fold>//GEN-END:initComponents
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
+	/**
+	 * This method is called from within the constructor to initialize the form.
+	 * WARNING: Do NOT modify this code. The content of this method is always
+	 * regenerated by the Form Editor.
+	 */
+	// <editor-fold defaultstate="collapsed" desc="Generated
+	// Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
+
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+		this.setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup(
+				javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 400,
+				Short.MAX_VALUE));
+		layout.setVerticalGroup(layout.createParallelGroup(
+				javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300,
+				Short.MAX_VALUE));
+	}// </editor-fold>//GEN-END:initComponents
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	// End of variables declaration//GEN-END:variables
 }

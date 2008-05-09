@@ -172,7 +172,8 @@ public class Wiimote implements WiiUseApiListener {
 	}
 
 	/**
-	 * Set the acceleration threshold .
+	 * Set the acceleration threshold(minimum angle between two degrees with
+	 * accelerometer).
 	 * 
 	 * @param th
 	 *            threshold
@@ -229,6 +230,28 @@ public class Wiimote implements WiiUseApiListener {
 	 */
 	public void setVirtualResolution(int x, int y) {
 		manager.setVirtualResolution(id, x, y);
+	}
+	
+	/**
+	 * Set the nunchuk orientation threshold for the given id.
+	 * (minimum angle between two events)
+	 * 
+	 * @param th
+	 *            threshold in degrees.
+	 */
+	public  void setNunchukOrientationThreshold(float th){
+		manager.setNunchukOrientationThreshold(id, th);
+	}
+	
+	/**
+	 * Set the nunchuk acceleration threshold for the given id.
+	 * (minimum angle between two events)
+	 * 
+	 * @param th
+	 *            threshold.
+	 */
+	public void setNunchukAccelerationThreshold(int th){
+		manager.setNunchukAccelerationThreshold(id, th);
 	}
 
 	/**
@@ -335,6 +358,9 @@ public class Wiimote implements WiiUseApiListener {
 			}
 			if (evt.isThereMotionSensingEvent()) {
 				listener.onMotionSensingEvent(evt.getMotionSensingEvent());
+			}
+			if (evt.isThereExpansionEvent()){
+				listener.onExpansionEvent(evt.getExpansionEvent());
 			}
 		}
 	}

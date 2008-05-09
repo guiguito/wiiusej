@@ -124,7 +124,6 @@ public class JoystickEvent extends GenericEvent {
 		String out = "";
 		/* Display IR Tracking */
 		out += "/******** Joystick ********/\n";
-		out += "--- Active : true\n";
 		out += "--- angle : " + angle + "\n";
 		out += "--- magnitude : " + magnitude + "\n";
 		out += "--- maximum values : " + max[0] + "," + max[1] + "\n";

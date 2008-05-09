@@ -16,6 +16,7 @@
  */
 package wiiusej.wiiusejevents.utils;
 
+import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
@@ -51,6 +52,12 @@ public interface WiimoteListener extends java.util.EventListener {
 	 * @param e the motion sensing event with orientation and acceleration.
 	 */
 	void onMotionSensingEvent(MotionSensingEvent e);
+	
+	/**
+	 * Method called when an expansion event occurs.
+	 * @param e the expansion event occured.
+	 */
+	void onExpansionEvent(ExpansionEvent e);
 	
 	/**
 	 * Method called on a status event.

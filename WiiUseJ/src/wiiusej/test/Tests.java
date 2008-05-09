@@ -23,6 +23,7 @@ import java.awt.event.InputEvent;
 import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
 import wiiusej.values.IRSource;
+import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
@@ -323,6 +324,10 @@ public class Tests implements WiimoteListener {
 
 	public void onMotionSensingEvent(MotionSensingEvent e) {
 		/* display motion sensing */
+		System.out.println(e);
+	}
+	
+	public void onExpansionEvent(ExpansionEvent e) {
 		System.out.println(e);
 	}
 

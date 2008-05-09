@@ -38,7 +38,7 @@ public class EventsGatherer {
 	 * Create EventsGatherer.
 	 * 
 	 * @param nbWiimotes
-	 *            nb wiimotes (nb a of events possible in a call to Wiiuse API)
+	 *            nb wiimotes (nb a of events possible in a call to Wiiuse API).
 	 */
 	public EventsGatherer(int nbWiimotes) {
 		events = new WiiUseApiEvent[nbWiimotes];
@@ -61,11 +61,11 @@ public class EventsGatherer {
 	 * @param id
 	 *            id of the wiimote.
 	 * @param buttonsJustPressed
-	 *            buttons just pressed
+	 *            buttons just pressed.
 	 * @param buttonsJustReleased
-	 *            buttons just released
+	 *            buttons just released.
 	 * @param buttonsHeld
-	 *            buttons held
+	 *            buttons held.
 	 */
 	public void prepareWiiMoteEvent(int id, short buttonsJustPressed,
 			short buttonsJustReleased, short buttonsHeld) {
@@ -85,7 +85,7 @@ public class EventsGatherer {
 	 * @param ax
 	 *            absolute X coordinate.
 	 * @param ay
-	 *            absolute Y coordinate
+	 *            absolute Y coordinate.
 	 * @param xVRes
 	 *            IR virtual screen x resolution.
 	 * @param yVRes
@@ -101,7 +101,7 @@ public class EventsGatherer {
 	 * @param irSensitivity
 	 *            Sensitivity of the infrared camera.
 	 * @param distance
-	 *            Pixel Distance between first two dots
+	 *            Pixel Distance between first two dots.
 	 */
 	public void prepareIRevent(int x, int y, int z, int ax, int ay, int xVRes,
 			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
@@ -113,12 +113,12 @@ public class EventsGatherer {
 	}
 
 	/**
-	 * Add an IR point to the WiiMoteEvent prepared
+	 * Add an IR point to the WiiMoteEvent prepared.
 	 * 
 	 * @param x
-	 *            x coordinates
+	 *            x coordinates.
 	 * @param y
-	 *            y coordinates
+	 *            y coordinates.
 	 * @param rx
 	 *            raw X coordinate (0-1023).
 	 * @param ry
@@ -138,36 +138,36 @@ public class EventsGatherer {
 	 * 
 	 * @param orientationThreshold
 	 *            value of the minimum angle between two events with the
-	 *            accelerometer
+	 *            accelerometer.
 	 * @param accelerationThreshold
 	 *            value of the value variation between two events with the
-	 *            accelerometer
+	 *            accelerometer.
 	 * @param smoothingState
-	 *            true if smoothing flag is activated
+	 *            true if smoothing flag is activated.
 	 * @param alphaSmooth
-	 *            value of the alpha smoothing parameter
+	 *            value of the alpha smoothing parameter.
 	 * @param r
-	 *            roll
+	 *            roll.
 	 * @param p
-	 *            pitch
+	 *            pitch.
 	 * @param ya
-	 *            yaw
+	 *            yaw.
 	 * @param ar
-	 *            absolute roll
+	 *            absolute roll.
 	 * @param ap
-	 *            absolute pitch
+	 *            absolute pitch.
 	 * @param x
-	 *            gravity force on x axis
+	 *            gravity force on x axis.
 	 * @param y
-	 *            gravity force on y axis
+	 *            gravity force on y axis.
 	 * @param z
-	 *            gravity force on z axis
+	 *            gravity force on z axis.
 	 * @param xx
-	 *            raw acceleration on x axis
+	 *            raw acceleration on x axis.
 	 * @param yy
-	 *            raw acceleration on y axis
+	 *            raw acceleration on y axis.
 	 * @param zz
-	 *            raw acceleration on z axis
+	 *            raw acceleration on z axis.
 	 */
 	public void addMotionSensingValues(float orientationThreshold,
 			int accelerationThreshold, boolean smoothingState,
@@ -177,6 +177,80 @@ public class EventsGatherer {
 			genericEvent.setMotionSensingEvent(orientationThreshold,
 					accelerationThreshold, smoothingState, alphaSmooth, r, p,
 					ya, ar, ap, x, y, z, xx, yy, zz);
+		}
+	}
+	
+	/**
+	 * Set a NunchukEvent to the prepared .
+	 * 
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
+	 * @param orientationThreshold
+	 *            value of the minimum angle between two events with the
+	 *            accelerometer.
+	 * @param accelerationThreshold
+	 *            value of the value variation between two events with the
+	 *            accelerometer.
+	 * @param smoothingState
+	 *            true if smoothing flag is activated.
+	 * @param alphaSmooth
+	 *            value of the alpha smoothing parameter.
+	 * @param r
+	 *            roll.
+	 * @param p
+	 *            pitch.
+	 * @param ya
+	 *            yaw.
+	 * @param ar
+	 *            absolute roll.
+	 * @param ap
+	 *            absolute pitch.
+	 * @param x
+	 *            gravity force on x axis.
+	 * @param y
+	 *            gravity force on y axis.
+	 * @param z
+	 *            gravity force on z axis.
+	 * @param xx
+	 *            raw acceleration on x axis.
+	 * @param yy
+	 *            raw acceleration on y axis.
+	 * @param zz
+	 *            raw acceleration on z axis.
+	 * @param angle
+	 *            angle the joystick is being held.
+	 * @param magnitude
+	 *            magnitude of the joystick (range 0-1).
+	 * @param max1
+	 *            maximum joystick value 1.
+	 * @param max2
+	 *            maximum joystick value 2.
+	 * @param min1
+	 *            minimum joystick value 1.
+	 * @param min2
+	 *            minimum joystick value 2.
+	 * @param center1
+	 *            center joystick value 1.
+	 * @param center2
+	 *            center joystick value 2.
+	 */
+	public void addNunchunkEventToPreparedWiimoteEvent(short buttonsJustPressed,
+			short buttonsJustReleased, short buttonsHeld,
+			float orientationThreshold, int accelerationThreshold,
+			boolean smoothingState, float alphaSmooth, float r, float p,
+			float ya, float ar, float ap, float x, float y, float z, short xx,
+			short yy, short zz, int angle, int magnitude, short max1,
+			short max2, short min1, short min2, short center1, short center2){
+		if (genericEvent != null) {
+			genericEvent.setNunchukEvent(buttonsJustPressed,
+				buttonsJustReleased, buttonsHeld, orientationThreshold,
+				accelerationThreshold, smoothingState, alphaSmooth, r, p, ya,
+				ar, ap, x, y, z, xx, yy, zz, angle, magnitude, max1, max2,
+				min1, min2, center1, center2);
 		}
 	}
 
@@ -194,25 +268,25 @@ public class EventsGatherer {
 	 * Add a StatusEvent to the gatherer.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 * @param connect
-	 *            true if the wiimote is connected
+	 *            true if the wiimote is connected.
 	 * @param batt
-	 *            battery level
+	 *            battery level.
 	 * @param led
-	 *            status of leds
+	 *            status of leds.
 	 * @param speak
-	 *            speakers status
+	 *            speakers status.
 	 * @param attach
-	 *            attachment status
+	 *            attachment status.
 	 * @param rumbleState
-	 *            true if rumble is active
+	 *            true if rumble is active.
 	 * @param continuousState
-	 *            true if continuous flag is activated
+	 *            true if continuous flag is activated.
 	 * @param irState
-	 *            true if ir is active
+	 *            true if ir is active.
 	 * @param motionSensingState
-	 *            true if accelerometer is active
+	 *            true if accelerometer is active.
 	 */
 	public void addStatusEvent(int id, boolean connect, float batt, short led,
 			boolean speak, int attach, boolean rumbleState,
@@ -227,7 +301,7 @@ public class EventsGatherer {
 	 * Add a DisconnectionEvent to the gatherer.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void addDisconnectionEvent(int id) {
 		DisconnectionEvent evt = new DisconnectionEvent(id);
@@ -238,7 +312,7 @@ public class EventsGatherer {
 	 * Add a NunchukInsertedEvent to the gatherer.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void addNunchukInsertedEvent(int id) {
 		NunchukInsertedEvent evt = new NunchukInsertedEvent(id);
@@ -249,7 +323,7 @@ public class EventsGatherer {
 	 * Add a NunchukRemovedEvent to the gatherer.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void addNunchukRemovedEvent(int id) {
 		NunchukRemovedEvent evt = new NunchukRemovedEvent(id);
@@ -259,7 +333,7 @@ public class EventsGatherer {
 	/**
 	 * Return an array containing the events.
 	 * 
-	 * @return events received
+	 * @return events received.
 	 */
 	public WiiUseApiEvent[] getEvents() {
 		return java.util.Arrays.copyOfRange(events, 0, index);

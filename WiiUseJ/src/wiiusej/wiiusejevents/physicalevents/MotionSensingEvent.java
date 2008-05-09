@@ -45,36 +45,36 @@ public class MotionSensingEvent extends GenericEvent {
 	 *            id of the wiimote concerned.
 	 * @param orientationThreshold
 	 *            value of the minimum angle between two events with the
-	 *            accelerometer
+	 *            accelerometer.
 	 * @param accelerationThreshold
 	 *            value of the value variation between two events with the
-	 *            accelerometer
+	 *            accelerometer.
 	 * @param smoothingState
-	 *            true if smoothing flag is activated
+	 *            true if smoothing flag is activated.
 	 * @param alphaSmooth
-	 *            value of the alpha smoothing parameter
+	 *            value of the alpha smoothing parameter.
 	 * @param r
-	 *            roll
+	 *            roll.
 	 * @param p
-	 *            pitch
+	 *            pitch.
 	 * @param ya
-	 *            yaw
+	 *            yaw.
 	 * @param ar
-	 *            absolute roll
+	 *            absolute roll.
 	 * @param ap
-	 *            absolute pitch
+	 *            absolute pitch.
 	 * @param x
-	 *            gravity force on x axis
+	 *            gravity force on x axis.
 	 * @param y
-	 *            gravity force on y axis
+	 *            gravity force on y axis.
 	 * @param z
-	 *            gravity force on z axis
+	 *            gravity force on z axis.
 	 * @param xx
-	 *            raw acceleration on x axis
+	 *            raw acceleration on x axis.
 	 * @param yy
-	 *            raw acceleration on y axis
+	 *            raw acceleration on y axis.
 	 * @param zz
-	 *            raw acceleration on z axis
+	 *            raw acceleration on z axis.
 	 */
 	public MotionSensingEvent(int id, float orientationThreshold,
 			int accelerationThreshold, boolean smoothingState,

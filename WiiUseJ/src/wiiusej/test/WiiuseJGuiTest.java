@@ -28,6 +28,7 @@ import wiiusej.utils.ButtonsEventPanel;
 import wiiusej.utils.GForcePanel;
 import wiiusej.utils.IRPanel;
 import wiiusej.utils.OrientationPanel;
+import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
@@ -124,6 +125,10 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
             statusMotionRequested = false;
         }
     }
+    
+    public void onExpansionEvent(ExpansionEvent e) {
+		//nothing yet
+	}
 
     public void onStatusEvent(StatusEvent arg0) {
         messageText.setText("Status received !");

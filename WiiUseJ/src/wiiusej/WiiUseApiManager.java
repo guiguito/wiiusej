@@ -54,9 +54,9 @@ public class WiiUseApiManager extends Thread {
 	 * wiimotes.
 	 * 
 	 * @param nb
-	 *            try to connect nb wiimotes
+	 *            try to connect nb wiimotes.
 	 * @param rumble
-	 *            make the connected wiimotes rumble
+	 *            make the connected wiimotes rumble.
 	 * @return an array with connected wiimotes or NULL.
 	 */
 	public synchronized static Wiimote[] getWiimotes(int nb, boolean rumble) {
@@ -277,7 +277,7 @@ public class WiiUseApiManager extends Thread {
 	 * Deactivate continuous for the wiimotes with the given id.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void deactivateContinuous(int id) {
 		wiiuse.deactivateContinuous(id);
@@ -289,13 +289,13 @@ public class WiiUseApiManager extends Thread {
 	 * @param id
 	 *            id of the wiimote
 	 * @param l1
-	 *            status of led1. True : ON, False : OFF
+	 *            status of led1. True : ON, False : OFF.
 	 * @param l2
-	 *            status of led2. True : ON, False : OFF
+	 *            status of led2. True : ON, False : OFF.
 	 * @param l3
-	 *            status of led3. True : ON, False : OFF
+	 *            status of led3. True : ON, False : OFF.
 	 * @param l4
-	 *            status of led4. True : ON, False : OFF
+	 *            status of led4. True : ON, False : OFF.
 	 */
 	public void setLeds(int id, boolean l1, boolean l2, boolean l3, boolean l4) {
 		wiiuse.setLeds(id, l1, l2, l3, l4);
@@ -303,11 +303,12 @@ public class WiiUseApiManager extends Thread {
 
 	/**
 	 * Set the orientation threshold for the given id.
+	 * (minimum angle between two events)
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 * @param th
-	 *            threshold in degrees
+	 *            threshold in degrees.
 	 */
 	public void setOrientationThreshold(int id, float th) {
 		wiiuse.setOrientThreshold(id, th);
@@ -315,11 +316,12 @@ public class WiiUseApiManager extends Thread {
 
 	/**
 	 * Set the acceleration threshold for the given id.
+	 * (minimum angle between two events)
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 * @param th
-	 *            threshold
+	 *            threshold.
 	 */
 	public void setAccelerationThreshold(int id, int th) {
 		wiiuse.setAccelThreshold(id, th);
@@ -329,9 +331,9 @@ public class WiiUseApiManager extends Thread {
 	 * Set alpha smoothing for the given id.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 * @param th
-	 *            threshold
+	 *            threshold.
 	 */
 	public void setAlphaSmoothing(int id, float th) {
 		wiiuse.setAlphaSmoothing(id, th);
@@ -341,7 +343,7 @@ public class WiiUseApiManager extends Thread {
 	 * Try to resync with the wiimote by starting a new handshake.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void reSync(int id) {
 		wiiuse.reSync(id);
@@ -351,7 +353,7 @@ public class WiiUseApiManager extends Thread {
 	 * Set screen aspect ratio to 4/3 for the given id.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void setScreenAspectRatio43(int id) {
 		wiiuse.setScreenRatio43(id);
@@ -361,7 +363,7 @@ public class WiiUseApiManager extends Thread {
 	 * Set screen aspect ratio to 16/9 for the given id.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void setScreenAspectRatio169(int id) {
 		wiiuse.setScreenRatio169(id);
@@ -371,7 +373,7 @@ public class WiiUseApiManager extends Thread {
 	 * Set the sensor bar to be above the screen.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void setSensorBarAboveScreen(int id) {
 		wiiuse.setSensorBarAboveScreen(id);
@@ -381,7 +383,7 @@ public class WiiUseApiManager extends Thread {
 	 * Set the sensor bar to be below the screen.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void setSensorBarBelowScreen(int id) {
 		wiiuse.setSensorBarBelowScreen(id);
@@ -393,11 +395,11 @@ public class WiiUseApiManager extends Thread {
 	 * come in the IREvent.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 * @param x
-	 *            x resolution
+	 *            x resolution.
 	 * @param y
-	 *            y resolution
+	 *            y resolution.
 	 */
 	public void setVirtualResolution(int id, int x, int y) {
 		wiiuse.setVirtualScreenResolution(id, x, y);
@@ -407,7 +409,7 @@ public class WiiUseApiManager extends Thread {
 	 * Get Status for the wiimote for the given id.
 	 * 
 	 * @param id
-	 *            id of the wiimote
+	 *            id of the wiimote.
 	 */
 	public void getStatus(int id) {
 		wiiuse.getStatus(id);
@@ -440,6 +442,32 @@ public class WiiUseApiManager extends Thread {
 	 */
 	public void setIrSensitivity(int id, int level) {
 		wiiuse.setIrSensitivity(id, level);
+	}
+	
+	/**
+	 * Set the nunchuk orientation threshold for the given id.
+	 * (minimum angle between two events)
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 * @param th
+	 *            threshold in degrees.
+	 */
+	public  void setNunchukOrientationThreshold(int id, float th){
+		wiiuse.setNunchukOrientationThreshold(id, th);
+	}
+	
+	/**
+	 * Set the nunchuk acceleration threshold for the given id.
+	 * (minimum angle between two events)
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 * @param th
+	 *            threshold.
+	 */
+	public void setNunchukAccelerationThreshold(int id, int th){
+		wiiuse.setNunchukAccelerationThreshold(id, th);
 	}
 
 	@Override
