@@ -192,7 +192,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setLeds
 /**
  * Set how many degrees an angle must change to generate an event.
  * @param id id of the wiimote concerned
- * @param angle minimum angle detected by an event
+ * @param thresh minimum angle detected by an event
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 (JNIEnv *env, jobject obj, jint id, jfloat thresh) {
@@ -202,7 +202,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setOrientThreshold
 /**
  * Set how much acceleration must change to generate an event.
  * @param id id of the wiimote concerned
- * @param value minimum value detected by an event
+ * @param val minimum value detected by an event
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setAccelThreshold
 (JNIEnv *env, jobject obj, jint id, jint val) {
@@ -358,6 +358,26 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setIrSensitivity
 }
 
 /**
+ * Set how many degrees an angle must change to generate an event for the nunchuk.
+ * @param id id of the wiimote concerned
+ * @param thresh minimum angle detected by an event
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukOrientationThreshold
+(JNIEnv *env, jobject obj, jint id, jfloat thresh) {
+	wiiuse_set_nunchuk_orient_threshold(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), thresh);
+}
+
+/**
+ * Set how much acceleration must change to generate an event for the nunchuk.
+ * @param id id of the wiimote concerned
+ * @param val minimum value detected by an event
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukAccelerationThreshold
+(JNIEnv *env, jobject obj, jint id, jint val) {
+	wiiuse_set_nunchuk_accel_threshold(wiiuse_get_by_id(wiimotes, nbMaxWiimotes, id), val);
+}
+
+/**
  * Get status and values from the wiimotes and send it through callbacks.
  * @param wim the wiimote object to fill with the datas.
  */
@@ -440,6 +460,36 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 							wiimotes[i]->orient.a_roll, wiimotes[i]->orient.a_pitch,
 							wiimotes[i]->gforce.x, wiimotes[i]->gforce.y, wiimotes[i]->gforce.z,
 							wiimotes[i]->accel.x, wiimotes[i]->accel.y, wiimotes[i]->accel.z);
+				}
+
+				/* Expansions support support*/
+				if (WIIUSE_USING_EXP(wiimotes[i])) {
+					/* Nunchuk support */
+					if (wiimotes[i]->exp.type == EXP_NUNCHUK) {
+						/* put nunchuk values to wiimote generic event */
+						mid = (*env)->GetMethodID(env, cls,
+								"addNunchunkEventToPreparedWiimoteEvent", "(SSSFIZFFFFFFFFFSSSIISSSSSS)V");
+						if (mid == 0) {
+							return;
+						}
+						struct nunchuk_t* nc = (nunchuk_t*)&wiimotes[i]->exp.nunchuk;
+
+						(*env)->CallVoidMethod(env, gath, mid,
+								/* buttons */
+								nc->btns,nc->btns_released,nc->btns_held,
+								/* motion sensing */
+								nc->orient_threshold,nc->accel_threshold,
+								WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_SMOOTHING),nc->accel_calib.st_alpha,
+								nc->orient.roll, nc->orient.pitch, nc->orient.yaw,
+								nc->orient.a_roll, nc->orient.a_pitch,
+								nc->gforce.x, nc->gforce.y, nc->gforce.z,
+								nc->accel.x, nc->accel.y, nc->accel.z,
+								/* joystick */
+								nc->js.ang,nc->js.mag,
+								nc->js.max.x,nc->js.max.y,
+								nc->js.min.x,nc->js.min.y,
+								nc->js.center.x,nc->js.center.y);
+					}
 				}
 
 				/* add generic event to java object used to gather events in c environment */
