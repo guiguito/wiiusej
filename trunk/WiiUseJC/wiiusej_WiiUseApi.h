@@ -226,7 +226,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_getStatus
 /*
  * Class:     wiiusej_WiiUseApi
  * Method:    setTimeout
- * Signature: (IISS)V
+ * Signature: (ISS)V
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setTimeout
   (JNIEnv *, jobject, jint, jshort, jshort);
@@ -241,8 +241,24 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setIrSensitivity
 
 /*
  * Class:     wiiusej_WiiUseApi
+ * Method:    setNunchukOrientationThreshold
+ * Signature: (IF)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukOrientationThreshold
+  (JNIEnv *, jobject, jint, jfloat);
+
+/*
+ * Class:     wiiusej_WiiUseApi
+ * Method:    setNunchukAccelerationThreshold
+ * Signature: (II)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukAccelerationThreshold
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
  * Method:    specialPoll
- * Signature: (Lwiiusej/wiiuseapievents/EventsGatherer;)V
+ * Signature: (Lwiiusej/wiiusejevents/utils/EventsGatherer;)V
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
   (JNIEnv *, jobject, jobject);
