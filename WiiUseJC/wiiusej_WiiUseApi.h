@@ -257,6 +257,14 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukAccelerationThreshold
 
 /*
  * Class:     wiiusej_WiiUseApi
+ * Method:    windowsSetBluetoothStack
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_windowsSetBluetoothStack
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     wiiusej_WiiUseApi
  * Method:    specialPoll
  * Signature: (Lwiiusej/wiiusejevents/utils/EventsGatherer;)V
  */
