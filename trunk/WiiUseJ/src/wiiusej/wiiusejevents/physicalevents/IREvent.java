@@ -31,7 +31,7 @@ public class IREvent extends GenericEvent {
 	private short indexPoints = 0;
 	private int x;
 	private int y;
-	private int z;// distance from the sensor bar
+	private float z;// distance from the sensor bar
 	private int ax;
 	private int ay;
 	private int xVRes;
@@ -82,7 +82,7 @@ public class IREvent extends GenericEvent {
 	 * @param distance
 	 *            Pixel Distance between first two dots
 	 */
-	public IREvent(int id, int x, int y, int z, int ax, int ay, int xVRes,
+	public IREvent(int id, int x, int y, float z, int ax, int ay, int xVRes,
 			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
 			short screenAsPectRatio, short irSensitivity, float distance) {
 		super(id);
@@ -154,7 +154,7 @@ public class IREvent extends GenericEvent {
 	 * 
 	 * @return the z
 	 */
-	public int getZ() {
+	public float getZ() {
 		return z;
 	}
 

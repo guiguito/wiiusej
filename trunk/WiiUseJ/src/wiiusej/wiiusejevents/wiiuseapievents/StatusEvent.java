@@ -16,7 +16,6 @@
  */
 package wiiusej.wiiusejevents.wiiuseapievents;
 
-
 /**
  * Class used to represent a status event. This class is used to know what are
  * the settings of the wiimote.
@@ -131,10 +130,12 @@ public class StatusEvent extends WiiUseApiEvent {
 	public short getLeds() {
 		return leds;
 	}
-	
+
 	/**
 	 * Tells if the given led is turned on according to the leds status int.
-	 * @param led the int encoding a led.
+	 * 
+	 * @param led
+	 *            the int encoding a led.
 	 * @return true if the led is turned on false otherwise.
 	 */
 	private boolean ledStatusCheck(short led) {
@@ -233,6 +234,42 @@ public class StatusEvent extends WiiUseApiEvent {
 	 */
 	public boolean isMotionSensingActive() {
 		return isMotionSensingActive;
+	}
+
+	/**
+	 * Tells if an attachment is connected.
+	 * 
+	 * @return true if anything is connected to the wiimote false otherwise.
+	 */
+	public boolean isAttachmentConnected() {
+		return attachment != EXP_NONE;
+	}
+
+	/**
+	 * Tells if a nunchuk is connected.
+	 * 
+	 * @return true if a nunchuk is connected to the wiimote false otherwise.
+	 */
+	public boolean isNunchukConnected() {
+		return attachment != EXP_NUNCHUK;
+	}
+
+	/**
+	 * Tells if a classic controller is connected.
+	 * 
+	 * @return true if a classic controller is connected to the wiimote false otherwise.
+	 */
+	public boolean isClassicControllerConnected() {
+		return attachment != EXP_CLASSIC;
+	}
+	
+	/**
+	 * Tells if a guitar hero controller is connected.
+	 * 
+	 * @return true if a guitar hero controllerr is connected to the wiimote false otherwise.
+	 */
+	public boolean isGuitarHeroConnected() {
+		return attachment != EXP_GUITAR_HERO_3;
 	}
 
 	@Override

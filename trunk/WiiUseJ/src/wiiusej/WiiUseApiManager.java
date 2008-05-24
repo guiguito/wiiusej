@@ -44,8 +44,48 @@ public class WiiUseApiManager extends Thread {
 
 	private AtomicBoolean running = new AtomicBoolean(false);
 
+	public static int WIIUSE_STACK_UNKNOWN = 0;
+	public static int WIIUSE_STACK_MS = 1;
+	public static int WIIUSE_STACK_BLUESOLEIL = 2;
+
 	public static WiiUseApiManager getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * Get wiimotes. Load library if necessary. Connect to wiimotes if
+	 * necessary. Start polling if necessary. Return an array with the connected
+	 * wiimotes.
+	 * 
+	 * @param nb
+	 *            try to connect nb wiimotes.
+	 * @param rumble
+	 *            make the connected wiimotes rumble.
+	 * 
+	 * @return an array with connected wiimotes or NULL.
+	 */
+	public static Wiimote[] getWiimotes(int nb, boolean rumble){
+		return getWiimotesPrivate(nb, rumble, false, WIIUSE_STACK_UNKNOWN);
+	}
+	
+	/**
+	 * Get wiimotes. Load library if necessary. Connect to wiimotes if
+	 * necessary. Start polling if necessary. Return an array with the connected
+	 * wiimotes.
+	 * 
+	 * @param nb
+	 *            try to connect nb wiimotes.
+	 * @param rumble
+	 *            make the connected wiimotes rumble.*
+	 * @param stackType
+	 *            the stack type : WiiUseApiManager.WIIUSE_STACK_UNKNOWN or
+	 *            WiiUseApiManager.WIIUSE_STACK_MS or
+	 *            WiiUseApiManager.WIIUSE_STACK_BLUESOLEIL
+	 * 
+	 * @return an array with connected wiimotes or NULL.
+	 */
+	public static Wiimote[] getWiimotes(int nb, boolean rumble, int stackType){
+		return getWiimotesPrivate(nb, rumble, true, stackType);
 	}
 
 	/**
@@ -56,42 +96,50 @@ public class WiiUseApiManager extends Thread {
 	 * @param nb
 	 *            try to connect nb wiimotes.
 	 * @param rumble
-	 *            make the connected wiimotes rumble.
+	 *            make the connected wiimotes rumble.*
+	 * @param forceStackType
+	 *            true if we want to force the stack type.
+	 * @param stackType
+	 *            the stack type : WiiUseApiManager.WIIUSE_STACK_UNKNOWN or
+	 *            WiiUseApiManager.WIIUSE_STACK_MS or
+	 *            WiiUseApiManager.WIIUSE_STACK_BLUESOLEIL
+	 * 
 	 * @return an array with connected wiimotes or NULL.
 	 */
-	public synchronized static Wiimote[] getWiimotes(int nb, boolean rumble) {
+	private synchronized static Wiimote[] getWiimotesPrivate(int nb, boolean rumble,
+			boolean forceStackType, int stackType) {
 		WiiUseApiManager manager = getInstance();
 		if (manager.connected <= 0 && !manager.running.get()) {
-			int nbWiimotes = manager.connectWiimotes(nb, rumble);
+			int nbWiimotes = manager.connectWiimotes(nb, rumble, forceStackType, stackType);
 			manager.wiimotes = new Wiimote[nbWiimotes];
 			for (int i = 0; i < nbWiimotes; i++) {
 				Wiimote wim = new Wiimote(WiiUseApi.getInstance().getUnId(i),
 						manager);
 				manager.wiimotes[i] = wim;
-				manager.addWiiUseApiListener(wim);				
+				manager.addWiiUseApiListener(wim);
 			}
-			//Set leds on wiimote
+			// Set leds on wiimote
 			for (Wiimote wiimote : manager.wiimotes) {
 				int id = wiimote.getId();
 				short leds = 0;
-				if (id%4==0){
+				if (id % 4 == 0) {
 					wiimote.setLeds(true, true, true, true);
-				}else if (id%4==1){
+				} else if (id % 4 == 1) {
 					wiimote.setLeds(true, false, false, false);
-				}else if (id%4==2){
+				} else if (id % 4 == 2) {
 					wiimote.setLeds(true, true, false, false);
-				}else if (id%4==3){
+				} else if (id % 4 == 3) {
 					wiimote.setLeds(true, true, true, false);
-				}			
+				}
 			}
-			//make the connected wiimotes rumble
+			// make the connected wiimotes rumble
 			if (rumble) {
-				for (Wiimote wiimote : manager.wiimotes) {		
+				for (Wiimote wiimote : manager.wiimotes) {
 					wiimote.activateRumble();
 				}
 				try {
 					sleep(500);
-				} catch (InterruptedException e) {					
+				} catch (InterruptedException e) {
 				}
 				for (Wiimote wiimote : manager.wiimotes) {
 					wiimote.deactivateRumble();
@@ -117,12 +165,20 @@ public class WiiUseApiManager extends Thread {
 	 *            try to connect nb wiimotes
 	 * @param rumble
 	 *            make the connected wiimotes rumble
+	 * @param forceStackType
+	 *            true if we want to force the stack type.
+	 * @param stackType
+	 *            the stack type : WiiUseApiManager.WIIUSE_STACK_UNKNOWN or
+	 *            WiiUseApiManager.WIIUSE_STACK_MS or
+	 *            WiiUseApiManager.WIIUSE_STACK_BLUESOLEIL
 	 * @return 0 if nothing connected or the number of wiimotes connected.
 	 */
-	private int connectWiimotes(int nb, boolean rumble) {
+	private int connectWiimotes(int nb, boolean rumble, boolean forceStackType, int stackType) {
 		if (connected <= 0) {
 			int nbWiimotesFound;
 			wiiuse.init(nb);
+			//force bluetooth stack type ?
+			if (forceStackType) setBlueToothstackType(stackType);			
 			nbWiimotesFound = wiiuse.find(nb, 3);
 			connected = wiiuse.connect(nbWiimotesFound);
 			return connected;
@@ -302,8 +358,8 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Set the orientation threshold for the given id.
-	 * (minimum angle between two events)
+	 * Set the orientation threshold for the given id. (minimum angle between
+	 * two events)
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -315,8 +371,8 @@ public class WiiUseApiManager extends Thread {
 	}
 
 	/**
-	 * Set the acceleration threshold for the given id.
-	 * (minimum angle between two events)
+	 * Set the acceleration threshold for the given id. (minimum angle between
+	 * two events)
 	 * 
 	 * @param id
 	 *            id of the wiimote.
@@ -443,31 +499,42 @@ public class WiiUseApiManager extends Thread {
 	public void setIrSensitivity(int id, int level) {
 		wiiuse.setIrSensitivity(id, level);
 	}
-	
+
 	/**
-	 * Set the nunchuk orientation threshold for the given id.
-	 * (minimum angle between two events)
+	 * Set the nunchuk orientation threshold for the given id. (minimum angle
+	 * between two events)
 	 * 
 	 * @param id
 	 *            id of the wiimote.
 	 * @param th
 	 *            threshold in degrees.
 	 */
-	public  void setNunchukOrientationThreshold(int id, float th){
+	public void setNunchukOrientationThreshold(int id, float th) {
 		wiiuse.setNunchukOrientationThreshold(id, th);
 	}
-	
+
 	/**
-	 * Set the nunchuk acceleration threshold for the given id.
-	 * (minimum angle between two events)
+	 * Set the nunchuk acceleration threshold for the given id. (minimum angle
+	 * between two events)
 	 * 
 	 * @param id
 	 *            id of the wiimote.
 	 * @param th
 	 *            threshold.
 	 */
-	public void setNunchukAccelerationThreshold(int id, int th){
+	public void setNunchukAccelerationThreshold(int id, int th) {
 		wiiuse.setNunchukAccelerationThreshold(id, th);
+	}
+
+	/**
+	 * Force the bluetooth stack type.(useful only for windows)
+	 * 
+	 * @param type
+	 *            must be WIIUSE_STACK_UNKNOWN or WIIUSE_STACK_MS or
+	 *            WIIUSE_STACK_BLUESOLEIL.
+	 */
+	private void setBlueToothstackType(int type) {
+
 	}
 
 	@Override
