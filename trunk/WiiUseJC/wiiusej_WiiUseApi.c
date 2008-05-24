@@ -378,6 +378,24 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukAccelerationThreshold
 }
 
 /**
+ * Force the bluetooth stack type.(useful only for windows)
+ * 
+ * @param bluetoothStackType
+ *            must be WiiUseApi.WIIUSE_STACK_UNKNOWN or WiiUseApi.WIIUSE_STACK_MS or
+ *            WiiUseApi.WIIUSE_STACK_BLUESOLEIL.
+ */
+JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_windowsSetBluetoothStack
+(JNIEnv *env, jobject obj, jint bluetoothStackType) {
+	if (bluetoothStackType == 0){
+		wiiuse_set_bluetooth_stack(wiimotes, nbMaxWiimotes, WIIUSE_STACK_UNKNOWN);
+	}else if (bluetoothStackType == 1){
+		wiiuse_set_bluetooth_stack(wiimotes, nbMaxWiimotes, WIIUSE_STACK_MS);
+	}else if (bluetoothStackType == 2){
+		wiiuse_set_bluetooth_stack(wiimotes, nbMaxWiimotes, WIIUSE_STACK_BLUESOLEIL);
+	}
+}
+
+/**
  * Get status and values from the wiimotes and send it through callbacks.
  * @param wim the wiimote object to fill with the datas.
  */
@@ -416,7 +434,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 					WIIUSE_GET_IR_SENSITIVITY_CORRECTED(wiimotes[i], &a);
 
 					mid = (*env)->GetMethodID(env, cls, "prepareIRevent",
-							"(IIIIIIIIISSSF)V");
+							"(IIFIIIIIISSSF)V");
 					if (mid == 0) {
 						return;
 					}
