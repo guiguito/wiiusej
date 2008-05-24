@@ -231,26 +231,26 @@ public class Wiimote implements WiiUseApiListener {
 	public void setVirtualResolution(int x, int y) {
 		manager.setVirtualResolution(id, x, y);
 	}
-	
+
 	/**
-	 * Set the nunchuk orientation threshold for the given id.
-	 * (minimum angle between two events)
+	 * Set the nunchuk orientation threshold for the given id. (minimum angle
+	 * between two events)
 	 * 
 	 * @param th
 	 *            threshold in degrees.
 	 */
-	public  void setNunchukOrientationThreshold(float th){
+	public void setNunchukOrientationThreshold(float th) {
 		manager.setNunchukOrientationThreshold(id, th);
 	}
-	
+
 	/**
-	 * Set the nunchuk acceleration threshold for the given id.
-	 * (minimum angle between two events)
+	 * Set the nunchuk acceleration threshold for the given id. (minimum angle
+	 * between two events)
 	 * 
 	 * @param th
 	 *            threshold.
 	 */
-	public void setNunchukAccelerationThreshold(int th){
+	public void setNunchukAccelerationThreshold(int th) {
 		manager.setNunchukAccelerationThreshold(id, th);
 	}
 
@@ -268,6 +268,21 @@ public class Wiimote implements WiiUseApiListener {
 	 */
 	public void getStatus() {
 		manager.getStatus(id);
+	}
+
+	/**
+	 * Set the normal and expansion handshake timeouts for this wiimote. Normal
+	 * time out is for classic polling. The expansion timeout is used when an
+	 * expansion is detected until the expansion successfully handshakes.
+	 * 
+	 * @param normalTimeout
+	 *            The timeout in milliseconds for a normal read.
+	 * @param expansionTimeout
+	 *            The timeout in millisecondsd to wait for an expansion
+	 *            handshake.
+	 */
+	public void setTimeout(short normalTimeout, short expansionTimeout) {
+		manager.setTimeout(id, normalTimeout, expansionTimeout);
 	}
 
 	/**
@@ -297,13 +312,12 @@ public class Wiimote implements WiiUseApiListener {
 			} else if (e.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
 				notifyDisconnectionEventListeners((DisconnectionEvent) e);
 			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_INSERTED) {
-				notifyNunchukInsertedEventListeners((NunchukInsertedEvent)e);
+				notifyNunchukInsertedEventListeners((NunchukInsertedEvent) e);
 			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED) {
-				notifyNunchukRemovedEventListeners((NunchukRemovedEvent)e);
+				notifyNunchukRemovedEventListeners((NunchukRemovedEvent) e);
 			}
 			/*
-			 * events not managed yet 
-			 * || e.getEventType() == WIIUSE_READ_DATA
+			 * events not managed yet || e.getEventType() == WIIUSE_READ_DATA
 			 * WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED || e.getEventType() ==
 			 * WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED || e.getEventType() ==
 			 * WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED ||
@@ -359,7 +373,7 @@ public class Wiimote implements WiiUseApiListener {
 			if (evt.isThereMotionSensingEvent()) {
 				listener.onMotionSensingEvent(evt.getMotionSensingEvent());
 			}
-			if (evt.isThereExpansionEvent()){
+			if (evt.isThereExpansionEvent()) {
 				listener.onExpansionEvent(evt.getExpansionEvent());
 			}
 		}

@@ -157,7 +157,7 @@ public class WiimoteEvent extends WiiUseApiEvent {
 	 * @param distance
 	 *            Pixel Distance between first two dots
 	 */
-	public void prepareIRevent(int x, int y, int z, int ax, int ay, int xVRes,
+	public void prepareIRevent(int x, int y, float z, int ax, int ay, int xVRes,
 			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
 			short screenAsPectRatio, short irSensitivity, float distance) {
 		if (infraredEvent == null) {

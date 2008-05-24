@@ -309,7 +309,8 @@ public class WiiUseApi {
 	synchronized native void setIrSensitivity(int id, int level);
 
 	/**
-	 * Set how many degrees an angle must change to generate an event for the nunchuk.
+	 * Set how many degrees an angle must change to generate an event for the
+	 * nunchuk.
 	 * 
 	 * @param id
 	 *            id of the wiimote concerned.
@@ -317,9 +318,10 @@ public class WiiUseApi {
 	 *            minimum angle detected by an event.
 	 */
 	synchronized native void setNunchukOrientationThreshold(int id, float angle);
-	
+
 	/**
-	 * Set how much acceleration must change to generate an event for the nunchuk.
+	 * Set how much acceleration must change to generate an event for the
+	 * nunchuk.
 	 * 
 	 * @param id
 	 *            id of the wiimote concerned.
@@ -327,8 +329,16 @@ public class WiiUseApi {
 	 *            minimum value detected by an event.
 	 */
 	synchronized native void setNunchukAccelerationThreshold(int id, int value);
-	
-	
+
+	/**
+	 * Force the bluetooth stack type.(useful only for windows)
+	 * 
+	 * @param bluetoothStackType
+	 *            must be WiiUseApi.WIIUSE_STACK_UNKNOWN or WiiUseApi.WIIUSE_STACK_MS or
+	 *            WiiUseApi.WIIUSE_STACK_BLUESOLEIL.
+	 */
+	native void windowsSetBluetoothStack(int bluetoothStackType);
+
 	/**
 	 * Check for new Events and Get it.
 	 * 
