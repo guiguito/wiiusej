@@ -242,7 +242,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if anything is connected to the wiimote false otherwise.
 	 */
 	public boolean isAttachmentConnected() {
-		return attachment != EXP_NONE;
+		return attachment == EXP_NONE;
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if a nunchuk is connected to the wiimote false otherwise.
 	 */
 	public boolean isNunchukConnected() {
-		return attachment != EXP_NUNCHUK;
+		return attachment == EXP_NUNCHUK;
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if a classic controller is connected to the wiimote false otherwise.
 	 */
 	public boolean isClassicControllerConnected() {
-		return attachment != EXP_CLASSIC;
+		return attachment == EXP_CLASSIC;
 	}
 	
 	/**
@@ -269,7 +269,7 @@ public class StatusEvent extends WiiUseApiEvent {
 	 * @return true if a guitar hero controllerr is connected to the wiimote false otherwise.
 	 */
 	public boolean isGuitarHeroConnected() {
-		return attachment != EXP_GUITAR_HERO_3;
+		return attachment == EXP_GUITAR_HERO_3;
 	}
 
 	@Override

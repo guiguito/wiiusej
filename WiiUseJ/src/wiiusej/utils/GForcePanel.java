@@ -26,6 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import wiiusej.values.GForce;
+import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
@@ -41,7 +42,7 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
  * 
  * @author guiguito
  */
-public class GForcePanel extends javax.swing.JPanel implements WiimoteListener {
+public abstract class GForcePanel extends javax.swing.JPanel implements WiimoteListener {
 
 	private Image mImage;// image for double buffering
 	private Color xColor = Color.RED;
@@ -173,17 +174,11 @@ public class GForcePanel extends javax.swing.JPanel implements WiimoteListener {
 	}
 
 	public void onMotionSensingEvent(MotionSensingEvent arg0) {
-		if (values.size() >= getWidth()) {
-			// if there are as many values as pixels in the width
-			// clear points
-			values.clear();
-		}
-		values.add(arg0.getGforce());
-		repaint();
+		draw(arg0);
 	}
 
-	public void onExpansionEvent(ExpansionEvent e) {
-		// nothing
+	public void onExpansionEvent(ExpansionEvent arg0) {
+		draw(arg0);
 	}
 
 	public void onStatusEvent(StatusEvent arg0) {
@@ -196,14 +191,69 @@ public class GForcePanel extends javax.swing.JPanel implements WiimoteListener {
 		repaint();
 	}
 
-	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+	public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
 		// nothing
 	}
 
-	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0){
 		// nothing
 	}
+        
+        private void draw(GenericEvent arg0){
+            if (values.size() >= getWidth()) {
+			// if there are as many values as pixels in the width
+			// clear points
+			values.clear();
+		}
+                GForce  gforce = getGForceValue(arg0);
+                if (gforce != null) values.add(gforce);
+		repaint();
+        }
+                
+        public abstract GForce getGForceValue(GenericEvent e);
 
+        public Color getBackgroundColor() {
+            return backgroundColor;
+        }
+
+        public Color getLineColor() {
+            return lineColor;
+        }
+
+        public Color getXColor() {
+            return xColor;
+        }
+
+        public Color getYColor() {
+            return yColor;
+        }
+
+        public Color getZColor() {
+            return zColor;
+        }
+
+        public void setBackgroundColor(Color backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        }
+
+        public void setLineColor(Color lineColor) {
+            this.lineColor = lineColor;
+        }
+
+        public void setXColor(Color xColor) {
+            this.xColor = xColor;
+        }
+
+        public void setYColor(Color yColor) {
+            this.yColor = yColor;
+        }
+
+        public void setZColor(Color zColor) {
+            this.zColor = zColor;
+        }
+
+
+        
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

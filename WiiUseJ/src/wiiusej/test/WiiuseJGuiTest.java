@@ -19,15 +19,21 @@ package wiiusej.test;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JFrame;
+import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
 import wiiusej.utils.AccelerationPanel;
+import wiiusej.utils.AccelerationWiimoteEventPanel;
 import wiiusej.utils.ButtonsEventPanel;
 import wiiusej.utils.GForcePanel;
 import wiiusej.utils.IRPanel;
 import wiiusej.utils.OrientationPanel;
+import wiiusej.utils.OrientationWiimoteEventPanel;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
@@ -48,10 +54,45 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
     private Robot robot = null;
     private boolean statusMotionRequested = false;
     private boolean statusIRRequested = false;
+    private JFrame expansionFrame = null;
+    private boolean isFirstStatusGot = false;
+    private WindowListener buttonSetter = new WindowListener() {
+
+        public void windowOpened(WindowEvent e) {
+        //nothing
+        }
+
+        public void windowClosing(WindowEvent e) {
+        //nothing
+        }
+
+        public void windowClosed(WindowEvent e) {
+        //nothing
+        }
+
+        public void windowIconified(WindowEvent e) {
+        //nothing
+        }
+
+        public void windowDeiconified(WindowEvent e) {
+        //nothing
+        }
+
+        public void windowActivated(WindowEvent e) {
+             showExpansionWiimoteButton.setEnabled(false);
+             showExpansionWiimoteButton.setText("Hide Nunchuk");                          
+        }
+
+        public void windowDeactivated(WindowEvent e) {
+            showExpansionWiimoteButton.setEnabled(true);
+            showExpansionWiimoteButton.setText("Show Nunchuk");
+        }
+        };
 
     /** Creates new form WiiuseJGuiTest */
     public WiiuseJGuiTest(Wiimote wiimote) {
         initComponents();
+        this.addWindowListener(new CloseGuiTestCleanly());
         this.wiimote = wiimote;
         wiimote.addWiiMoteEventListeners((IRPanel) irViewPanel);
         wiimote.addWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
@@ -63,8 +104,8 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         wiimote.deactivateSmoothing();
         wiimote.setScreenAspectRatio169();
         wiimote.setSensorBarBelowScreen();
-        getStatusButtonMousePressed(null);
-        this.addWindowListener(new CloseGuiTestCleanly(wiimote));
+        isFirstStatusGot = false;
+        getStatusButtonMousePressed(null);                        
     }
 
     public void onButtonsEvent(WiimoteButtonsEvent arg0) {
@@ -99,7 +140,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
             if (arg0.isButtonDownPressed()) {//mouse wheel down
                 robot.mouseWheel(1);
             }
-            
+
             if (arg0.isButtonTwoPressed()) {//stop mouse control
                 mouseIRControlButtonMousePressed(null);
             }
@@ -110,69 +151,99 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         if (robot != null) {//if mouse control activated
             robot.mouseMove(arg0.getX(), arg0.getY());
         }
-        if (statusIRRequested){
-            xResolutionTextField.setText(""+arg0.getXVRes());
-            yResolutionTextField.setText(""+arg0.getYVRes());
+        if (statusIRRequested) {
+            xResolutionTextField.setText("" + arg0.getXVRes());
+            yResolutionTextField.setText("" + arg0.getYVRes());
             statusIRRequested = false;
         }
     }
 
     public void onMotionSensingEvent(MotionSensingEvent arg0) {
-        if (statusMotionRequested){//Status requested
-            accelerationThresholdTextField.setText(""+arg0.getAccelerationThreshold());
-            orientationThresholdTextField.setText(""+arg0.getOrientationThreshold());
-            alphaSmoothingTextField.setText(""+arg0.getAlphaSmoothing());
+        if (statusMotionRequested) {//Status requested
+            accelerationThresholdTextField.setText("" + arg0.getAccelerationThreshold());
+            orientationThresholdTextField.setText("" + arg0.getOrientationThreshold());
+            alphaSmoothingTextField.setText("" + arg0.getAlphaSmoothing());
             statusMotionRequested = false;
         }
     }
-    
+
     public void onExpansionEvent(ExpansionEvent e) {
-		//nothing yet
-	}
+    //nothing yet
+    }
 
     public void onStatusEvent(StatusEvent arg0) {
+        if (!isFirstStatusGot) {
+            if (arg0.isNunchukConnected()) {
+                showExpansionWiimoteButton.setEnabled(true);
+                showExpansionWiimoteButton.setText("Show Nunchuk");
+                expansionFrame = new NunchukGuiTest(wiimote);
+                expansionFrame.setDefaultCloseOperation(expansionFrame.HIDE_ON_CLOSE);
+                expansionFrame.addWindowListener(buttonSetter);
+                isFirstStatusGot = true;
+            }
+        }
         messageText.setText("Status received !");
-        batteryLevelText.setText(arg0.getBatteryLevel() + " %");                
+        batteryLevelText.setText(arg0.getBatteryLevel() + " %");
         led1Button.setEnabled(arg0.isLed1Set());
         led2Button.setEnabled(arg0.isLed2Set());
         led3Button.setEnabled(arg0.isLed3Set());
         led4Button.setEnabled(arg0.isLed4Set());
+        if (arg0.isNunchukConnected()) {
+            ((NunchukGuiTest)expansionFrame).requestThresholdsUpdate();
+        }
         //attachments
         int eventType = arg0.getEventType();
-        if (eventType == StatusEvent.WIIUSE_CLASSIC_CTRL_INSERTED){
+        if (eventType == StatusEvent.WIIUSE_CLASSIC_CTRL_INSERTED) {
             expansionText.setText("Classic control connected.");
-        }else
-        if (eventType == StatusEvent.WIIUSE_CLASSIC_CTRL_REMOVED){
+        } else if (eventType == StatusEvent.WIIUSE_CLASSIC_CTRL_REMOVED) {
             expansionText.setText("Classic control removed.");
-        }else
-        if (eventType == StatusEvent.WIIUSE_NUNCHUK_INSERTED){
+        } else if (eventType == StatusEvent.WIIUSE_NUNCHUK_INSERTED) {
             expansionText.setText("Nunchuk connected.");
-        }else
-        if (eventType == StatusEvent.WIIUSE_NUNCHUK_REMOVED){
+        } else if (eventType == StatusEvent.WIIUSE_NUNCHUK_REMOVED) {
             expansionText.setText("Nunchuk removed.");
-        }else
-        if (eventType == StatusEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED){
+        } else if (eventType == StatusEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED) {
             expansionText.setText("Guitar Hero 3 control connected.");
-        }else
-        if (eventType == StatusEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED){
+        } else if (eventType == StatusEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED) {
             expansionText.setText("Guitar Hero 3 control removed.");
         }
     }
 
     public void onDisconnectionEvent(DisconnectionEvent arg0) {
         messageText.setText("Wiimote Disconnected !");
+        wiimote.removeWiiMoteEventListeners((IRPanel) irViewPanel);
+        wiimote.removeWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
+        wiimote.removeWiiMoteEventListeners((OrientationPanel) motionSensingPanel);
+        wiimote.removeWiiMoteEventListeners((GForcePanel) gForcePanel);
+        wiimote.removeWiiMoteEventListeners((AccelerationPanel) accelerationPanel);
+        wiimote.removeWiiMoteEventListeners(this);
+        isFirstStatusGot = false;                
     }
-    
-	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+        messageText.setText("Nunchuk connected !");
+        expansionText.setText("Expansion connected : Nunchuk.");
+        showExpansionWiimoteButton.setEnabled(true);
+        showExpansionWiimoteButton.setText("Show nunchuk");
+        expansionFrame = new NunchukGuiTest(wiimote);
+        expansionFrame.setDefaultCloseOperation(expansionFrame.HIDE_ON_CLOSE);
+        expansionFrame.addWindowListener(buttonSetter);
+    }
+
+    public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+        messageText.setText("Nunchuk disconnected !");
+        expansionText.setText("No expansion connected.");
+        showExpansionWiimoteButton.setEnabled(false);
+        showExpansionWiimoteButton.setText("No expansion");
+        if (expansionFrame != null) {
+            if (expansionFrame instanceof NunchukGuiTest) {
+                ((NunchukGuiTest) expansionFrame).unRegisterListeners();
+            }
+            expansionFrame.setEnabled(false);
+            expansionFrame.dispose();
+            expansionFrame = null;
+        }
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -184,57 +255,66 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         leftPanel = new javax.swing.JPanel();
         irViewPanel = new IRPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        motionSensingPanel = new OrientationPanel();
-        gForcePanel = new wiiusej.utils.GForcePanel();
-        accelerationPanel = new AccelerationPanel();
+        accelerationPanel = new AccelerationWiimoteEventPanel();
+        motionSensingPanel = new OrientationWiimoteEventPanel();
+        gForcePanel = new wiiusej.utils.GForceWiimoteEventPanel();
         rightPanel = new javax.swing.JPanel();
         fixedWiimotePanel = new javax.swing.JPanel();
         buttonsPanel = new ButtonsEventPanel();
         controlsPanel = new javax.swing.JPanel();
-        activateRumblePanel = new javax.swing.JPanel();
+        activateRumbleIRPanel = new javax.swing.JPanel();
         toggleRumbleButton = new javax.swing.JButton();
-        deactivateRumblePanel = new javax.swing.JPanel();
         toggleIRTrackingButton = new javax.swing.JButton();
-        activateIRtrackingPanel = new javax.swing.JPanel();
+        activateMotionSensingPanel = new javax.swing.JPanel();
         toggleMotionSensingTrackingButton = new javax.swing.JButton();
-        deactivateIRTrackingPanel = new javax.swing.JPanel();
+        activateSmoothingContinuousPanel = new javax.swing.JPanel();
         toggleSmoothingButton = new javax.swing.JButton();
-        activateMotionSensingTrackingPanel = new javax.swing.JPanel();
         toggleContinuousButton = new javax.swing.JButton();
-        deactivateMotionSensingTrackingPanel = new javax.swing.JPanel();
+        setLedsPanel = new javax.swing.JPanel();
         led1Button = new javax.swing.JButton();
         led2Button = new javax.swing.JButton();
         led3Button = new javax.swing.JButton();
         led4Button = new javax.swing.JButton();
         setLedsButton = new javax.swing.JButton();
-        activateSmoothingPanel = new javax.swing.JPanel();
+        setAlphaSmoothingPanel = new javax.swing.JPanel();
         alphaSmoothingTextField = new javax.swing.JTextField();
         alphaSmoothingButton = new javax.swing.JButton();
-        deactivateSmoothingPanel = new javax.swing.JPanel();
+        setOrientationThresholdPanel = new javax.swing.JPanel();
         orientationThresholdTextField = new javax.swing.JTextField();
         orientationThresholdButton = new javax.swing.JButton();
-        activateContinuousPanel = new javax.swing.JPanel();
+        setAccelerationThresholdPanel = new javax.swing.JPanel();
         accelerationThresholdTextField = new javax.swing.JTextField();
         accelerationThresholdButton = new javax.swing.JButton();
-        deactivateContinuousPanel = new javax.swing.JPanel();
+        getStatusPanel = new javax.swing.JPanel();
         getStatusButton = new javax.swing.JButton();
         batteryText = new javax.swing.JLabel();
         batteryLevelText = new javax.swing.JLabel();
-        ledsPanel = new javax.swing.JPanel();
+        setIrSensitivyPanel = new javax.swing.JPanel();
+        setIrSensitivySpinner = new javax.swing.JSpinner();
+        setIrSensitivyButton = new javax.swing.JButton();
+        setTimeoutButton = new javax.swing.JButton();
+        setTimeoutPanel = new javax.swing.JPanel();
+        normalTimeoutSpinner = new javax.swing.JSpinner();
+        normalTimeoutText = new javax.swing.JLabel();
+        expansionHandshakeTimeoutSpinner = new javax.swing.JSpinner();
+        expansionHandshakeTimeoutText = new javax.swing.JLabel();
+        setIRConfPanel = new javax.swing.JPanel();
         toggleSensorBarPositionButton = new javax.swing.JButton();
-        alphaSmoothingPanel = new javax.swing.JPanel();
         toggleScreenAspectRatioButton = new javax.swing.JButton();
-        orientationThresholdPanel = new javax.swing.JPanel();
+        setVirtualResolutionPanel = new javax.swing.JPanel();
         xLabel = new javax.swing.JLabel();
         xResolutionTextField = new javax.swing.JTextField();
         yLabel = new javax.swing.JLabel();
         yResolutionTextField = new javax.swing.JTextField();
         setVirtualResolutionButton = new javax.swing.JButton();
-        accelerationThresholdPanel = new javax.swing.JPanel();
+        startMouseControlPanel = new javax.swing.JPanel();
         mouseIRControlButton = new javax.swing.JButton();
-        batteryPanel = new javax.swing.JPanel();
+        exPansionPanel = new javax.swing.JPanel();
         expansionText = new javax.swing.JLabel();
+        showExpansionWiimoteButton = new javax.swing.JButton();
+        showExpansionWiimoteButton.setEnabled(false);
         messagesPanel = new javax.swing.JPanel();
+        reconnectWiimotesButton = new javax.swing.JButton();
         messageLabelText = new javax.swing.JLabel();
         messageText = new javax.swing.JLabel();
 
@@ -246,6 +326,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
 
         irViewPanel.setBackground(new java.awt.Color(0, 0, 0));
         irViewPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 2, true), "IR View", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 0, 51)));
+        irViewPanel.setToolTipText("IREvent");
 
         javax.swing.GroupLayout irViewPanelLayout = new javax.swing.GroupLayout(irViewPanel);
         irViewPanel.setLayout(irViewPanelLayout);
@@ -257,6 +338,21 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
             irViewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 299, Short.MAX_VALUE)
         );
+
+        accelerationPanel.setToolTipText("MotionSensingEvent");
+
+        javax.swing.GroupLayout accelerationPanelLayout = new javax.swing.GroupLayout(accelerationPanel);
+        accelerationPanel.setLayout(accelerationPanelLayout);
+        accelerationPanelLayout.setHorizontalGroup(
+            accelerationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 279, Short.MAX_VALUE)
+        );
+        accelerationPanelLayout.setVerticalGroup(
+            accelerationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 213, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Acceleration", accelerationPanel);
 
         javax.swing.GroupLayout motionSensingPanelLayout = new javax.swing.GroupLayout(motionSensingPanel);
         motionSensingPanel.setLayout(motionSensingPanelLayout);
@@ -283,19 +379,6 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         );
 
         jTabbedPane1.addTab("GForce", gForcePanel);
-
-        javax.swing.GroupLayout accelerationPanelLayout = new javax.swing.GroupLayout(accelerationPanel);
-        accelerationPanel.setLayout(accelerationPanelLayout);
-        accelerationPanelLayout.setHorizontalGroup(
-            accelerationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
-        );
-        accelerationPanelLayout.setVerticalGroup(
-            accelerationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 213, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Raw Acceleration", accelerationPanel);
 
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
@@ -354,9 +437,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleRumbleButtonMousePressed(evt);
             }
         });
-        activateRumblePanel.add(toggleRumbleButton);
-
-        controlsPanel.add(activateRumblePanel);
+        activateRumbleIRPanel.add(toggleRumbleButton);
 
         toggleIRTrackingButton.setText("Activate IR Tracking");
         toggleIRTrackingButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -364,9 +445,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleIRTrackingButtonMousePressed(evt);
             }
         });
-        deactivateRumblePanel.add(toggleIRTrackingButton);
+        activateRumbleIRPanel.add(toggleIRTrackingButton);
 
-        controlsPanel.add(deactivateRumblePanel);
+        controlsPanel.add(activateRumbleIRPanel);
 
         toggleMotionSensingTrackingButton.setText("Activate motion sensing Tracking");
         toggleMotionSensingTrackingButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -374,9 +455,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleMotionSensingTrackingButtonMousePressed(evt);
             }
         });
-        activateIRtrackingPanel.add(toggleMotionSensingTrackingButton);
+        activateMotionSensingPanel.add(toggleMotionSensingTrackingButton);
 
-        controlsPanel.add(activateIRtrackingPanel);
+        controlsPanel.add(activateMotionSensingPanel);
 
         toggleSmoothingButton.setText("Activate Smoothing");
         toggleSmoothingButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -384,9 +465,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleSmoothingButtonMousePressed(evt);
             }
         });
-        deactivateIRTrackingPanel.add(toggleSmoothingButton);
-
-        controlsPanel.add(deactivateIRTrackingPanel);
+        activateSmoothingContinuousPanel.add(toggleSmoothingButton);
 
         toggleContinuousButton.setText("Activate Continuous");
         toggleContinuousButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -394,9 +473,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleContinuousButtonMousePressed(evt);
             }
         });
-        activateMotionSensingTrackingPanel.add(toggleContinuousButton);
+        activateSmoothingContinuousPanel.add(toggleContinuousButton);
 
-        controlsPanel.add(activateMotionSensingTrackingPanel);
+        controlsPanel.add(activateSmoothingContinuousPanel);
 
         led1Button.setText("Led1");
         led1Button.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -404,7 +483,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 led1ButtonMousePressed(evt);
             }
         });
-        deactivateMotionSensingTrackingPanel.add(led1Button);
+        setLedsPanel.add(led1Button);
 
         led2Button.setText("Led2");
         led2Button.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -412,7 +491,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 led2ButtonMousePressed(evt);
             }
         });
-        deactivateMotionSensingTrackingPanel.add(led2Button);
+        setLedsPanel.add(led2Button);
 
         led3Button.setText("Led3");
         led3Button.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -420,7 +499,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 led3ButtonMousePressed(evt);
             }
         });
-        deactivateMotionSensingTrackingPanel.add(led3Button);
+        setLedsPanel.add(led3Button);
 
         led4Button.setText("Led4");
         led4Button.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -428,7 +507,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 led4ButtonMousePressed(evt);
             }
         });
-        deactivateMotionSensingTrackingPanel.add(led4Button);
+        setLedsPanel.add(led4Button);
 
         setLedsButton.setText("Set leds");
         setLedsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -436,13 +515,13 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 setLedsButtonMousePressed(evt);
             }
         });
-        deactivateMotionSensingTrackingPanel.add(setLedsButton);
+        setLedsPanel.add(setLedsButton);
 
-        controlsPanel.add(deactivateMotionSensingTrackingPanel);
+        controlsPanel.add(setLedsPanel);
 
         alphaSmoothingTextField.setMinimumSize(new java.awt.Dimension(100, 20));
         alphaSmoothingTextField.setPreferredSize(new java.awt.Dimension(100, 20));
-        activateSmoothingPanel.add(alphaSmoothingTextField);
+        setAlphaSmoothingPanel.add(alphaSmoothingTextField);
 
         alphaSmoothingButton.setText("Set alpha smoothing");
         alphaSmoothingButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -450,13 +529,13 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 alphaSmoothingButtonMousePressed(evt);
             }
         });
-        activateSmoothingPanel.add(alphaSmoothingButton);
+        setAlphaSmoothingPanel.add(alphaSmoothingButton);
 
-        controlsPanel.add(activateSmoothingPanel);
+        controlsPanel.add(setAlphaSmoothingPanel);
 
         orientationThresholdTextField.setMinimumSize(new java.awt.Dimension(100, 20));
         orientationThresholdTextField.setPreferredSize(new java.awt.Dimension(100, 20));
-        deactivateSmoothingPanel.add(orientationThresholdTextField);
+        setOrientationThresholdPanel.add(orientationThresholdTextField);
 
         orientationThresholdButton.setText("Set orientation threshold");
         orientationThresholdButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -464,12 +543,12 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 orientationThresholdButtonMousePressed(evt);
             }
         });
-        deactivateSmoothingPanel.add(orientationThresholdButton);
+        setOrientationThresholdPanel.add(orientationThresholdButton);
 
-        controlsPanel.add(deactivateSmoothingPanel);
+        controlsPanel.add(setOrientationThresholdPanel);
 
         accelerationThresholdTextField.setPreferredSize(new java.awt.Dimension(100, 20));
-        activateContinuousPanel.add(accelerationThresholdTextField);
+        setAccelerationThresholdPanel.add(accelerationThresholdTextField);
 
         accelerationThresholdButton.setText("Set acceleration threshold");
         accelerationThresholdButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -477,9 +556,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 accelerationThresholdButtonMousePressed(evt);
             }
         });
-        activateContinuousPanel.add(accelerationThresholdButton);
+        setAccelerationThresholdPanel.add(accelerationThresholdButton);
 
-        controlsPanel.add(activateContinuousPanel);
+        controlsPanel.add(setAccelerationThresholdPanel);
 
         getStatusButton.setText("Get status");
         getStatusButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -487,17 +566,67 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 getStatusButtonMousePressed(evt);
             }
         });
-        deactivateContinuousPanel.add(getStatusButton);
+        getStatusPanel.add(getStatusButton);
 
         batteryText.setFont(new java.awt.Font("Tahoma", 0, 14));
         batteryText.setText("Battery level :");
-        deactivateContinuousPanel.add(batteryText);
+        getStatusPanel.add(batteryText);
 
         batteryLevelText.setFont(new java.awt.Font("Arial", 0, 14));
         batteryLevelText.setText(" %");
-        deactivateContinuousPanel.add(batteryLevelText);
+        getStatusPanel.add(batteryLevelText);
 
-        controlsPanel.add(deactivateContinuousPanel);
+        controlsPanel.add(getStatusPanel);
+
+        setIrSensitivySpinner.setPreferredSize(new java.awt.Dimension(50, 18));
+        setIrSensitivySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                setIrSensitivySpinnerStateChanged(evt);
+            }
+        });
+        setIrSensitivyPanel.add(setIrSensitivySpinner);
+
+        setIrSensitivyButton.setText("SetIrSensivity");
+        setIrSensitivyButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                setIrSensitivyButtonMousePressed(evt);
+            }
+        });
+        setIrSensitivyPanel.add(setIrSensitivyButton);
+
+        setTimeoutButton.setText("Set timeouts in ms");
+        setTimeoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                setTimeoutButtonMousePressed(evt);
+            }
+        });
+        setIrSensitivyPanel.add(setTimeoutButton);
+
+        controlsPanel.add(setIrSensitivyPanel);
+
+        normalTimeoutSpinner.setPreferredSize(new java.awt.Dimension(40, 18));
+        normalTimeoutSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                normalTimeoutSpinnerStateChanged(evt);
+            }
+        });
+        setTimeoutPanel.add(normalTimeoutSpinner);
+
+        normalTimeoutText.setText("Normal timeout");
+        setTimeoutPanel.add(normalTimeoutText);
+
+        expansionHandshakeTimeoutSpinner.setPreferredSize(new java.awt.Dimension(40, 18));
+        expansionHandshakeTimeoutSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                expansionHandshakeTimeoutSpinnerStateChanged(evt);
+            }
+        });
+        setTimeoutPanel.add(expansionHandshakeTimeoutSpinner);
+
+        expansionHandshakeTimeoutText.setText("Expansion handshake timeout");
+        setTimeoutPanel.add(expansionHandshakeTimeoutText);
+
+        controlsPanel.add(setTimeoutPanel);
 
         toggleSensorBarPositionButton.setText("Set sensor bar above");
         toggleSensorBarPositionButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -505,9 +634,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleSensorBarPositionButtonMousePressed(evt);
             }
         });
-        ledsPanel.add(toggleSensorBarPositionButton);
-
-        controlsPanel.add(ledsPanel);
+        setIRConfPanel.add(toggleSensorBarPositionButton);
 
         toggleScreenAspectRatioButton.setText("Set screen aspect ratio 4/3");
         toggleScreenAspectRatioButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -515,24 +642,24 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 toggleScreenAspectRatioButtonMousePressed(evt);
             }
         });
-        alphaSmoothingPanel.add(toggleScreenAspectRatioButton);
+        setIRConfPanel.add(toggleScreenAspectRatioButton);
 
-        controlsPanel.add(alphaSmoothingPanel);
+        controlsPanel.add(setIRConfPanel);
 
         xLabel.setText("X");
-        orientationThresholdPanel.add(xLabel);
+        setVirtualResolutionPanel.add(xLabel);
 
         xResolutionTextField.setMinimumSize(new java.awt.Dimension(40, 20));
         xResolutionTextField.setPreferredSize(new java.awt.Dimension(40, 20));
-        orientationThresholdPanel.add(xResolutionTextField);
+        setVirtualResolutionPanel.add(xResolutionTextField);
 
         yLabel.setText("Y");
-        orientationThresholdPanel.add(yLabel);
+        setVirtualResolutionPanel.add(yLabel);
 
         yResolutionTextField.setFocusTraversalPolicyProvider(true);
         yResolutionTextField.setMinimumSize(new java.awt.Dimension(40, 20));
         yResolutionTextField.setPreferredSize(new java.awt.Dimension(40, 20));
-        orientationThresholdPanel.add(yResolutionTextField);
+        setVirtualResolutionPanel.add(yResolutionTextField);
 
         setVirtualResolutionButton.setText("Set virtual resolution");
         setVirtualResolutionButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -540,9 +667,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 setVirtualResolutionButtonMousePressed(evt);
             }
         });
-        orientationThresholdPanel.add(setVirtualResolutionButton);
+        setVirtualResolutionPanel.add(setVirtualResolutionButton);
 
-        controlsPanel.add(orientationThresholdPanel);
+        controlsPanel.add(setVirtualResolutionPanel);
 
         mouseIRControlButton.setText("Start infrared mouse control");
         mouseIRControlButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -550,14 +677,30 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
                 mouseIRControlButtonMousePressed(evt);
             }
         });
-        accelerationThresholdPanel.add(mouseIRControlButton);
+        startMouseControlPanel.add(mouseIRControlButton);
 
-        controlsPanel.add(accelerationThresholdPanel);
+        controlsPanel.add(startMouseControlPanel);
 
-        expansionText.setText("No expansion connected");
-        batteryPanel.add(expansionText);
+        expansionText.setText("No expansion connected.");
+        exPansionPanel.add(expansionText);
 
-        controlsPanel.add(batteryPanel);
+        showExpansionWiimoteButton.setText("No expansion connected");
+        showExpansionWiimoteButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                showExpansionWiimoteButtonMousePressed(evt);
+            }
+        });
+        exPansionPanel.add(showExpansionWiimoteButton);
+
+        controlsPanel.add(exPansionPanel);
+
+        reconnectWiimotesButton.setText("Reconnect wiimote");
+        reconnectWiimotesButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                reconnectWiimotesButtonMousePressed(evt);
+            }
+        });
+        messagesPanel.add(reconnectWiimotesButton);
 
         messageLabelText.setFont(new java.awt.Font("Tahoma", 0, 14));
         messageLabelText.setText("Message : ");
@@ -734,6 +877,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         wiimote.getStatus();
         statusMotionRequested = true;
         statusIRRequested = true;
+        if (expansionFrame instanceof NunchukGuiTest){
+            ((NunchukGuiTest)expansionFrame).requestThresholdsUpdate();
+        }        
     }//GEN-LAST:event_getStatusButtonMousePressed
 
     private void toggleSensorBarPositionButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_toggleSensorBarPositionButtonMousePressed
@@ -793,52 +939,236 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         }
     }//GEN-LAST:event_mouseIRControlButtonMousePressed
 
+    private void normalTimeoutSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_normalTimeoutSpinnerStateChanged
+        String value = normalTimeoutSpinner.getValue().toString();
+        boolean isInt = true;
+        int valueInt = 0;
+        try {
+            valueInt = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            isInt = false;
+            messageText.setText("Wrong value for normal timeout.");
+        }
+        if (isInt) {
+            if (valueInt > 1000) {
+                normalTimeoutSpinner.setValue("1000");
+            } else if (valueInt < 0) {
+                normalTimeoutSpinner.setValue("0");
+            }
+        }
+    }//GEN-LAST:event_normalTimeoutSpinnerStateChanged
+
+    private void expansionHandshakeTimeoutSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_expansionHandshakeTimeoutSpinnerStateChanged
+        String value = expansionHandshakeTimeoutSpinner.getValue().toString();
+        boolean isInt = true;
+        int valueInt = 0;
+        try {
+            valueInt = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            isInt = false;
+            messageText.setText("Wrong value for expansion handshake timeout.");
+        }
+        if (isInt) {
+            if (valueInt > 1000) {
+                expansionHandshakeTimeoutSpinner.setValue("1000");
+            } else if (valueInt < 0) {
+                expansionHandshakeTimeoutSpinner.setValue("0");
+            }
+        }
+    }//GEN-LAST:event_expansionHandshakeTimeoutSpinnerStateChanged
+
+    private void setIrSensitivySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_setIrSensitivySpinnerStateChanged
+        String value = setIrSensitivySpinner.getValue().toString();
+        boolean isInt = true;
+        int valueInt = 0;
+        try {
+            valueInt = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            isInt = false;
+            messageText.setText("Wrong value for IR senstivity.");
+        }
+        if (isInt) {
+            if (valueInt > 5) {
+                setIrSensitivySpinner.setValue("1000");
+            } else if (valueInt < 0) {
+                setIrSensitivySpinner.setValue("0");
+            }
+        }
+    }//GEN-LAST:event_setIrSensitivySpinnerStateChanged
+
+    private void setIrSensitivyButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_setIrSensitivyButtonMousePressed
+        String value = setIrSensitivySpinner.getValue().toString();
+        boolean isInt = true;
+        int valueInt = 0;
+        try {
+            valueInt = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            isInt = false;
+            messageText.setText("Wrong value for IR sensitivity. It must be an int !");
+        }
+        if (isInt) {
+            if (valueInt >= 1 && valueInt <= 5) {
+                wiimote.setIrSensitivity(valueInt);
+                messageText.setText("IR senstivity set to: " + valueInt + ".");
+            } else {
+                messageText.setText("Wrong value for IR senstivity. It muset be between 1 and 5 !");
+            }
+        }
+    }//GEN-LAST:event_setIrSensitivyButtonMousePressed
+
+    private void setTimeoutButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_setTimeoutButtonMousePressed
+        //get normal timeout
+        String value = normalTimeoutSpinner.getValue().toString();
+        boolean isInt = true;
+        short valueInt = 0;
+        try {
+            valueInt = Short.parseShort(value);
+        } catch (NumberFormatException e) {
+            isInt = false;
+            messageText.setText("Wrong value for normal timeout. It must be an int !");
+        }
+        //get expansion handshake timeout
+        String value2 = expansionHandshakeTimeoutSpinner.getValue().toString();
+        boolean isInt2 = true;
+        short valueInt2 = 0;
+        try {
+            valueInt2 = Short.parseShort(value2);
+        } catch (NumberFormatException e) {
+            isInt2 = false;
+            messageText.setText("Wrong value for expansion handshake timeout. It must be an int !");
+        }
+        if (isInt && isInt2) {
+            if (valueInt > 0 && valueInt2 > 0) {
+                wiimote.setTimeout(valueInt, valueInt2);
+                messageText.setText("Normal timeout set to: " + valueInt + " and expansion handshake timeout set to: " + valueInt2 + "!");
+            } else {
+                messageText.setText("Wrong value for one of the timeout value. It must be an integer > 0 !");
+            }
+        }
+    }//GEN-LAST:event_setTimeoutButtonMousePressed
+
+    private void reconnectWiimotesButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reconnectWiimotesButtonMousePressed
+        //stop manager
+        WiiUseApiManager manager = WiiUseApiManager.getInstance();
+        manager.shutdown();
+        //unregister previous wiimote
+        onDisconnectionEvent(null);
+        
+        //get wiimote
+        wiimote = WiiUseApiManager.getWiimotes(1, true)[0];        
+
+        //registers listeners        
+        wiimote.addWiiMoteEventListeners((IRPanel) irViewPanel);
+        wiimote.addWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
+        wiimote.addWiiMoteEventListeners((OrientationPanel) motionSensingPanel);
+        wiimote.addWiiMoteEventListeners((GForcePanel) gForcePanel);
+        wiimote.addWiiMoteEventListeners((AccelerationPanel) accelerationPanel);
+        wiimote.addWiiMoteEventListeners(this);
+        wiimote.deactivateContinuous();
+        wiimote.deactivateSmoothing();
+        wiimote.setScreenAspectRatio169();
+        wiimote.setSensorBarBelowScreen();
+        
+        //Reset Gui                    
+        //setup buttons In first state
+        toggleRumbleButton.setText("Activate Rumble");
+        toggleRumbleButton.setEnabled(true);
+        toggleMotionSensingTrackingButton.setText("Activate motion sensing Tracking");
+        toggleMotionSensingTrackingButton.setEnabled(true);
+        toggleIRTrackingButton.setText("Activate IR Tracking");
+        toggleIRTrackingButton.setEnabled(true);
+        toggleContinuousButton.setText("Activate Continuous");
+        toggleContinuousButton.setEnabled(true);
+        toggleScreenAspectRatioButton.setText("Set screen aspect ratio 4/3");
+        toggleScreenAspectRatioButton.setEnabled(true);
+        toggleSensorBarPositionButton.setText("Set sensor bar above");
+        toggleSensorBarPositionButton.setEnabled(true);
+        toggleSmoothingButton.setText("Activate Smoothing");
+        toggleSmoothingButton.setEnabled(true);
+        mouseIRControlButton.setText("Start infrared mouse control");
+        mouseIRControlButton.setEnabled(true);
+        
+        isFirstStatusGot = false;
+        getStatusButtonMousePressed(null);
+    }//GEN-LAST:event_reconnectWiimotesButtonMousePressed
+
+    private void showExpansionWiimoteButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showExpansionWiimoteButtonMousePressed
+        System.out.println("fdsfds");
+        if (expansionFrame != null) {
+            System.out.println("aaaaaaaaaa");
+            if (showExpansionWiimoteButton.isEnabled()) {//expansion frame not shown
+                //show it
+                System.out.println("enabled");
+                expansionFrame.setEnabled(true);
+                expansionFrame.setVisible(true);
+                showExpansionWiimoteButton.setEnabled(false);
+                showExpansionWiimoteButton.setText("Hide Nunchuk");
+                messageText.setText("Nunchuk displayed !");
+            } else {//already being shown
+                System.out.println("desactivated");
+                expansionFrame.setEnabled(false);
+                expansionFrame.setVisible(false);
+                showExpansionWiimoteButton.setEnabled(true);
+                showExpansionWiimoteButton.setText("Show Nunchuk");
+                messageText.setText("Nunchuk hidden !");
+            }
+        }
+    }//GEN-LAST:event_showExpansionWiimoteButtonMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel accelerationPanel;
     private javax.swing.JButton accelerationThresholdButton;
-    private javax.swing.JPanel accelerationThresholdPanel;
     private javax.swing.JTextField accelerationThresholdTextField;
-    private javax.swing.JPanel activateContinuousPanel;
-    private javax.swing.JPanel activateIRtrackingPanel;
-    private javax.swing.JPanel activateMotionSensingTrackingPanel;
-    private javax.swing.JPanel activateRumblePanel;
-    private javax.swing.JPanel activateSmoothingPanel;
+    private javax.swing.JPanel activateMotionSensingPanel;
+    private javax.swing.JPanel activateRumbleIRPanel;
+    private javax.swing.JPanel activateSmoothingContinuousPanel;
     private javax.swing.JButton alphaSmoothingButton;
-    private javax.swing.JPanel alphaSmoothingPanel;
     private javax.swing.JTextField alphaSmoothingTextField;
     private javax.swing.JLabel batteryLevelText;
-    private javax.swing.JPanel batteryPanel;
     private javax.swing.JLabel batteryText;
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JPanel controlsPanel;
-    private javax.swing.JPanel deactivateContinuousPanel;
-    private javax.swing.JPanel deactivateIRTrackingPanel;
-    private javax.swing.JPanel deactivateMotionSensingTrackingPanel;
-    private javax.swing.JPanel deactivateRumblePanel;
-    private javax.swing.JPanel deactivateSmoothingPanel;
+    private javax.swing.JPanel exPansionPanel;
+    private javax.swing.JSpinner expansionHandshakeTimeoutSpinner;
+    private javax.swing.JLabel expansionHandshakeTimeoutText;
     private javax.swing.JLabel expansionText;
     private javax.swing.JPanel fixedWiimotePanel;
     private javax.swing.JPanel gForcePanel;
     private javax.swing.JButton getStatusButton;
+    private javax.swing.JPanel getStatusPanel;
     private javax.swing.JPanel irViewPanel;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton led1Button;
     private javax.swing.JButton led2Button;
     private javax.swing.JButton led3Button;
     private javax.swing.JButton led4Button;
-    private javax.swing.JPanel ledsPanel;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JLabel messageLabelText;
     private javax.swing.JLabel messageText;
     private javax.swing.JPanel messagesPanel;
     private javax.swing.JPanel motionSensingPanel;
     private javax.swing.JButton mouseIRControlButton;
+    private javax.swing.JSpinner normalTimeoutSpinner;
+    private javax.swing.JLabel normalTimeoutText;
     private javax.swing.JButton orientationThresholdButton;
-    private javax.swing.JPanel orientationThresholdPanel;
     private javax.swing.JTextField orientationThresholdTextField;
+    private javax.swing.JButton reconnectWiimotesButton;
     private javax.swing.JPanel rightPanel;
+    private javax.swing.JPanel setAccelerationThresholdPanel;
+    private javax.swing.JPanel setAlphaSmoothingPanel;
+    private javax.swing.JPanel setIRConfPanel;
+    private javax.swing.JButton setIrSensitivyButton;
+    private javax.swing.JPanel setIrSensitivyPanel;
+    private javax.swing.JSpinner setIrSensitivySpinner;
     private javax.swing.JButton setLedsButton;
+    private javax.swing.JPanel setLedsPanel;
+    private javax.swing.JPanel setOrientationThresholdPanel;
+    private javax.swing.JButton setTimeoutButton;
+    private javax.swing.JPanel setTimeoutPanel;
     private javax.swing.JButton setVirtualResolutionButton;
+    private javax.swing.JPanel setVirtualResolutionPanel;
+    private javax.swing.JButton showExpansionWiimoteButton;
+    private javax.swing.JPanel startMouseControlPanel;
     private javax.swing.JButton toggleContinuousButton;
     private javax.swing.JButton toggleIRTrackingButton;
     private javax.swing.JButton toggleMotionSensingTrackingButton;

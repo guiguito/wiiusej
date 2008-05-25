@@ -53,7 +53,7 @@ public class JoystickEvent extends GenericEvent {
 	 * @param center2
 	 *            center joystick value 2.
 	 */
-	public JoystickEvent(int id, int angle, int magnitude, short max1,
+	public JoystickEvent(int id, float angle, float magnitude, short max1,
 			short max2, short min1, short min2, short center1, short center2) {
 		super(id);
 		this.angle = angle;
@@ -74,7 +74,7 @@ public class JoystickEvent extends GenericEvent {
 	 * 
 	 * @return the angle angle the joystick.
 	 */
-	public float getangle() {
+	public float getAngle() {
 		return angle;
 	}
 
@@ -83,7 +83,7 @@ public class JoystickEvent extends GenericEvent {
 	 * 
 	 * @return the magnitude magnitude of the joystick.
 	 */
-	public float getmagnitude() {
+	public float getMagnitude() {
 		return magnitude;
 	}
 

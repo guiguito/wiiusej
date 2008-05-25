@@ -26,6 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import wiiusej.values.RawAcceleration;
+import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
@@ -42,7 +43,7 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
  * 
  * @author guiguito
  */
-public class AccelerationPanel extends javax.swing.JPanel implements
+public abstract class AccelerationPanel extends javax.swing.JPanel implements
 		WiimoteListener {
 
 	private Image mImage;// image for double buffering
@@ -55,6 +56,30 @@ public class AccelerationPanel extends javax.swing.JPanel implements
 
 	/** Creates new form AccelerationPanel */
 	public AccelerationPanel() {
+		initComponents();
+	}
+        
+        /**
+	 * Constructor used to choose the colors used by the AccelerationPanel.
+	 * 
+	 * @param bgColor
+	 *            background color.
+	 * @param xColor
+	 *            x color.
+	 * @param yColor
+	 *            y color.
+	 * @param zColor
+	 *            z color.
+	 * @param lColor
+	 *            line color.
+	 */
+	public AccelerationPanel(Color bgColor, Color xColor, Color yColor,
+			Color zColor, Color lColor) {
+		backgroundColor = bgColor;
+		this.xColor = xColor;
+		this.yColor = yColor;
+		this.zColor = zColor;
+		lineColor = lColor;
 		initComponents();
 	}
 
@@ -125,19 +150,18 @@ public class AccelerationPanel extends javax.swing.JPanel implements
 		// put offscreen image on the screen
 		g.drawImage(mImage, 0, 0, null);
 	}
-
-	/**
-	 * check if the mImage variable has been initialized. If it's not the case
-	 * it initializes it with the dimensions of the panel. mImage is for double
-	 * buffering.
-	 */
-	private void checkOffScreenImage() {
-		Dimension d = getSize();
-		if (mImage == null || mImage.getWidth(null) != d.width
-				|| mImage.getHeight(null) != d.height) {
-			mImage = createImage(d.width, d.height);
-		}
-	}
+        
+        /**
+         * check if the mImage variable has been initialized. If it's not the case
+         * it initializes it with the dimensions of the panel. mImage is for double
+         * buffering.
+         */
+        private void checkOffScreenImage() {
+            Dimension d = getSize();
+            if (mImage == null || mImage.getWidth(null) != d.width || mImage.getHeight(null) != d.height) {
+                mImage = createImage(d.width, d.height);
+            }
+        }
 
 	public void onButtonsEvent(WiimoteButtonsEvent arg0) {
 		// nothing
@@ -148,17 +172,11 @@ public class AccelerationPanel extends javax.swing.JPanel implements
 	}
 
 	public void onMotionSensingEvent(MotionSensingEvent arg0) {
-		if (values.size() >= getWidth()) {
-			// if there are as many values as pixels in the width
-			// clear points
-			values.clear();
-		}
-		values.add(arg0.getRawAcceleration());
-		repaint();
+		draw(arg0);
 	}
 
-	public void onExpansionEvent(ExpansionEvent e) {
-		// nothing
+	public void onExpansionEvent(ExpansionEvent arg0) {
+		draw(arg0);
 	}
 
 	public void onStatusEvent(StatusEvent arg0) {
@@ -171,14 +189,67 @@ public class AccelerationPanel extends javax.swing.JPanel implements
 		repaint();
 	}
 
-	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+	public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
 		// nothing
 	}
 
-	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
 		// nothing
 	}
+        
+        private void draw(GenericEvent arg0){
+            if (values.size() >= getWidth()) {
+			// if there are as many values as pixels in the width
+			// clear points
+			values.clear();
+		}
+                RawAcceleration  rawAcceleration = getRawAccelerationValue(arg0);
+                if (rawAcceleration != null) values.add(rawAcceleration);
+		repaint();
+        }
+                
+        public abstract RawAcceleration getRawAccelerationValue(GenericEvent e);
 
+        public Color getBackgroundColor() {
+            return backgroundColor;
+        }
+
+        public Color getLineColor() {
+            return lineColor;
+        }
+
+        public Color getXColor() {
+            return xColor;
+        }
+
+        public Color getYColor() {
+            return yColor;
+        }
+
+        public Color getZColor() {
+            return zColor;
+        }
+
+        public void setBackgroundColor(Color backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        }
+
+        public void setLineColor(Color lineColor) {
+            this.lineColor = lineColor;
+        }
+
+        public void setXColor(Color xColor) {
+            this.xColor = xColor;
+        }
+
+        public void setYColor(Color yColor) {
+            this.yColor = yColor;
+        }
+
+        public void setZColor(Color zColor) {
+            this.zColor = zColor;
+        }
+        
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

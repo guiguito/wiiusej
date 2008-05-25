@@ -26,7 +26,6 @@ import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 
-import wiiusej.wiiusejevents.physicalevents.ButtonsEvent;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
@@ -303,6 +302,40 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
 	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
 		// nothing
 	}
+
+        public Color getHeldColor() {
+            return heldColor;
+        }
+
+        public Color getPressedColor() {
+            return pressedColor;
+        }
+
+        public Color getReleasedColor() {
+            return releasedColor;
+        }
+
+        public Shape getShape() {
+            return shape;
+        }
+
+        public void setHeldColor(Color heldColor) {
+            this.heldColor = heldColor;
+        }
+
+        public void setPressedColor(Color pressedColor) {
+            this.pressedColor = pressedColor;
+        }
+
+        public void setReleasedColor(Color releasedColor) {
+            this.releasedColor = releasedColor;
+        }
+
+        public void setShape(Shape shape) {
+            this.shape = shape;
+        }
+        
+        
 
 	/**
 	 * This method is called from within the constructor to initialize the form.

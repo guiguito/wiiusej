@@ -534,7 +534,7 @@ public class WiiUseApiManager extends Thread {
 	 *            WIIUSE_STACK_BLUESOLEIL.
 	 */
 	private void setBlueToothstackType(int type) {
-
+		wiiuse.windowsSetBluetoothStack(type);
 	}
 
 	@Override

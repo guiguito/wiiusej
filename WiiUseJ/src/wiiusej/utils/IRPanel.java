@@ -49,7 +49,7 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
     private Image mImage;//image for double buffering
     private int[] xCoordinates;
     private int[] yCoordinates;
-    private int nbPoints=-1;
+    private int nbPoints = -1;
 
     /**
      * Default constructor for IR Panel.
@@ -63,7 +63,7 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
         initArrays();
         initComponents();
     }
-    
+
     /**
      * Constructor used to parameterize the IR panel.
      * @param bgColor color.
@@ -79,8 +79,8 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
         initArrays();
         initComponents();
     }
-    
-    private void initArrays(){
+
+    private void initArrays() {
         xCoordinates = new int[MAX_NB_POINTS];
         yCoordinates = new int[MAX_NB_POINTS];
         for (int i = 0; i < MAX_NB_POINTS; i++) {
@@ -135,7 +135,7 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
 
     public void onButtonsEvent(WiimoteButtonsEvent arg0) {
         //nothing
-    	repaint();
+        repaint();
     }
 
     public void onIrEvent(IREvent arg0) {
@@ -158,10 +158,10 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
     public void onMotionSensingEvent(MotionSensingEvent arg0) {
     //nothing
     }
-    
+
     public void onExpansionEvent(ExpansionEvent e) {
-		// nothing
-	}
+    // nothing
+    }
 
     public void onStatusEvent(StatusEvent arg0) {
     //nothing
@@ -176,14 +176,46 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
         //redraw panel
         repaint();
     }
-    
-	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
-		// nothing
-	}
 
-	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
-		// nothing
-	}
+    public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+    // nothing    
+    }
+
+    public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+    // nothing
+    }
+
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setShape(Shape shape) {
+        this.shape = shape;
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.

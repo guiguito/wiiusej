@@ -19,20 +19,12 @@ package wiiusej.test;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import wiiusej.WiiUseApiManager;
-import wiiusej.Wiimote;
 
 /**
  * This class is used to close wiiusej cleanly.
  * @author guiguito
  */
 public class CloseGuiTestCleanly implements WindowListener{
-
-    Wiimote wiimote;
-    
-    
-    public CloseGuiTestCleanly(Wiimote wim) {
-        wiimote = wim;
-    }
 
     public void windowOpened(WindowEvent e) {
         //nothing

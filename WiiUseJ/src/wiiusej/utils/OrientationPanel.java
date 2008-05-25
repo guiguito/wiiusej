@@ -26,6 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import wiiusej.values.Orientation;
+import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
@@ -41,7 +42,7 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
  * 
  * @author guiguito
  */
-public class OrientationPanel extends javax.swing.JPanel implements
+public abstract class OrientationPanel extends javax.swing.JPanel implements
 		WiimoteListener {
 
 	private Image mImage;// image for double buffering
@@ -175,17 +176,11 @@ public class OrientationPanel extends javax.swing.JPanel implements
 	}
 
 	public void onMotionSensingEvent(MotionSensingEvent arg0) {
-		if (values.size() >= getWidth()) {
-			// if there are as many values as pixels in the width
-			// clear points
-			values.clear();
-		}
-		values.add(arg0.getOrientation());
-		repaint();
+		draw(arg0);
 	}
 
-	public void onExpansionEvent(ExpansionEvent e) {
-		// nothing
+	public void onExpansionEvent(ExpansionEvent arg0) {
+		draw(arg0);
 	}
 
 	public void onStatusEvent(StatusEvent arg0) {
@@ -198,14 +193,69 @@ public class OrientationPanel extends javax.swing.JPanel implements
 		repaint();
 	}
 
-	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
+	public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
 		// nothing
 	}
 
-	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
+	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
 		// nothing
 	}
+        
+        private void draw(GenericEvent arg0){
+            if (values.size() >= getWidth()) {
+			// if there are as many values as pixels in the width
+			// clear points
+			values.clear();
+		}
+                Orientation  orientation = getOrientationValue(arg0);
+                if (orientation != null) values.add(orientation);
+		repaint();
+        }
+                
+        public abstract Orientation getOrientationValue(GenericEvent e);
 
+        public Color getBackgroundColor() {
+            return backgroundColor;
+        }
+
+        public Color getLineColor() {
+            return lineColor;
+        }
+
+        public Color getPitchColor() {
+            return pitchColor;
+        }
+
+        public Color getRollColor() {
+            return rollColor;
+        }
+
+        public Color getYawColor() {
+            return yawColor;
+        }
+
+        public void setBackgroundColor(Color backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        }
+
+        public void setLineColor(Color lineColor) {
+            this.lineColor = lineColor;
+        }
+
+        public void setPitchColor(Color pitchColor) {
+            this.pitchColor = pitchColor;
+        }
+
+        public void setRollColor(Color rollColor) {
+            this.rollColor = rollColor;
+        }
+
+        public void setYawColor(Color yawColor) {
+            this.yawColor = yawColor;
+        }
+
+        
+        
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
