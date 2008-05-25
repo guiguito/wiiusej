@@ -295,7 +295,7 @@ public class WiimoteEvent extends WiiUseApiEvent {
 			float orientationThreshold, int accelerationThreshold,
 			boolean smoothingState, float alphaSmooth, float r, float p,
 			float ya, float ar, float ap, float x, float y, float z, short xx,
-			short yy, short zz, int angle, int magnitude, short max1,
+			short yy, short zz, float angle, float magnitude, short max1,
 			short max2, short min1, short min2, short center1, short center2) {
 		expansionEvent = new NunchukEvent(getWiimoteId(), buttonsJustPressed,
 				buttonsJustReleased, buttonsHeld, orientationThreshold,
