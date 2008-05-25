@@ -27,8 +27,8 @@
  *
  *	See below in main() for what they are used for.
  */
-#define WIIMOTE_STATE_RUMBLE			0x08
-#define WIIMOTE_STATE_CONNECTED			0x04
+#define WIIMOTE_STATE_RUMBLE			0x0010
+#define WIIMOTE_STATE_CONNECTED			0x0008
 #define WIIMOTE_IS_SET(wm, s)			((wm->state & (s)) == (s))
 #define WIIMOTE_IS_FLAG_SET(wm, s)		((wm->flags & (s)) == (s))
 #define WIIUSE_GET_IR_SENSITIVITY_CORRECTED(wm, lvl)									\
@@ -386,11 +386,11 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_setNunchukAccelerationThreshold
  */
 JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_windowsSetBluetoothStack
 (JNIEnv *env, jobject obj, jint bluetoothStackType) {
-	if (bluetoothStackType == 0){
+	if (bluetoothStackType == 0) {
 		wiiuse_set_bluetooth_stack(wiimotes, nbMaxWiimotes, WIIUSE_STACK_UNKNOWN);
-	}else if (bluetoothStackType == 1){
+	} else if (bluetoothStackType == 1) {
 		wiiuse_set_bluetooth_stack(wiimotes, nbMaxWiimotes, WIIUSE_STACK_MS);
-	}else if (bluetoothStackType == 2){
+	} else if (bluetoothStackType == 2) {
 		wiiuse_set_bluetooth_stack(wiimotes, nbMaxWiimotes, WIIUSE_STACK_BLUESOLEIL);
 	}
 }
@@ -486,7 +486,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 					if (wiimotes[i]->exp.type == EXP_NUNCHUK) {
 						/* put nunchuk values to wiimote generic event */
 						mid = (*env)->GetMethodID(env, cls,
-								"addNunchunkEventToPreparedWiimoteEvent", "(SSSFIZFFFFFFFFFSSSIISSSSSS)V");
+								"addNunchunkEventToPreparedWiimoteEvent", "(SSSFIZFFFFFFFFFSSSFFSSSSSS)V");
 						if (mid == 0) {
 							return;
 						}
@@ -517,26 +517,6 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 					return;
 				}
 				(*env)->CallVoidMethod(env, gath, mid);
-				break;
-
-				case WIIUSE_STATUS:
-				/* a status event occured */
-				mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZZZZ)V");
-				if (mid == 0) {
-					return;
-				}
-				/* LEDS */
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
-				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
-
-				(*env)->CallVoidMethod(env, gath, mid,
-						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
-						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
-						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
-						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
-						WIIUSE_USING_IR(wiimotes[i]),WIIUSE_USING_ACC(wiimotes[i]));
 				break;
 
 				case WIIUSE_DISCONNECT:
@@ -573,6 +553,26 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 					return;
 				}
 				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_STATUS:
+				/* a status event occured */
+				mid = (*env)->GetMethodID(env, cls, "addStatusEvent", "(IZFSZIZZZZ)V");
+				if (mid == 0) {
+					return;
+				}
+				/* LEDS */
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 1)) leds += 1;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 2)) leds += 2;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 3)) leds += 4;
+				if (WIIUSE_IS_LED_SET(wiimotes[i], 4)) leds += 8;
+
+				(*env)->CallVoidMethod(env, gath, mid,
+						wiimotes[i]->unid, WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_CONNECTED),
+						wiimotes[i]->battery_level, leds, WIIUSE_USING_SPEAKER(wiimotes[i]),
+						wiimotes[i]->exp.type,WIIMOTE_IS_SET(wiimotes[i], WIIMOTE_STATE_RUMBLE),
+						WIIMOTE_IS_FLAG_SET(wiimotes[i],WIIUSE_CONTINUOUS),
+						WIIUSE_USING_IR(wiimotes[i]),WIIUSE_USING_ACC(wiimotes[i]));
 				break;
 
 				default:
