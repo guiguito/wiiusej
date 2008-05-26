@@ -35,7 +35,7 @@ gcc -shared -fPIC -o libWiiuseJ.so -Wall -L. -lwiiuse -I/home/vincent/jdk1.6.0_0
 = Launch on linux =
 
 Put both libs `libwiiuse.so` and `libWiiuseJ.so` in the folder of `wiiusej.jar`.
-
+Put your wiimote in discovery mode by clicking on the buttons 1 and 2 in the mean time.
 Now launch
 {{{
 LD_LIBRARY_PATH=. java -Djava.library.path=. -jar wiiusej.jar
