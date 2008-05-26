@@ -252,7 +252,10 @@ public abstract class GForcePanel extends javax.swing.JPanel implements WiimoteL
             this.zColor = zColor;
         }
 
-
+        public void clearView(){
+            values.clear();
+            repaint();
+        }
         
 	/**
 	 * This method is called from within the constructor to initialize the form.

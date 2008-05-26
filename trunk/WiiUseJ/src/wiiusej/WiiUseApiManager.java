@@ -16,6 +16,7 @@
  */
 package wiiusej;
 
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.event.EventListenerList;
@@ -36,6 +37,8 @@ public class WiiUseApiManager extends Thread {
 
 	private final EventListenerList listeners = new EventListenerList();
 
+	private Semaphore semaphore = new Semaphore(0);
+
 	private Wiimote[] wiimotes;
 
 	private WiiUseApi wiiuse = WiiUseApi.getInstance();
@@ -51,7 +54,7 @@ public class WiiUseApiManager extends Thread {
 	public static WiiUseApiManager getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Get wiimotes. Load library if necessary. Connect to wiimotes if
 	 * necessary. Start polling if necessary. Return an array with the connected
@@ -64,10 +67,10 @@ public class WiiUseApiManager extends Thread {
 	 * 
 	 * @return an array with connected wiimotes or NULL.
 	 */
-	public static Wiimote[] getWiimotes(int nb, boolean rumble){
+	public static Wiimote[] getWiimotes(int nb, boolean rumble) {
 		return getWiimotesPrivate(nb, rumble, false, WIIUSE_STACK_UNKNOWN);
 	}
-	
+
 	/**
 	 * Get wiimotes. Load library if necessary. Connect to wiimotes if
 	 * necessary. Start polling if necessary. Return an array with the connected
@@ -84,7 +87,7 @@ public class WiiUseApiManager extends Thread {
 	 * 
 	 * @return an array with connected wiimotes or NULL.
 	 */
-	public static Wiimote[] getWiimotes(int nb, boolean rumble, int stackType){
+	public static Wiimote[] getWiimotes(int nb, boolean rumble, int stackType) {
 		return getWiimotesPrivate(nb, rumble, true, stackType);
 	}
 
@@ -106,11 +109,12 @@ public class WiiUseApiManager extends Thread {
 	 * 
 	 * @return an array with connected wiimotes or NULL.
 	 */
-	private synchronized static Wiimote[] getWiimotesPrivate(int nb, boolean rumble,
-			boolean forceStackType, int stackType) {
+	private synchronized static Wiimote[] getWiimotesPrivate(int nb,
+			boolean rumble, boolean forceStackType, int stackType) {
 		WiiUseApiManager manager = getInstance();
 		if (manager.connected <= 0 && !manager.running.get()) {
-			int nbWiimotes = manager.connectWiimotes(nb, rumble, forceStackType, stackType);
+			int nbWiimotes = manager.connectWiimotes(nb, rumble,
+					forceStackType, stackType);
 			manager.wiimotes = new Wiimote[nbWiimotes];
 			for (int i = 0; i < nbWiimotes; i++) {
 				Wiimote wim = new Wiimote(WiiUseApi.getInstance().getUnId(i),
@@ -154,6 +158,8 @@ public class WiiUseApiManager extends Thread {
 		if (!manager.isAlive())
 			manager.start();
 
+		manager.semaphore.release();
+
 		return manager.wiimotes;
 	}
 
@@ -173,12 +179,14 @@ public class WiiUseApiManager extends Thread {
 	 *            WiiUseApiManager.WIIUSE_STACK_BLUESOLEIL
 	 * @return 0 if nothing connected or the number of wiimotes connected.
 	 */
-	private int connectWiimotes(int nb, boolean rumble, boolean forceStackType, int stackType) {
+	private int connectWiimotes(int nb, boolean rumble, boolean forceStackType,
+			int stackType) {
 		if (connected <= 0) {
 			int nbWiimotesFound;
 			wiiuse.init(nb);
-			//force bluetooth stack type ?
-			if (forceStackType) setBlueToothstackType(stackType);			
+			// force bluetooth stack type ?
+			if (forceStackType)
+				setBlueToothstackType(stackType);
 			nbWiimotesFound = wiiuse.find(nb, 3);
 			connected = wiiuse.connect(nbWiimotesFound);
 			return connected;
@@ -206,7 +214,7 @@ public class WiiUseApiManager extends Thread {
 				if (connected == 0) {// stop this thread if there is
 					// no more wiimotes connected.
 					// stop thread
-					shutdown();
+					running.set(false);
 				}
 				/* Close connection in wiiuse */
 				wiiuse.closeConnection(index);
@@ -540,41 +548,50 @@ public class WiiUseApiManager extends Thread {
 	@Override
 	public void run() {
 
-		if (connected > 0) {
-			running.set(true);
+		while (true) {
+			try {
+				semaphore.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			EventsGatherer gather = new EventsGatherer(connected);
+			if (connected > 0) {
+				running.set(true);
 
-			// Start polling and tell the observers when there are Wiimote
-			// events
-			while (running.get() && connected > 0) {
+				EventsGatherer gather = new EventsGatherer(connected);
 
-				/* Polling */
-				wiiuse.specialPoll(gather);
+				// Start polling and tell the observers when there are Wiimote
+				// events
+				while (running.get() && connected > 0) {
 
-				/* deal with events gathered in Wiiuse API */
-				for (WiiUseApiEvent evt : gather.getEvents()) {
-					if (evt.getWiimoteId() != -1) {// event filled
-						// there is an event notify observers
-						notifyWiiUseApiListener(evt);
-						if (evt.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
-							// check if it was a disconnection
-							// in this case disconnect the wiimote
-							closeConnection(evt.getWiimoteId());
+					/* Polling */
+					wiiuse.specialPoll(gather);
+
+					/* deal with events gathered in Wiiuse API */
+					for (WiiUseApiEvent evt : gather.getEvents()) {
+						if (evt.getWiimoteId() != -1) {// event filled
+							// there is an event notify observers
+							notifyWiiUseApiListener(evt);
+							if (evt.getEventType() == WiiUseApiEvent.DISCONNECTION_EVENT) {
+								// check if it was a disconnection
+								// in this case disconnect the wiimote
+								closeConnection(evt.getWiimoteId());
+							}
+						} else {
+							System.out
+									.println("There is an event with id == -1 ??? there is a problem !!! : "
+											+ evt);
 						}
-					} else {
-						System.out
-								.println("There is an event with id == -1 ??? there is a problem !!! : "
-										+ evt);
 					}
+					gather.clearEvents();
 				}
-				gather.clearEvents();
+			} else {
+				if (connected <= 0) {
+					System.out.println("No wiimotes connected !");
+				}
 			}
-		} else {
-			if (connected <= 0) {
-				System.out.println("No wiimotes connected !");
-			}
-		}
+		}//end while true
 
 	}
 
