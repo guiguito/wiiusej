@@ -254,7 +254,10 @@ public abstract class OrientationPanel extends javax.swing.JPanel implements
             this.yawColor = yawColor;
         }
 
-        
+        public void clearView(){
+            values.clear();
+            repaint();
+        }
         
 	/**
 	 * This method is called from within the constructor to initialize the form.

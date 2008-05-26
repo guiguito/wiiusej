@@ -216,6 +216,11 @@ public class IRPanel extends javax.swing.JPanel implements WiimoteListener {
     public void setShape(Shape shape) {
         this.shape = shape;
     }
+    
+    public void clearView(){
+        initArrays();
+        repaint();
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.

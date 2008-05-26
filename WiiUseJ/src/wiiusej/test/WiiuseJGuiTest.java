@@ -94,18 +94,53 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         initComponents();
         this.addWindowListener(new CloseGuiTestCleanly());
         this.wiimote = wiimote;
+        registerListeners();
+        initWiimote();
+        isFirstStatusGot = false;
+        getStatusButtonMousePressed(null);                        
+    }
+    
+    /**
+     * Clear all views
+     */
+    private void clearViews(){
+        ((IRPanel) irViewPanel).clearView();
+        ((ButtonsEventPanel) buttonsPanel).clearView();
+        ((OrientationPanel) motionSensingPanel).clearView();
+        ((GForcePanel) gForcePanel).clearView();
+        ((AccelerationPanel) accelerationPanel).clearView();
+    }
+    
+    /**
+     * Unregister all listeners.
+     */
+    private void unregisterListeners(){
+        wiimote.removeWiiMoteEventListeners((IRPanel) irViewPanel);
+        wiimote.removeWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
+        wiimote.removeWiiMoteEventListeners((OrientationPanel) motionSensingPanel);
+        wiimote.removeWiiMoteEventListeners((GForcePanel) gForcePanel);
+        wiimote.removeWiiMoteEventListeners((AccelerationPanel) accelerationPanel);
+        wiimote.removeWiiMoteEventListeners(this);
+    }
+    
+    private void initWiimote(){
+        wiimote.deactivateContinuous();
+        wiimote.deactivateSmoothing();
+        wiimote.setScreenAspectRatio169();
+        wiimote.setSensorBarBelowScreen();        
+    }
+    
+    /**
+     * Register all listeners
+     */
+    private void registerListeners(){
         wiimote.addWiiMoteEventListeners((IRPanel) irViewPanel);
         wiimote.addWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
         wiimote.addWiiMoteEventListeners((OrientationPanel) motionSensingPanel);
         wiimote.addWiiMoteEventListeners((GForcePanel) gForcePanel);
         wiimote.addWiiMoteEventListeners((AccelerationPanel) accelerationPanel);
         wiimote.addWiiMoteEventListeners(this);
-        wiimote.deactivateContinuous();
-        wiimote.deactivateSmoothing();
-        wiimote.setScreenAspectRatio169();
-        wiimote.setSensorBarBelowScreen();
-        isFirstStatusGot = false;
-        getStatusButtonMousePressed(null);                        
+        
     }
 
     public void onButtonsEvent(WiimoteButtonsEvent arg0) {
@@ -210,14 +245,10 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
 
     public void onDisconnectionEvent(DisconnectionEvent arg0) {
         messageText.setText("Wiimote Disconnected !");
-        wiimote.removeWiiMoteEventListeners((IRPanel) irViewPanel);
-        wiimote.removeWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
-        wiimote.removeWiiMoteEventListeners((OrientationPanel) motionSensingPanel);
-        wiimote.removeWiiMoteEventListeners((GForcePanel) gForcePanel);
-        wiimote.removeWiiMoteEventListeners((AccelerationPanel) accelerationPanel);
-        wiimote.removeWiiMoteEventListeners(this);
+        unregisterListeners();
+        clearViews();
         isFirstStatusGot = false;                
-    }
+    }        
 
     public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
         messageText.setText("Nunchuk connected !");
@@ -1051,25 +1082,23 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         //stop manager
         WiiUseApiManager manager = WiiUseApiManager.getInstance();
         manager.shutdown();
+        
         //unregister previous wiimote
-        onDisconnectionEvent(null);
+        if (wiimote != null){
+            onDisconnectionEvent(null);                
+        }
         
-        //get wiimote
-        wiimote = WiiUseApiManager.getWiimotes(1, true)[0];        
-
-        //registers listeners        
-        wiimote.addWiiMoteEventListeners((IRPanel) irViewPanel);
-        wiimote.addWiiMoteEventListeners((ButtonsEventPanel) buttonsPanel);
-        wiimote.addWiiMoteEventListeners((OrientationPanel) motionSensingPanel);
-        wiimote.addWiiMoteEventListeners((GForcePanel) gForcePanel);
-        wiimote.addWiiMoteEventListeners((AccelerationPanel) accelerationPanel);
-        wiimote.addWiiMoteEventListeners(this);
-        wiimote.deactivateContinuous();
-        wiimote.deactivateSmoothing();
-        wiimote.setScreenAspectRatio169();
-        wiimote.setSensorBarBelowScreen();
+        //Reset Gui              
+        //remove frame for expansion
+        if (expansionFrame != null) {
+            if (expansionFrame instanceof NunchukGuiTest) {
+                ((NunchukGuiTest) expansionFrame).unRegisterListeners();
+            }
+            expansionFrame.setEnabled(false);
+            expansionFrame.dispose();
+            expansionFrame = null;
+        }
         
-        //Reset Gui                    
         //setup buttons In first state
         toggleRumbleButton.setText("Activate Rumble");
         toggleRumbleButton.setEnabled(true);
@@ -1088,24 +1117,30 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements WiimoteListene
         mouseIRControlButton.setText("Start infrared mouse control");
         mouseIRControlButton.setEnabled(true);
         
-        isFirstStatusGot = false;
-        getStatusButtonMousePressed(null);
+        //get wiimote
+        Wiimote[] listWiimote = WiiUseApiManager.getWiimotes(1, true);
+        if (listWiimote.length > 0){
+            wiimote = listWiimote[0];        
+
+            //registers listeners        
+            registerListeners();
+            initWiimote();
+            
+            isFirstStatusGot = false;
+            getStatusButtonMousePressed(null);
+        }
     }//GEN-LAST:event_reconnectWiimotesButtonMousePressed
 
     private void showExpansionWiimoteButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showExpansionWiimoteButtonMousePressed
-        System.out.println("fdsfds");
-        if (expansionFrame != null) {
-            System.out.println("aaaaaaaaaa");
+        if (expansionFrame != null) {            
             if (showExpansionWiimoteButton.isEnabled()) {//expansion frame not shown
-                //show it
-                System.out.println("enabled");
+                //show it        
                 expansionFrame.setEnabled(true);
                 expansionFrame.setVisible(true);
                 showExpansionWiimoteButton.setEnabled(false);
                 showExpansionWiimoteButton.setText("Hide Nunchuk");
                 messageText.setText("Nunchuk displayed !");
             } else {//already being shown
-                System.out.println("desactivated");
                 expansionFrame.setEnabled(false);
                 expansionFrame.setVisible(false);
                 showExpansionWiimoteButton.setEnabled(true);

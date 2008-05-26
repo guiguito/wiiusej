@@ -250,6 +250,11 @@ public abstract class AccelerationPanel extends javax.swing.JPanel implements
             this.zColor = zColor;
         }
         
+        public void clearView(){
+            values.clear();
+            repaint();
+        }
+        
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

@@ -335,7 +335,10 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
             this.shape = shape;
         }
         
-        
+        public void clearView(){
+            buttons = null;
+            repaint();
+        }
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
