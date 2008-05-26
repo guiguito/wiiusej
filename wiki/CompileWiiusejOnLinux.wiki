@@ -1,12 +1,13 @@
 #summary Compile Wiiusej C part on linux
 
-Page not finished yet!
+Very light summary on how I managed to compile Wiiusej on linux.
+Contact the mailing list if you face a bug!
 
 = Introduction =
 
 What packages you need installed: libc-dev, libbluetooth-dev, xlibmesa-gl-dev, libglu1-mesa-dev, libsdl.
 
-You need Java 6 jdk installed, to get the jni interface.
+You need also Java 6 jdk installed, to get the jni interface.
 
 You need to get `libwiiuse.so` compiled before trying to compile Wiiusej library.
 
@@ -23,6 +24,8 @@ make install
 Here, if you did not install the sdl library, you may get a bug. The library is well-compiled anyway.
 
 = Wiiusej library =
+Move the `libwiiuse.so` compiled in the src directory of WiiUseJC.
+
 ''Don't forget to replace my jdk folder by yours''
 
 {{{
@@ -35,5 +38,13 @@ Put both libs `libwiiuse.so` and `libWiiuseJ.so` in the folder of `wiiusej.jar`.
 
 Now launch
 {{{
-LD_LIBRARY_PATH=. ~/jdk1.6.0_05/bin/java -Djava.library.path=. -jar wiiusej.jar
+LD_LIBRARY_PATH=. java -Djava.library.path=. -jar wiiusej.jar
+wiiuse v0.12 loaded.
+  By: Michael Laforest <thepara[at]gmail{dot}com>
+  http://wiiuse.net  http://wiiuse.sf.net
+[INFO] Found 1 bluetooth device(s).
+[INFO] Found wiimote (00:1B:7A:35:55:F6) [id 1].
+[INFO] Connected to wiimote [id 1].
+...
+window is opening
 }}}
