@@ -30,11 +30,14 @@ public class Main {
      */
     public static void main(String[] args) {
         Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
-        if (wiimotes.length>0){
-            WiiuseJGuiTest gui = new WiiuseJGuiTest(wiimotes[0]);
-            gui.setDefaultCloseOperation(gui.EXIT_ON_CLOSE);
-            gui.setVisible(true);
-        }
+		WiiuseJGuiTest gui = null;
+		if (wiimotes.length > 0) {
+			gui = new WiiuseJGuiTest(wiimotes[0]);
+		} else {
+			gui = new WiiuseJGuiTest();
+		}
+		gui.setDefaultCloseOperation(gui.EXIT_ON_CLOSE);
+		gui.setVisible(true);
     }
 
 }

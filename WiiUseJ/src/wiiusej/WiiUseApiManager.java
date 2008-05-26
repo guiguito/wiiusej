@@ -46,6 +46,8 @@ public class WiiUseApiManager extends Thread {
 	private int connected = -1;
 
 	private AtomicBoolean running = new AtomicBoolean(false);
+	
+	private boolean leave = false;
 
 	public static int WIIUSE_STACK_UNKNOWN = 0;
 	public static int WIIUSE_STACK_MS = 1;
@@ -245,6 +247,14 @@ public class WiiUseApiManager extends Thread {
 		}
 		running.set(false);
 		wiiuse.cleanUp();
+	}
+	
+	/**
+	 * Stop wiiuseJ definitively for this program.
+	 */
+	public void definitiveShutdown(){
+		leave = true;
+		shutdown();		
 	}
 
 	/**
@@ -548,7 +558,7 @@ public class WiiUseApiManager extends Thread {
 	@Override
 	public void run() {
 
-		while (true) {
+		while (!leave) {
 			try {
 				semaphore.acquire();
 			} catch (InterruptedException e) {
