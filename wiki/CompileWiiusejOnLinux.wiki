@@ -1,0 +1,29 @@
+#summary Compile Wiiusej C part on linux
+
+Page not finished yet!
+
+= Introduction =
+
+You need to get `libwiiuse.so` compiled before trying to compile Wiiusej library.
+
+= Wiiuse library =
+
+# First, download according version of Wiiuse (for WiiuseJ v0.12, download Wiiuse v0.12).
+http://sourceforge.net/project/showfiles.php?group_id=187194
+
+# Second, compile the Wiiuse
+
+{{{
+make
+}}}
+
+
+= Wiiusej library =
+
+{{{
+gcc -shared -fPIC -o libWiiuseJ.so -Wall -L. -lwiiuse -I/home/vincent/jdk1.6.0_05/include -I/home/vincent/jdk1.6.0_05/include/linux wiiusej_WiiUseApi.c
+}}}
+
+= Launch on linux =
+
+Put both libs `libwiiuse.so` and `libWiiuseJ.so` in the folder of `wiiusej.jar`.
