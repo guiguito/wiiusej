@@ -3,20 +3,23 @@
 Page not finished yet!
 
 = Introduction =
+What packages you need installed: libc-dev and libbluetooth-dev
+You need Java 6 jdk installed, to get the jni interface.
 
 You need to get `libwiiuse.so` compiled before trying to compile Wiiusej library.
 
 = Wiiuse library =
 
-# First, download according version of Wiiuse (for WiiuseJ v0.12, download Wiiuse v0.12).
-http://sourceforge.net/project/showfiles.php?group_id=187194
-
-# Second, compile the Wiiuse
+  # First, [http://sourceforge.net/project/showfiles.php?group_id=187194 download according version of Wiiuse] (for WiiuseJ v0.12, download Wiiuse v0.12).
+  # Second, compile the Wiiuse
 
 {{{
 make
 }}}
 
+{{{
+make install
+}}}
 
 = Wiiusej library =
 
