@@ -244,6 +244,7 @@ public class WiiUseApiManager extends Thread {
 	 */
 	public static void shutdown() {
 		WiiUseApiManager manager = getInstance();
+		int pastConnected = manager.connected; 
 		if (manager.connected > 0) {
 			for (Wiimote wim : manager.wiimotes) {
 				if (wim != null)
@@ -251,7 +252,9 @@ public class WiiUseApiManager extends Thread {
 			}
 		}
 		manager.running.set(false);
-		manager.wiiuse.cleanUp();
+		if (pastConnected > 0) {
+			manager.wiiuse.cleanUp();
+		}
 	}
 
 	/**
