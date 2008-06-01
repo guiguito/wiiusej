@@ -14,7 +14,7 @@ First, make a project. Import wiiusej.jar and put the 2 dlls files at the root o
 
 
 Then make a class (for example MyClass) implementing WiimoteListener with it.
-For example, in the following example, each method implemented receives the differents event Types : ButtonsEvent , IREvent , MotionSensingEvent , StatusEvent and DisconnectionEvent (check Javadoc to see what infos you get from each event type). In this case in each method we only display the event received.
+For example, in the following example, each method implemented receives the differents event Types : ButtonsEvent, IREvent, MotionSensingEvent, ExpansionEvent, StatusEvent, DisconnectionEvent, NunchukInsertedEvent and NunchukRemovedEvent(check Javadoc to see what infos you get from each event type). In this case in each method we only display the event received.
 
 
 {{{
