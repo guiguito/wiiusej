@@ -112,9 +112,13 @@ public class WiiUseApiManager extends Thread {
 	 * @return an array with connected wiimotes or NULL.
 	 */
 	private synchronized static Wiimote[] getWiimotesPrivate(int nb,
-			boolean rumble, boolean forceStackType, int stackType) {
+			boolean rumble, boolean forceStackType, int stackType) {		 
 		WiiUseApiManager manager = getInstance();
+		
+		if (manager.leave) return null;//wiiusej definitively stopped
+		
 		if (manager.connected <= 0 && !manager.running.get()) {
+			//connect wiimotes.
 			int nbWiimotes = manager.connectWiimotes(nb, rumble,
 					forceStackType, stackType);
 			manager.wiimotes = new Wiimote[nbWiimotes];
@@ -152,15 +156,16 @@ public class WiiUseApiManager extends Thread {
 				}
 			}
 		}
-
-		if (manager.connected == 0) {
+				
+		if (manager.connected == 0) {//no wiimote connected
+			//return empty array
 			return new Wiimote[0];
 		}
 
-		if (!manager.isAlive())
+		if (!manager.isAlive())//start wiiuseJ polling
 			manager.start();
 
-		manager.semaphore.release();
+		manager.semaphore.release(1);
 
 		return manager.wiimotes;
 	}

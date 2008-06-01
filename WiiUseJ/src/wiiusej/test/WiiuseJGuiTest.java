@@ -1189,7 +1189,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 			java.awt.event.MouseEvent evt) {// GEN-FIRST:event_reconnectWiimotesButtonMousePressed
 		// stop manager
 		WiiUseApiManager manager = WiiUseApiManager.getInstance();
-		manager.definitiveShutdown();
+		manager.shutdown();
 
 		// unregister previous wiimote
 		if (wiimote != null) {
@@ -1228,7 +1228,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 
 		// get wiimote
 		Wiimote[] listWiimote = WiiUseApiManager.getWiimotes(1, true);
-		if (listWiimote.length > 0) {
+		if (listWiimote!=null && listWiimote.length > 0) {
 			wiimote = listWiimote[0];
 
 			// registers listeners
