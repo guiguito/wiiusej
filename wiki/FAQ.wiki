@@ -32,4 +32,4 @@ A : Shutdown WiiuseJ: WiiUseApiManager.shutdown(); and get wiimotes again : WiiU
 *Q :* I have this error: Error: [ERROR] Unable to
 determine bluetooth stack type. What can i do ?
 
-A : You can try to force the type of bluetooth stack you got. For this get the wiimotes this way : WiiUseApiManager.getWiimotes(2, true, WiiUseApiManager.WIIUSE_STACK_MS);   if you got a windows bluetooth stack or widcomm. Use WiiUseApiManager.WIIUSE_STACK_BLUESOLEIL  if you got bluesoleil.
+A : You can try to force the type of bluetooth stack you got. This is only for windows. For this get the wiimotes this way : WiiUseApiManager.getWiimotes(2, true, WiiUseApiManager.WIIUSE_STACK_MS);   if you got a windows bluetooth stack or widcomm. Use WiiUseApiManager.WIIUSE_STACK_BLUESOLEIL  if you got bluesoleil.
