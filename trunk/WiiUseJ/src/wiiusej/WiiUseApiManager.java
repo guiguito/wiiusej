@@ -569,8 +569,7 @@ public class WiiUseApiManager extends Thread {
 		while (!leave) {
 			try {
 				semaphore.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException e) {				
 				e.printStackTrace();
 			}
 
@@ -604,13 +603,12 @@ public class WiiUseApiManager extends Thread {
 					}
 					gather.clearEvents();
 				}
-			} else {
+			}/* else {
 				if (connected <= 0) {
 					System.out.println("No wiimotes connected !");
 				}
-			}
+			}*/
 		}// end while true
-
 	}
 
 	/**
