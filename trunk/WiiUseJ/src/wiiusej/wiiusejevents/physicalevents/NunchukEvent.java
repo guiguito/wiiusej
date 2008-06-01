@@ -103,9 +103,7 @@ public class NunchukEvent extends ExpansionEvent {
 		nunchukJoystickEvent = new JoystickEvent(id, angle, magnitude, max1,
 				max2, min1, min2, center1, center2);
 	}
-	
-	
-	
+
 	/**
 	 * Tell if there is a nunchuk motion sensing Event.
 	 * 
@@ -114,7 +112,7 @@ public class NunchukEvent extends ExpansionEvent {
 	public boolean isThereMotionSensingEvent() {
 		return nunchukMotionSensingEvent != null;
 	}
-	
+
 	/**
 	 * Tell if there is a nunchuk joystick event.
 	 * 

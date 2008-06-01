@@ -21,17 +21,19 @@ import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
 
 /**
- *
+ * Panel to display Acceleration in a MotionSensingEvent from an expansion.
+ * 
  * @author guiguito
  */
-public class AccelerationExpansionEventPanel extends AccelerationPanel{
+public class AccelerationExpansionEventPanel extends AccelerationPanel {
 
-    @Override
-    public RawAcceleration getRawAccelerationValue(GenericEvent e) {
-        if (e instanceof NunchukEvent){
-            return ((NunchukEvent)e).getNunchukMotionSensingEvent().getRawAcceleration();
-        }
-        return null;
-    }
+	@Override
+	public RawAcceleration getRawAccelerationValue(GenericEvent e) {
+		if (e instanceof NunchukEvent) {
+			return ((NunchukEvent) e).getNunchukMotionSensingEvent()
+					.getRawAcceleration();
+		}
+		return null;
+	}
 
 }

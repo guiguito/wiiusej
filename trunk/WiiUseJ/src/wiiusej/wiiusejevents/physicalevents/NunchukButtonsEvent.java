@@ -27,19 +27,24 @@ public class NunchukButtonsEvent extends ButtonsEvent {
 	private static short NUNCHUK_BUTTON_Z = 0x01;
 	private static short NUNCHUK_BUTTON_C = 0x02;
 	private static short NUNCHUK_BUTTON_ALL = 0x03;
-		
+
 	/**
 	 * Constructor of the nunchuk button Event.
-	 * @param id id of the wiimote.
-	 * @param buttonsJustPressed buttons just pressed.
-	 * @param buttonsJustReleased buttons just released.
-	 * @param buttonsHeld buttons just pressed.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
 	 */
 	public NunchukButtonsEvent(int id, short buttonsJustPressed,
 			short buttonsJustReleased, short buttonsHeld) {
 		super(id, buttonsJustPressed, buttonsJustReleased, buttonsHeld);
 	}
-	
+
 	/* Button Z */
 
 	public boolean isButtonZJustPressed() {
@@ -57,7 +62,7 @@ public class NunchukButtonsEvent extends ButtonsEvent {
 	public boolean isButtonZPressed() {
 		return isButtonPressed(NUNCHUK_BUTTON_Z);
 	}
-	
+
 	/* Button Z */
 
 	public boolean isButtonCJustPressed() {
@@ -82,5 +87,4 @@ public class NunchukButtonsEvent extends ButtonsEvent {
 				+ super.toString();
 	}
 
-	
 }

@@ -90,9 +90,9 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 			showExpansionWiimoteButton.setText("Show Nunchuk");
 		}
 	};
-	
+
 	/**
-	 *  default constructor 
+	 * default constructor
 	 */
 	public WiiuseJGuiTest() {
 		initComponents();
@@ -231,7 +231,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 				showExpansionWiimoteButton.setText("Show Nunchuk");
 				expansionFrame = new NunchukGuiTest(wiimote);
 				expansionFrame
-						.setDefaultCloseOperation(expansionFrame.HIDE_ON_CLOSE);
+						.setDefaultCloseOperation(NunchukGuiTest.HIDE_ON_CLOSE);
 				expansionFrame.addWindowListener(buttonSetter);
 				isFirstStatusGot = true;
 			}
@@ -275,7 +275,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 		showExpansionWiimoteButton.setEnabled(true);
 		showExpansionWiimoteButton.setText("Show nunchuk");
 		expansionFrame = new NunchukGuiTest(wiimote);
-		expansionFrame.setDefaultCloseOperation(expansionFrame.HIDE_ON_CLOSE);
+		expansionFrame.setDefaultCloseOperation(NunchukGuiTest.HIDE_ON_CLOSE);
 		expansionFrame.addWindowListener(buttonSetter);
 	}
 
@@ -1188,8 +1188,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 	private void reconnectWiimotesButtonMousePressed(
 			java.awt.event.MouseEvent evt) {// GEN-FIRST:event_reconnectWiimotesButtonMousePressed
 		// stop manager
-		WiiUseApiManager manager = WiiUseApiManager.getInstance();
-		manager.shutdown();
+		WiiUseApiManager.shutdown();
 
 		// unregister previous wiimote
 		if (wiimote != null) {
@@ -1228,7 +1227,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 
 		// get wiimote
 		Wiimote[] listWiimote = WiiUseApiManager.getWiimotes(1, true);
-		if (listWiimote!=null && listWiimote.length > 0) {
+		if (listWiimote != null && listWiimote.length > 0) {
 			wiimote = listWiimote[0];
 
 			// registers listeners
@@ -1244,7 +1243,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 			java.awt.event.MouseEvent evt) {// GEN-FIRST:event_showExpansionWiimoteButtonMousePressed
 		if (expansionFrame != null) {
 			if (showExpansionWiimoteButton.isEnabled()) {// expansion frame
-															// not shown
+				// not shown
 				// show it
 				expansionFrame.setEnabled(true);
 				expansionFrame.setVisible(true);

@@ -21,16 +21,18 @@ import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
 
 /**
- *
+ * Panel to display Orientation in a MotionSensingEvent from an expansion.
+ * 
  * @author guiguito
  */
 public class OrientationExpansionEventPanel extends OrientationPanel {
 
-    @Override
-    public Orientation getOrientationValue(GenericEvent e) {
-        if (e instanceof NunchukEvent) {
-            return ((NunchukEvent) e).getNunchukMotionSensingEvent().getOrientation();
-        }
-        return null;
-    }
+	@Override
+	public Orientation getOrientationValue(GenericEvent e) {
+		if (e instanceof NunchukEvent) {
+			return ((NunchukEvent) e).getNunchukMotionSensingEvent()
+					.getOrientation();
+		}
+		return null;
+	}
 }

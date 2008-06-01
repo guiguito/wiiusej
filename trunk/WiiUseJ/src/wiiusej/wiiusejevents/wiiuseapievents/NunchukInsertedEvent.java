@@ -16,30 +16,35 @@
  */
 package wiiusej.wiiusejevents.wiiuseapievents;
 
-
 /**
  * Event that represents the connection of a nunchuk to a wiimote.
+ * 
  * @author guiguito
- *
+ * 
  */
 public class NunchukInsertedEvent extends WiiUseApiEvent {
 
 	/**
 	 * Construct the NunchukInsertedEvent setting up the id.
-	 * @param id id of the wiimote.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
 	 */
 	public NunchukInsertedEvent(int id) {
 		super(id, WIIUSE_NUNCHUK_INSERTED);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see wiiusej.wiiusejevents.WiiUseApiEvent#toString()
 	 */
 	@Override
 	public String toString() {
 		String out = "";
 		/* Status */
-		out += "/*********** NUNCHUK INSERTED EVENT : WIIMOTE   ID :" + super.getWiimoteId() + " ********/\n";
+		out += "/*********** NUNCHUK INSERTED EVENT : WIIMOTE   ID :"
+				+ super.getWiimoteId() + " ********/\n";
 		return out;
 	}
 

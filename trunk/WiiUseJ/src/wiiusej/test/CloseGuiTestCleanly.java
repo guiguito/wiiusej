@@ -22,36 +22,37 @@ import wiiusej.WiiUseApiManager;
 
 /**
  * This class is used to close wiiusej cleanly.
+ * 
  * @author guiguito
  */
-public class CloseGuiTestCleanly implements WindowListener{
+public class CloseGuiTestCleanly implements WindowListener {
 
-    public void windowOpened(WindowEvent e) {
-        //nothing
-    }
+	public void windowOpened(WindowEvent e) {
+		// nothing
+	}
 
-    public void windowClosing(WindowEvent e) {
-        WiiUseApiManager.getInstance().shutdown();
-    }
+	public void windowClosing(WindowEvent e) {
+		WiiUseApiManager.definitiveShutdown();
+	}
 
-    public void windowClosed(WindowEvent e) {
-       //nothing
-    }
+	public void windowClosed(WindowEvent e) {
+		// nothing
+	}
 
-    public void windowIconified(WindowEvent e) {
-        //nothing
-    }
+	public void windowIconified(WindowEvent e) {
+		// nothing
+	}
 
-    public void windowDeiconified(WindowEvent e) {
-       //nothing
-    }
+	public void windowDeiconified(WindowEvent e) {
+		// nothing
+	}
 
-    public void windowActivated(WindowEvent e) {
-        //nothing
-    }
+	public void windowActivated(WindowEvent e) {
+		// nothing
+	}
 
-    public void windowDeactivated(WindowEvent e) {
-        //nothing
-    }
- 
+	public void windowDeactivated(WindowEvent e) {
+		// nothing
+	}
+
 }

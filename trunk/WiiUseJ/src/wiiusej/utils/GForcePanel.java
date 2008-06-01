@@ -42,7 +42,8 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
  * 
  * @author guiguito
  */
-public abstract class GForcePanel extends javax.swing.JPanel implements WiimoteListener {
+public abstract class GForcePanel extends javax.swing.JPanel implements
+		WiimoteListener {
 
 	private Image mImage;// image for double buffering
 	private Color xColor = Color.RED;
@@ -195,68 +196,69 @@ public abstract class GForcePanel extends javax.swing.JPanel implements WiimoteL
 		// nothing
 	}
 
-	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0){
+	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
 		// nothing
 	}
-        
-        private void draw(GenericEvent arg0){
-            if (values.size() >= getWidth()) {
+
+	private void draw(GenericEvent arg0) {
+		if (values.size() >= getWidth()) {
 			// if there are as many values as pixels in the width
 			// clear points
 			values.clear();
 		}
-                GForce  gforce = getGForceValue(arg0);
-                if (gforce != null) values.add(gforce);
+		GForce gforce = getGForceValue(arg0);
+		if (gforce != null)
+			values.add(gforce);
 		repaint();
-        }
-                
-        public abstract GForce getGForceValue(GenericEvent e);
+	}
 
-        public Color getBackgroundColor() {
-            return backgroundColor;
-        }
+	public abstract GForce getGForceValue(GenericEvent e);
 
-        public Color getLineColor() {
-            return lineColor;
-        }
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
 
-        public Color getXColor() {
-            return xColor;
-        }
+	public Color getLineColor() {
+		return lineColor;
+	}
 
-        public Color getYColor() {
-            return yColor;
-        }
+	public Color getXColor() {
+		return xColor;
+	}
 
-        public Color getZColor() {
-            return zColor;
-        }
+	public Color getYColor() {
+		return yColor;
+	}
 
-        public void setBackgroundColor(Color backgroundColor) {
-            this.backgroundColor = backgroundColor;
-        }
+	public Color getZColor() {
+		return zColor;
+	}
 
-        public void setLineColor(Color lineColor) {
-            this.lineColor = lineColor;
-        }
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 
-        public void setXColor(Color xColor) {
-            this.xColor = xColor;
-        }
+	public void setLineColor(Color lineColor) {
+		this.lineColor = lineColor;
+	}
 
-        public void setYColor(Color yColor) {
-            this.yColor = yColor;
-        }
+	public void setXColor(Color xColor) {
+		this.xColor = xColor;
+	}
 
-        public void setZColor(Color zColor) {
-            this.zColor = zColor;
-        }
+	public void setYColor(Color yColor) {
+		this.yColor = yColor;
+	}
 
-        public void clearView(){
-            values.clear();
-            repaint();
-        }
-        
+	public void setZColor(Color zColor) {
+		this.zColor = zColor;
+	}
+
+	public void clearView() {
+		values.clear();
+		repaint();
+	}
+
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

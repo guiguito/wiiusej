@@ -36,7 +36,7 @@ public class WiiUseApi {
 	 * 
 	 * @return the only instace of WiiUseApi.
 	 */
-	static WiiUseApi getInstance() {
+	protected static WiiUseApi getInstance() {
 		return instance;
 	}
 
@@ -334,7 +334,8 @@ public class WiiUseApi {
 	 * Force the bluetooth stack type.(useful only for windows)
 	 * 
 	 * @param bluetoothStackType
-	 *            must be WiiUseApi.WIIUSE_STACK_UNKNOWN or WiiUseApi.WIIUSE_STACK_MS or
+	 *            must be WiiUseApi.WIIUSE_STACK_UNKNOWN or
+	 *            WiiUseApi.WIIUSE_STACK_MS or
 	 *            WiiUseApi.WIIUSE_STACK_BLUESOLEIL.
 	 */
 	native void windowsSetBluetoothStack(int bluetoothStackType);

@@ -16,9 +16,9 @@
  */
 package wiiusej.wiiusejevents.wiiuseapievents;
 
-
 /**
  * Class representing a disconnection event.
+ * 
  * @author guiguito
  */
 public class DisconnectionEvent extends WiiUseApiEvent {
@@ -30,14 +30,15 @@ public class DisconnectionEvent extends WiiUseApiEvent {
 	 *            the Wiimote id
 	 */
 	public DisconnectionEvent(int id) {
-		super(id,WiiUseApiEvent.DISCONNECTION_EVENT);
+		super(id, WiiUseApiEvent.DISCONNECTION_EVENT);
 	}
-		
+
 	@Override
 	public String toString() {
 		String out = "";
 		/* Status */
-		out += "/*********** DISCONNECTION EVENT : WIIMOTE   ID :" + super.getWiimoteId() + " ********/\n";
+		out += "/*********** DISCONNECTION EVENT : WIIMOTE   ID :"
+				+ super.getWiimoteId() + " ********/\n";
 		return out;
 	}
 

@@ -21,23 +21,25 @@ import wiiusej.Wiimote;
 
 /**
  * Main Class to launch WiiuseJ GUI Test.
+ * 
  * @author guiguito
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
+		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
 		WiiuseJGuiTest gui = null;
 		if (wiimotes.length > 0) {
 			gui = new WiiuseJGuiTest(wiimotes[0]);
 		} else {
 			gui = new WiiuseJGuiTest();
 		}
-		gui.setDefaultCloseOperation(gui.EXIT_ON_CLOSE);
+		gui.setDefaultCloseOperation(WiiuseJGuiTest.EXIT_ON_CLOSE);
 		gui.setVisible(true);
-    }
+	}
 
 }

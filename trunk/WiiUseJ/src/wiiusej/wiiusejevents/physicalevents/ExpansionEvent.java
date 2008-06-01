@@ -18,19 +18,20 @@ package wiiusej.wiiusejevents.physicalevents;
 
 import wiiusej.wiiusejevents.GenericEvent;
 
-
 /**
- * Mother Class of all expansions.
+ * Mother Class of all expansions event.
+ * 
  * @author guiguito
  */
 public abstract class ExpansionEvent extends GenericEvent {
-	
-	
+
 	/**
 	 * Constructor of an ExpansionEvent.
-	 * @param id id of the wiimote to which the expansion is connected.
+	 * 
+	 * @param id
+	 *            id of the wiimote to which the expansion is connected.
 	 */
-	public ExpansionEvent(int id){
+	public ExpansionEvent(int id) {
 		super(id);
 	}
 	
