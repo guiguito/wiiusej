@@ -32,7 +32,25 @@ Some of the great aspects of this API are :
 WiiuseJ is made by Guilhem Duché : guiguito1@hotmail.com.
 You can contact me if you need more information.    
     
-Go to : http://wiiusej.googlecode.com/   for further documentations.    
+Go to : http://wiiusej.googlecode.com/   for further documentations.   
 
 
 
+CHANGELOG :
+
+wiiusej 0.12 :
+- added nunchuk support.
+- all new stuffs from wiiuse 0.12.
+- added timeout method.
+- added IR sensitivity.
+- updated to be able to reconnect wiimotes.
+- new architecture behind the scene.
+- cleaning of the project.
+
+wiiusej 0.11 :
+- updated with new stuffs from wiiuse 0.11.
+- Linux version.
+- selectionnable rumble on wiimotes connection. 
+
+wiiusej 0.1 :
+- first version on wiiuse 0.1.
