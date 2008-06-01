@@ -22,15 +22,16 @@ import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
 
 /**
  * Panel to display nunchuk joystick events.
+ * 
  * @author guiguito
  */
 public class NunchukJoystickEventPanel extends JoystickEventPanel {
 
-    @Override
-    public JoystickEvent getJoystikEvent(ExpansionEvent e) {
-        if (e instanceof NunchukEvent) {
-            return ((NunchukEvent) e).getNunchukJoystickEvent();
-        }
-        return null;
-    }
+	@Override
+	public JoystickEvent getJoystikEvent(ExpansionEvent e) {
+		if (e instanceof NunchukEvent) {
+			return ((NunchukEvent) e).getNunchukJoystickEvent();
+		}
+		return null;
+	}
 }

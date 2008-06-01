@@ -21,7 +21,8 @@ import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
 
 /**
- *
+ * Panel to display GForce in a MotionSensingEvent from an expansion.
+ * 
  * @author guiguito
  */
 public class GForceExpansionEventPanel extends GForcePanel{

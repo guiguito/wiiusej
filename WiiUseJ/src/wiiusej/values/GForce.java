@@ -18,6 +18,7 @@ package wiiusej.values;
 
 /**
  * Represents gravity force on each axis.
+ * 
  * @author guiguito
  */
 public class GForce {
@@ -25,23 +26,27 @@ public class GForce {
 	private float x;
 	private float y;
 	private float z;
-	
+
 	/**
 	 * Default constructor;
 	 */
-	public GForce(){
+	public GForce() {
 		x = 0;
 		y = 0;
 		z = 0;
 	}
-	
+
 	/**
 	 * Constructor with gravity force on each axis.
-	 * @param xx x value
-	 * @param yy x value
-	 * @param zz x value
+	 * 
+	 * @param xx
+	 *            x value
+	 * @param yy
+	 *            x value
+	 * @param zz
+	 *            x value
 	 */
-	public GForce(float xx, float yy, float zz){
+	public GForce(float xx, float yy, float zz) {
 		x = xx;
 		y = yy;
 		z = zz;
@@ -67,9 +72,9 @@ public class GForce {
 	public float getZ() {
 		return z;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Gravity force : ("+x+", "+y+","+z+")";
+		return "Gravity force : (" + x + ", " + y + "," + z + ")";
 	}
 }

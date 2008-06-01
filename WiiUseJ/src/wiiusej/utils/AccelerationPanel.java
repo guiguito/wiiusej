@@ -58,8 +58,8 @@ public abstract class AccelerationPanel extends javax.swing.JPanel implements
 	public AccelerationPanel() {
 		initComponents();
 	}
-        
-        /**
+
+	/**
 	 * Constructor used to choose the colors used by the AccelerationPanel.
 	 * 
 	 * @param bgColor
@@ -150,18 +150,19 @@ public abstract class AccelerationPanel extends javax.swing.JPanel implements
 		// put offscreen image on the screen
 		g.drawImage(mImage, 0, 0, null);
 	}
-        
-        /**
-         * check if the mImage variable has been initialized. If it's not the case
-         * it initializes it with the dimensions of the panel. mImage is for double
-         * buffering.
-         */
-        private void checkOffScreenImage() {
-            Dimension d = getSize();
-            if (mImage == null || mImage.getWidth(null) != d.width || mImage.getHeight(null) != d.height) {
-                mImage = createImage(d.width, d.height);
-            }
-        }
+
+	/**
+	 * check if the mImage variable has been initialized. If it's not the case
+	 * it initializes it with the dimensions of the panel. mImage is for double
+	 * buffering.
+	 */
+	private void checkOffScreenImage() {
+		Dimension d = getSize();
+		if (mImage == null || mImage.getWidth(null) != d.width
+				|| mImage.getHeight(null) != d.height) {
+			mImage = createImage(d.width, d.height);
+		}
+	}
 
 	public void onButtonsEvent(WiimoteButtonsEvent arg0) {
 		// nothing
@@ -196,65 +197,66 @@ public abstract class AccelerationPanel extends javax.swing.JPanel implements
 	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
 		// nothing
 	}
-        
-        private void draw(GenericEvent arg0){
-            if (values.size() >= getWidth()) {
+
+	private void draw(GenericEvent arg0) {
+		if (values.size() >= getWidth()) {
 			// if there are as many values as pixels in the width
 			// clear points
 			values.clear();
 		}
-                RawAcceleration  rawAcceleration = getRawAccelerationValue(arg0);
-                if (rawAcceleration != null) values.add(rawAcceleration);
+		RawAcceleration rawAcceleration = getRawAccelerationValue(arg0);
+		if (rawAcceleration != null)
+			values.add(rawAcceleration);
 		repaint();
-        }
-                
-        public abstract RawAcceleration getRawAccelerationValue(GenericEvent e);
+	}
 
-        public Color getBackgroundColor() {
-            return backgroundColor;
-        }
+	public abstract RawAcceleration getRawAccelerationValue(GenericEvent e);
 
-        public Color getLineColor() {
-            return lineColor;
-        }
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
 
-        public Color getXColor() {
-            return xColor;
-        }
+	public Color getLineColor() {
+		return lineColor;
+	}
 
-        public Color getYColor() {
-            return yColor;
-        }
+	public Color getXColor() {
+		return xColor;
+	}
 
-        public Color getZColor() {
-            return zColor;
-        }
+	public Color getYColor() {
+		return yColor;
+	}
 
-        public void setBackgroundColor(Color backgroundColor) {
-            this.backgroundColor = backgroundColor;
-        }
+	public Color getZColor() {
+		return zColor;
+	}
 
-        public void setLineColor(Color lineColor) {
-            this.lineColor = lineColor;
-        }
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 
-        public void setXColor(Color xColor) {
-            this.xColor = xColor;
-        }
+	public void setLineColor(Color lineColor) {
+		this.lineColor = lineColor;
+	}
 
-        public void setYColor(Color yColor) {
-            this.yColor = yColor;
-        }
+	public void setXColor(Color xColor) {
+		this.xColor = xColor;
+	}
 
-        public void setZColor(Color zColor) {
-            this.zColor = zColor;
-        }
-        
-        public void clearView(){
-            values.clear();
-            repaint();
-        }
-        
+	public void setYColor(Color yColor) {
+		this.yColor = yColor;
+	}
+
+	public void setZColor(Color zColor) {
+		this.zColor = zColor;
+	}
+
+	public void clearView() {
+		values.clear();
+		repaint();
+	}
+
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

@@ -20,28 +20,34 @@ import wiiusej.wiiusejevents.GenericEvent;
 
 /**
  * Class which represents a buttons event.
+ * 
  * @author guiguito
  */
-public abstract class ButtonsEvent extends GenericEvent{
-		
+public abstract class ButtonsEvent extends GenericEvent {
+
 	/* Buttons */
 	private short buttonsJustPressed = 0;
 	private short buttonsJustReleased = 0;
 	private short buttonsHeld = 0;
-	
+
 	/**
 	 * Constructor of the button Event.
-	 * @param id id of the wiimote concerned.
-	 * @param buttonsJustPressed buttons just pressed.
-	 * @param buttonsJustReleased buttons just released.
-	 * @param buttonsHeld buttons just held.
+	 * 
+	 * @param id
+	 *            id of the wiimote concerned.
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just held.
 	 */
 	public ButtonsEvent(int id, short buttonsJustPressed,
-			short buttonsJustReleased, short buttonsHeld){
+			short buttonsJustReleased, short buttonsHeld) {
 		super(id);
 		setAllButtons(buttonsJustPressed, buttonsJustReleased, buttonsHeld);
 	}
-	
+
 	/**
 	 * Set all buttons in one method.
 	 * 
@@ -55,7 +61,7 @@ public abstract class ButtonsEvent extends GenericEvent{
 		this.buttonsJustReleased = buttonsJustReleased;
 		this.buttonsHeld = buttonsHeld;
 	}
-	
+
 	/**
 	 * Get the short storing the buttons just pressed
 	 * 
@@ -82,7 +88,7 @@ public abstract class ButtonsEvent extends GenericEvent{
 	public short getButtonsHeld() {
 		return buttonsHeld;
 	}
-	
+
 	/** **************** BUTTONS Methods ***************** */
 	/* generic button functions */
 
@@ -102,11 +108,12 @@ public abstract class ButtonsEvent extends GenericEvent{
 	protected boolean isButtonHeld(short buttonBitsDefinition) {
 		return buttonTest(buttonBitsDefinition, buttonsHeld);
 	}
-	
+
 	protected boolean isButtonPressed(short buttonBitsDefinition) {
-		return isButtonHeld(buttonBitsDefinition)||isButtonJustPressed(buttonBitsDefinition);
-	}	
-	
+		return isButtonHeld(buttonBitsDefinition)
+				|| isButtonJustPressed(buttonBitsDefinition);
+	}
+
 	@Override
 	public String toString() {
 		String out = "";

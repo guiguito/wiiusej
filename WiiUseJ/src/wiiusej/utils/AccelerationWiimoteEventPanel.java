@@ -21,17 +21,17 @@ import wiiusej.wiiusejevents.GenericEvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 
 /**
- *
+ * Panel to display Acceleration in a MotionSensingEvent from a wiimote.
  * @author guiguito
  */
-public class AccelerationWiimoteEventPanel extends AccelerationPanel{
+public class AccelerationWiimoteEventPanel extends AccelerationPanel {
 
-    @Override
-    public RawAcceleration getRawAccelerationValue(GenericEvent e) {
-        if (e instanceof MotionSensingEvent){
-            return ((MotionSensingEvent)e).getRawAcceleration();
-        }
-        return null;
-    }
+	@Override
+	public RawAcceleration getRawAccelerationValue(GenericEvent e) {
+		if (e instanceof MotionSensingEvent) {
+			return ((MotionSensingEvent) e).getRawAcceleration();
+		}
+		return null;
+	}
 
 }

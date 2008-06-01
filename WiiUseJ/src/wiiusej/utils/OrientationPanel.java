@@ -200,65 +200,66 @@ public abstract class OrientationPanel extends javax.swing.JPanel implements
 	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
 		// nothing
 	}
-        
-        private void draw(GenericEvent arg0){
-            if (values.size() >= getWidth()) {
+
+	private void draw(GenericEvent arg0) {
+		if (values.size() >= getWidth()) {
 			// if there are as many values as pixels in the width
 			// clear points
 			values.clear();
 		}
-                Orientation  orientation = getOrientationValue(arg0);
-                if (orientation != null) values.add(orientation);
+		Orientation orientation = getOrientationValue(arg0);
+		if (orientation != null)
+			values.add(orientation);
 		repaint();
-        }
-                
-        public abstract Orientation getOrientationValue(GenericEvent e);
+	}
 
-        public Color getBackgroundColor() {
-            return backgroundColor;
-        }
+	public abstract Orientation getOrientationValue(GenericEvent e);
 
-        public Color getLineColor() {
-            return lineColor;
-        }
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
 
-        public Color getPitchColor() {
-            return pitchColor;
-        }
+	public Color getLineColor() {
+		return lineColor;
+	}
 
-        public Color getRollColor() {
-            return rollColor;
-        }
+	public Color getPitchColor() {
+		return pitchColor;
+	}
 
-        public Color getYawColor() {
-            return yawColor;
-        }
+	public Color getRollColor() {
+		return rollColor;
+	}
 
-        public void setBackgroundColor(Color backgroundColor) {
-            this.backgroundColor = backgroundColor;
-        }
+	public Color getYawColor() {
+		return yawColor;
+	}
 
-        public void setLineColor(Color lineColor) {
-            this.lineColor = lineColor;
-        }
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
 
-        public void setPitchColor(Color pitchColor) {
-            this.pitchColor = pitchColor;
-        }
+	public void setLineColor(Color lineColor) {
+		this.lineColor = lineColor;
+	}
 
-        public void setRollColor(Color rollColor) {
-            this.rollColor = rollColor;
-        }
+	public void setPitchColor(Color pitchColor) {
+		this.pitchColor = pitchColor;
+	}
 
-        public void setYawColor(Color yawColor) {
-            this.yawColor = yawColor;
-        }
+	public void setRollColor(Color rollColor) {
+		this.rollColor = rollColor;
+	}
 
-        public void clearView(){
-            values.clear();
-            repaint();
-        }
-        
+	public void setYawColor(Color yawColor) {
+		this.yawColor = yawColor;
+	}
+
+	public void clearView() {
+		values.clear();
+		repaint();
+	}
+
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

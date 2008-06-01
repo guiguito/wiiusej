@@ -34,7 +34,7 @@ import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 /**
- * This class used to test WiiuseJ.
+ * This class used to test WiiuseJ in text mode.
  * 
  * @author guiguito
  */
@@ -60,8 +60,6 @@ public class Tests implements WiimoteListener {
 			e.printStackTrace();
 		}
 	}
-
-	private static int nb = 0;
 
 	public void onButtonsEvent(WiimoteButtonsEvent e) {
 		if (dump == DISPLAY_EACH_VALUE) {
@@ -326,7 +324,7 @@ public class Tests implements WiimoteListener {
 		/* display motion sensing */
 		System.out.println(e);
 	}
-	
+
 	public void onExpansionEvent(ExpansionEvent e) {
 		System.out.println(e);
 	}
@@ -340,23 +338,23 @@ public class Tests implements WiimoteListener {
 		System.out.println(" wiimote " + e.getWiimoteId()
 				+ "has been disconnected !!");
 	}
-	
+
 	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {
-		System.out.println(e);		
+		System.out.println(e);
 	}
 
 	public void onNunchukRemovedEvent(NunchukRemovedEvent e) {
-		System.out.println(e);		
+		System.out.println(e);
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(4, true);
+		Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
 		if (wiimotes.length > 0) {
 			System.out.println(wiimotes[0]);
-			Tests tests = new Tests(wiimotes[0]);
+			new Tests(wiimotes[0]);
 		} else {
 			System.out.println("No wiimotes found !!!");
 		}

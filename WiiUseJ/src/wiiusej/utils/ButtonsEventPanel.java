@@ -37,8 +37,8 @@ import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
 
 /**
- * This panel is used to see what buttons are pressed. It displays the result of
- * last ButtonsEvent.
+ * This panel is used to see what buttons are pressed on the wiimote. It
+ * displays the result of last ButtonsEvent.
  * 
  * @author guiguito
  */
@@ -303,42 +303,42 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
 		// nothing
 	}
 
-        public Color getHeldColor() {
-            return heldColor;
-        }
+	public Color getHeldColor() {
+		return heldColor;
+	}
 
-        public Color getPressedColor() {
-            return pressedColor;
-        }
+	public Color getPressedColor() {
+		return pressedColor;
+	}
 
-        public Color getReleasedColor() {
-            return releasedColor;
-        }
+	public Color getReleasedColor() {
+		return releasedColor;
+	}
 
-        public Shape getShape() {
-            return shape;
-        }
+	public Shape getShape() {
+		return shape;
+	}
 
-        public void setHeldColor(Color heldColor) {
-            this.heldColor = heldColor;
-        }
+	public void setHeldColor(Color heldColor) {
+		this.heldColor = heldColor;
+	}
 
-        public void setPressedColor(Color pressedColor) {
-            this.pressedColor = pressedColor;
-        }
+	public void setPressedColor(Color pressedColor) {
+		this.pressedColor = pressedColor;
+	}
 
-        public void setReleasedColor(Color releasedColor) {
-            this.releasedColor = releasedColor;
-        }
+	public void setReleasedColor(Color releasedColor) {
+		this.releasedColor = releasedColor;
+	}
 
-        public void setShape(Shape shape) {
-            this.shape = shape;
-        }
-        
-        public void clearView(){
-            buttons = null;
-            repaint();
-        }
+	public void setShape(Shape shape) {
+		this.shape = shape;
+	}
+
+	public void clearView() {
+		buttons = null;
+		repaint();
+	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.

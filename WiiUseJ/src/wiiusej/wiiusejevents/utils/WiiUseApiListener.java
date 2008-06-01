@@ -18,24 +18,20 @@ package wiiusej.wiiusejevents.utils;
 
 import wiiusej.wiiusejevents.wiiuseapievents.WiiUseApiEvent;
 
-
-
 /**
  * This is the interface to implement to listen to events from the wiiuse API.
  * 
  * @author guiguito
  */
 public interface WiiUseApiListener extends java.util.EventListener {
-	
+
 	/**
-	 * Method called when a WiiUseApiEvent occurs.
-	 * A WiiUseApiEvent can be :
-	 * 					- WiimoteEvent (Storing ButtonsEvent and
-	 * 					 eventually IREvent and MotionSensingEvent)
-	 * 					- StatusEvent
-	 * 					- DisconnectionEvent
+	 * Method called when a WiiUseApiEvent occurs. A WiiUseApiEvent can be : -
+	 * WiimoteEvent (Storing ButtonsEvent and eventually IREvent and
+	 * MotionSensingEvent) - StatusEvent - DisconnectionEvent
+	 * 
 	 * @param e
 	 */
 	void onWiiUseApiEvent(WiiUseApiEvent e);
-			
+
 }

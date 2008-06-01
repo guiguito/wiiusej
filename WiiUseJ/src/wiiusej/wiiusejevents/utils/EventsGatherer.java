@@ -103,9 +103,10 @@ public class EventsGatherer {
 	 * @param distance
 	 *            Pixel Distance between first two dots.
 	 */
-	public void prepareIRevent(int x, int y, float z, int ax, int ay, int xVRes,
-			int yVRes, int xOffset, int yOffset, short sensorBarPostion,
-			short screenAsPectRatio, short irSensitivity, float distance) {
+	public void prepareIRevent(int x, int y, float z, int ax, int ay,
+			int xVRes, int yVRes, int xOffset, int yOffset,
+			short sensorBarPostion, short screenAsPectRatio,
+			short irSensitivity, float distance) {
 		genericEvent.prepareIRevent(x, y, z, ax, ay, xVRes, yVRes, xOffset,
 				yOffset, sensorBarPostion, screenAsPectRatio, irSensitivity,
 				distance);
@@ -179,7 +180,7 @@ public class EventsGatherer {
 					ya, ar, ap, x, y, z, xx, yy, zz);
 		}
 	}
-	
+
 	/**
 	 * Set a NunchukEvent to the prepared .
 	 * 
@@ -238,19 +239,20 @@ public class EventsGatherer {
 	 * @param center2
 	 *            center joystick value 2.
 	 */
-	public void addNunchunkEventToPreparedWiimoteEvent(short buttonsJustPressed,
-			short buttonsJustReleased, short buttonsHeld,
-			float orientationThreshold, int accelerationThreshold,
-			boolean smoothingState, float alphaSmooth, float r, float p,
-			float ya, float ar, float ap, float x, float y, float z, short xx,
-			short yy, short zz, float angle, float magnitude, short max1,
-			short max2, short min1, short min2, short center1, short center2){
+	public void addNunchunkEventToPreparedWiimoteEvent(
+			short buttonsJustPressed, short buttonsJustReleased,
+			short buttonsHeld, float orientationThreshold,
+			int accelerationThreshold, boolean smoothingState,
+			float alphaSmooth, float r, float p, float ya, float ar, float ap,
+			float x, float y, float z, short xx, short yy, short zz,
+			float angle, float magnitude, short max1, short max2, short min1,
+			short min2, short center1, short center2) {
 		if (genericEvent != null) {
 			genericEvent.setNunchukEvent(buttonsJustPressed,
-				buttonsJustReleased, buttonsHeld, orientationThreshold,
-				accelerationThreshold, smoothingState, alphaSmooth, r, p, ya,
-				ar, ap, x, y, z, xx, yy, zz, angle, magnitude, max1, max2,
-				min1, min2, center1, center2);
+					buttonsJustReleased, buttonsHeld, orientationThreshold,
+					accelerationThreshold, smoothingState, alphaSmooth, r, p,
+					ya, ar, ap, x, y, z, xx, yy, zz, angle, magnitude, max1,
+					max2, min1, min2, center1, center2);
 		}
 	}
 
@@ -307,7 +309,7 @@ public class EventsGatherer {
 		DisconnectionEvent evt = new DisconnectionEvent(id);
 		addEvent(evt);
 	}
-	
+
 	/**
 	 * Add a NunchukInsertedEvent to the gatherer.
 	 * 
@@ -318,7 +320,7 @@ public class EventsGatherer {
 		NunchukInsertedEvent evt = new NunchukInsertedEvent(id);
 		addEvent(evt);
 	}
-	
+
 	/**
 	 * Add a NunchukRemovedEvent to the gatherer.
 	 * 

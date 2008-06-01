@@ -18,14 +18,15 @@ package wiiusej.values;
 
 /**
  * Represents raw acceleration on each axis.
+ * 
  * @author guiguito
  */
 public class RawAcceleration {
-	
+
 	private short x;
 	private short y;
 	private short z;
-	
+
 	/**
 	 * Default constructor;
 	 */
@@ -34,12 +35,16 @@ public class RawAcceleration {
 		y = 0;
 		z = 0;
 	}
-	
+
 	/**
 	 * Constructor with raw acceleration on each axis.
-	 * @param xx x value
-	 * @param yy x value
-	 * @param zz x value
+	 * 
+	 * @param xx
+	 *            x value
+	 * @param yy
+	 *            x value
+	 * @param zz
+	 *            x value
 	 */
 	public RawAcceleration(short xx, short yy, short zz) {
 		x = xx;
@@ -53,6 +58,7 @@ public class RawAcceleration {
 	public short getX() {
 		return x;
 	}
+
 	/**
 	 * @return the y
 	 */
@@ -66,10 +72,10 @@ public class RawAcceleration {
 	public short getZ() {
 		return z;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Raw acceleration : ("+x+", "+y+","+z+")";
+		return "Raw acceleration : (" + x + ", " + y + "," + z + ")";
 	}
 
 }

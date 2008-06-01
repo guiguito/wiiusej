@@ -45,10 +45,15 @@ public class WiimoteButtonsEvent extends ButtonsEvent {
 
 	/**
 	 * Constructor of the wiimote button Event.
-	 * @param id id of the wiimote.
-	 * @param buttonsJustPressed buttons just pressed.
-	 * @param buttonsJustReleased buttons just released.
-	 * @param buttonsHeld buttons held.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons held.
 	 */
 	public WiimoteButtonsEvent(int id, short buttonsJustPressed,
 			short buttonsJustReleased, short buttonsHeld) {
