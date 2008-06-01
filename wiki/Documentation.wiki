@@ -18,10 +18,11 @@ For example, in the following example, each method implemented receives the diff
 
 
 {{{
-public class MyClass implements WiimoteListener{
-
-    public void onButtonsEvent(ButtonsEvent arg0) {
+public void onButtonsEvent(WiimoteButtonsEvent arg0) {
         System.out.println(arg0);
+        if (arg0.isButtonAPressed()){
+            WiiUseApiManager.shutdown();
+        }
     }
 
     public void onIrEvent(IREvent arg0) {
@@ -29,6 +30,10 @@ public class MyClass implements WiimoteListener{
     }
 
     public void onMotionSensingEvent(MotionSensingEvent arg0) {
+        System.out.println(arg0);
+    }
+
+    public void onExpansionEvent(ExpansionEvent arg0) {
         System.out.println(arg0);
     }
 
@@ -40,7 +45,15 @@ public class MyClass implements WiimoteListener{
         System.out.println(arg0);
     }
 
-}
+    public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
+        System.out.println(arg0);
+    }
+
+    public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
+        System.out.println(arg0);
+    }
+
+
 }}}
 
 
