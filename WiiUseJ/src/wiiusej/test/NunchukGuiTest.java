@@ -89,7 +89,7 @@ public class NunchukGuiTest extends javax.swing.JFrame implements
     private void initComponents() {
 
         topPanels = new javax.swing.JPanel();
-        joystickEventsPanel = joystickEventsPanel = new NunchukJoystickEventPanel();
+        joystickEventsPanel = new NunchukJoystickEventPanel();
         motionSensingEventsPanel = new javax.swing.JPanel();
         motionSensingEventsTabbedPanels = new javax.swing.JTabbedPane();
         rawAccelerationPanel = new AccelerationExpansionEventPanel();
