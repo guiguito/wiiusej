@@ -30,10 +30,10 @@ import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
  */
 public class WiimoteEvent extends WiiUseApiEvent {
 
-	WiimoteButtonsEvent buttonsEvent = null;
-	IREvent infraredEvent = null;
-	MotionSensingEvent motionSensingEvent = null;
-	ExpansionEvent expansionEvent = null;
+	private WiimoteButtonsEvent buttonsEvent = null;
+	private IREvent infraredEvent = null;
+	private MotionSensingEvent motionSensingEvent = null;
+	private ExpansionEvent expansionEvent = null;
 
 	/**
 	 * Construct the Wiimote setting up the id.

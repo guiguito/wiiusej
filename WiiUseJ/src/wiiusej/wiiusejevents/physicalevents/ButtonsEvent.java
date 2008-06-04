@@ -92,24 +92,24 @@ public abstract class ButtonsEvent extends GenericEvent {
 	/** **************** BUTTONS Methods ***************** */
 	/* generic button functions */
 
-	protected boolean buttonTest(short buttonBitsDefinition, short buttons) {
+	protected boolean buttonTest(int buttonBitsDefinition, int buttons) {
 		return (buttons & buttonBitsDefinition) == buttonBitsDefinition;
 	}
 
-	protected boolean isButtonJustPressed(short buttonBitsDefinition) {
+	protected boolean isButtonJustPressed(int buttonBitsDefinition) {
 		return buttonTest(buttonBitsDefinition, buttonsJustPressed)
 				&& !isButtonHeld(buttonBitsDefinition);
 	}
 
-	protected boolean isButtonJustReleased(short buttonBitsDefinition) {
+	protected boolean isButtonJustReleased(int buttonBitsDefinition) {
 		return buttonTest(buttonBitsDefinition, buttonsJustReleased);
 	}
 
-	protected boolean isButtonHeld(short buttonBitsDefinition) {
+	protected boolean isButtonHeld(int buttonBitsDefinition) {
 		return buttonTest(buttonBitsDefinition, buttonsHeld);
 	}
 
-	protected boolean isButtonPressed(short buttonBitsDefinition) {
+	protected boolean isButtonPressed(int buttonBitsDefinition) {
 		return isButtonHeld(buttonBitsDefinition)
 				|| isButtonJustPressed(buttonBitsDefinition);
 	}
