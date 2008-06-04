@@ -17,8 +17,7 @@
 package wiiusej.wiiusejevents.physicalevents;
 
 /**
- * Class which represents a buttons event for a generic event. It means buttons
- * from a wiimote.
+ * Class which represents a buttons event from a Nunchuk.
  * 
  * @author guiguito
  */
@@ -29,7 +28,7 @@ public class NunchukButtonsEvent extends ButtonsEvent {
 	private static short NUNCHUK_BUTTON_ALL = 0x03;
 
 	/**
-	 * Constructor of the nunchuk button Event.
+	 * Constructor of the nunchuk buttons Event.
 	 * 
 	 * @param id
 	 *            id of the wiimote.

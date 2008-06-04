@@ -23,9 +23,9 @@ package wiiusej.wiiusejevents.physicalevents;
  */
 public class NunchukEvent extends ExpansionEvent {
 
-	NunchukButtonsEvent buttonsEvent;
-	MotionSensingEvent nunchukMotionSensingEvent;
-	JoystickEvent nunchukJoystickEvent;
+	private NunchukButtonsEvent buttonsEvent;
+	private MotionSensingEvent nunchukMotionSensingEvent;
+	private JoystickEvent nunchukJoystickEvent;
 
 	/**
 	 * Constructor of NunchukEvent.
@@ -123,9 +123,9 @@ public class NunchukEvent extends ExpansionEvent {
 	}
 
 	/**
-	 * Get joystick buttons event.
+	 * Get nunchuk buttons event.
 	 * 
-	 * @return the joystick buttons event if there is one or null.
+	 * @return the nunchuk buttons event if there is one or null.
 	 */
 	public NunchukButtonsEvent getButtonsEvent() {
 		return buttonsEvent;
