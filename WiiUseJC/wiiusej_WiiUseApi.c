@@ -484,7 +484,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				if (WIIUSE_USING_EXP(wiimotes[i])) {
 					/* Nunchuk support */
 					if (wiimotes[i]->exp.type == EXP_NUNCHUK) {
-						/* put nunchuk values to wiimote generic event */
+						/* put nunchuk values in wiimote generic event */
 						mid = (*env)->GetMethodID(env, cls,
 								"addNunchunkEventToPreparedWiimoteEvent", "(SSSFIZFFFFFFFFFSSSFFSSSSSS)V");
 						if (mid == 0) {
@@ -507,6 +507,49 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 								nc->js.max.x,nc->js.max.y,
 								nc->js.min.x,nc->js.min.y,
 								nc->js.center.x,nc->js.center.y);
+					} else if (wiimotes[i]->exp.type == EXP_GUITAR_HERO_3) {
+						/* put guitar hero values in wiimote generic event */
+						mid = (*env)->GetMethodID(env, cls,
+								"addGuitarHeroEventToPreparedWiimoteEvent", "(SSSFFFSSSSSS)V");
+						if (mid == 0) {
+							return;
+						}
+						struct guitar_hero_3_t* gh = (guitar_hero_3_t*)&wiimotes[i]->exp.gh3;
+
+						(*env)->CallVoidMethod(env, gath, mid,
+								/* buttons */
+								gh->btns,gh->btns_released,gh->btns_held,
+								/* whammy bar */
+								gh->whammy_bar,
+								/* joystick */
+								gh->js.ang,gh->js.mag,
+								gh->js.max.x,gh->js.max.y,
+								gh->js.min.x,gh->js.min.y,
+								gh->js.center.x,gh->js.center.y);
+					}if (wiimotes[i]->exp.type == EXP_CLASSIC) {
+						/* put classic controller values in wiimote generic event */
+						mid = (*env)->GetMethodID(env, cls,
+								"addClassicControllerEventToPreparedWiimoteEvent", "(SSSFFFFSSSSSSFFSSSSSS)V");
+						if (mid == 0) {
+							return;
+						}
+						struct classic_ctrl_t* cl = (classic_ctrl_t*)&wiimotes[i]->exp.classic;
+
+						(*env)->CallVoidMethod(env, gath, mid,
+								/* buttons */
+								cl->btns,cl->btns_released,cl->btns_held,
+								/* shoulder buttons */
+								cl->l_shoulder,cl->r_shoulder,
+								/* joystick left*/
+								cl->ljs.ang,cl->ljs.mag,
+								cl->ljs.max.x,cl->ljs.max.y,
+								cl->ljs.min.x,cl->ljs.min.y,
+								cl->ljs.center.x,cl->ljs.center.y,
+								/* joystick right */
+								cl->rjs.ang,cl->rjs.mag,
+								cl->rjs.max.x,cl->rjs.max.y,
+								cl->rjs.min.x,cl->rjs.min.y,
+								cl->rjs.center.x,cl->rjs.center.y);
 					}
 				}
 
@@ -529,7 +572,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				break;
 
 				case WIIUSE_UNEXPECTED_DISCONNECT:
-				/* the wiimote disconnected */
+				/* the wimote disconnected */
 				mid = (*env)->GetMethodID(env, cls, "addDisconnectionEvent", "(I)V");
 				if (mid == 0) {
 					return;
@@ -538,7 +581,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				break;
 
 				case WIIUSE_NUNCHUK_INSERTED:
-				/* the wiimote disconnected */
+				/* the nunchuk was just connected */
 				mid = (*env)->GetMethodID(env, cls, "addNunchukInsertedEvent", "(I)V");
 				if (mid == 0) {
 					return;
@@ -547,8 +590,44 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 				break;
 
 				case WIIUSE_NUNCHUK_REMOVED:
-				/* the wiimote disconnected */
+				/* the nunchuk disconnected */
 				mid = (*env)->GetMethodID(env, cls, "addNunchukRemovedEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_GUITAR_HERO_3_CTRL_INSERTED:
+				/* the guitar hero was just connected */
+				mid = (*env)->GetMethodID(env, cls, "addGuitarHeroInsertedEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_GUITAR_HERO_3_CTRL_REMOVED:
+				/* the guitar hero disconnected */
+				mid = (*env)->GetMethodID(env, cls, "addGuitarHeroRemovedEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_CLASSIC_CTRL_INSERTED:
+				/* the classic controller was just connected */
+				mid = (*env)->GetMethodID(env, cls, "addClassicControllerInsertedEvent", "(I)V");
+				if (mid == 0) {
+					return;
+				}
+				(*env)->CallVoidMethod(env, gath, mid, wiimotes[i]->unid);
+				break;
+
+				case WIIUSE_CLASSIC_CTRL_REMOVED:
+				/* the classic controller disconnected */
+				mid = (*env)->GetMethodID(env, cls, "addClassicControllerRemovedEvent", "(I)V");
 				if (mid == 0) {
 					return;
 				}
