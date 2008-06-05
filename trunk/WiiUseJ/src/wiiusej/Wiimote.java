@@ -20,7 +20,11 @@ import javax.swing.event.EventListenerList;
 
 import wiiusej.wiiusejevents.utils.WiiUseApiListener;
 import wiiusej.wiiusejevents.utils.WiimoteListener;
+import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.GuitarHeroInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.GuitarHeroRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
@@ -315,6 +319,14 @@ public class Wiimote implements WiiUseApiListener {
 				notifyNunchukInsertedEventListeners((NunchukInsertedEvent) e);
 			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_NUNCHUK_REMOVED) {
 				notifyNunchukRemovedEventListeners((NunchukRemovedEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_INSERTED) {
+				notifyGuitarHeroInsertedEventListeners((GuitarHeroInsertedEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_GUITAR_HERO_3_CTRL_REMOVED) {
+				notifyGuitarHeroRemovedEventListeners((GuitarHeroRemovedEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_INSERTED) {
+				notifyClassicControllerInsertedEventListeners((ClassicControllerInsertedEvent) e);
+			} else if (e.getEventType() == WiiUseApiEvent.WIIUSE_CLASSIC_CTRL_REMOVED) {
+				notifyClassicControllerRemovedEventListeners((ClassicControllerRemovedEvent) e);
 			}
 			/*
 			 * events not managed yet || e.getEventType() == WIIUSE_READ_DATA
@@ -427,6 +439,54 @@ public class Wiimote implements WiiUseApiListener {
 		}
 	}
 
+	/**
+	 * Notify WiimoteListener that a GuitarHeroInserted Event occured.
+	 * 
+	 * @param evt
+	 *            GuitarHeroInserted Event occured
+	 */
+	private void notifyGuitarHeroInsertedEventListeners(GuitarHeroInsertedEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
+			listener.onGuitarHeroInsertedEvent(evt);
+		}
+	}
+
+	/**
+	 * Notify WiimoteListener that a GuitarHeroRemoved Event occured.
+	 * 
+	 * @param evt
+	 *            GuitarHeroRemoved Event occured
+	 */
+	private void notifyGuitarHeroRemovedEventListeners(GuitarHeroRemovedEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
+			listener.onGuitarHeroRemovedEvent(evt);
+		}
+	}
+	
+	/**
+	 * Notify WiimoteListener that a ClassicControllerInserted Event occured.
+	 * 
+	 * @param evt
+	 *            ClassicControllerInserted Event occured
+	 */
+	private void notifyClassicControllerInsertedEventListeners(ClassicControllerInsertedEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
+			listener.onClassicControllerInsertedEvent(evt);
+		}
+	}
+
+	/**
+	 * Notify WiimoteListener that a ClassicControllerRemoved Event occured.
+	 * 
+	 * @param evt
+	 *            ClassicControllerRemoved Event occured
+	 */
+	private void notifyClassicControllerRemovedEventListeners(ClassicControllerRemovedEvent evt) {
+		for (WiimoteListener listener : getWiiMoteEventListeners()) {
+			listener.onClassicControllerRemovedEvent(evt);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Wiimote with ID : " + id;

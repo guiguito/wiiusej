@@ -16,7 +16,9 @@
  */
 package wiiusej.wiiusejevents.wiiuseapievents;
 
+import wiiusej.wiiusejevents.physicalevents.ClassicControllerEvent;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
+import wiiusej.wiiusejevents.physicalevents.GuitarHeroEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
@@ -305,8 +307,102 @@ public class WiimoteEvent extends WiiUseApiEvent {
 				min1, min2, center1, center2);
 	}
 
-	public void setClassicControllerEvent() {
-		// @TODO
+	/**
+	 * Set a ClassicControllerEvent for the expansionEvent.
+	 * 
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
+	 * @param rightShoulder
+	 *            right shoulder button (range 0-1).
+	 * @param leftShoulder
+	 *            left shoulder button (range 0-1).
+	 * @param langle
+	 *            angle the left joystick is being held.
+	 * @param lmagnitude
+	 *            magnitude of the left joystick (range 0-1).
+	 * @param lmax1
+	 *            maximum left joystick value 1.
+	 * @param lmax2
+	 *            maximum left joystick value 2.
+	 * @param lmin1
+	 *            minimum left joystick value 1.
+	 * @param lmin2
+	 *            minimum left joystick value 2.
+	 * @param lcenter1
+	 *            center left joystick value 1.
+	 * @param lcenter2
+	 *            center left joystick value 2.
+	 * @param rangle
+	 *            angle the right joystick is being held.
+	 * @param rmagnitude
+	 *            magnitude of the right joystick (range 0-1).
+	 * @param rmax1
+	 *            maximum right joystick value 1.
+	 * @param rmax2
+	 *            maximum right joystick value 2.
+	 * @param rmin1
+	 *            minimum right joystick value 1.
+	 * @param rmin2
+	 *            minimum right joystick value 2.
+	 * @param rcenter1
+	 *            center right joystick value 1.
+	 * @param rcenter2
+	 *            center right joystick value 2.
+	 */
+	public void setClassicControllerEvent(short buttonsJustPressed,
+			short buttonsJustReleased, short buttonsHeld, float rightShoulder,
+			float leftShoulder, float langle, float lmagnitude, short lmax1,
+			short lmax2, short lmin1, short lmin2, short lcenter1,
+			short lcenter2, float rangle, float rmagnitude, short rmax1,
+			short rmax2, short rmin1, short rmin2, short rcenter1,
+			short rcenter2) {
+		expansionEvent = new ClassicControllerEvent(getWiimoteId(),
+				buttonsJustPressed, buttonsJustReleased, buttonsHeld,
+				rightShoulder, leftShoulder, langle, lmagnitude, lmax1, lmax2,
+				lmin1, lmin2, lcenter1, lcenter2, rangle, rmagnitude, rmax1,
+				rmax2, rmin1, rmin2, rcenter1, rcenter2);
+	}
+	
+	/**
+	 * Set a GuitarHeroEvent for the expansionEvent.
+	 * 
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
+	 * @param whammyBar
+	 *            whammy bar (range 0-1).
+	 * @param angle
+	 *            angle the joystick is being held.
+	 * @param magnitude
+	 *            magnitude of the joystick (range 0-1).
+	 * @param max1
+	 *            maximum joystick value 1.
+	 * @param max2
+	 *            maximum joystick value 2.
+	 * @param min1
+	 *            minimum joystick value 1.
+	 * @param min2
+	 *            minimum joystick value 2.
+	 * @param center1
+	 *            center joystick value 1.
+	 * @param center2
+	 *            center joystick value 2.
+	 */
+	public void setGuitarHeroEvent(short buttonsJustPressed,
+			short buttonsJustReleased, short buttonsHeld, float whammyBar,
+			float angle, float magnitude, short max1, short max2, short min1,
+			short min2, short center1, short center2) {
+		expansionEvent = new GuitarHeroEvent(getWiimoteId(),
+				buttonsJustPressed, buttonsJustReleased, buttonsHeld,
+				whammyBar, angle, magnitude, max1, max2, min1, min2, center1,
+				center2);
 	}
 
 	@Override

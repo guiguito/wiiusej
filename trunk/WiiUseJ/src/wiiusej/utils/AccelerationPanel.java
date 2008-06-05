@@ -32,7 +32,11 @@ import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
 import wiiusej.wiiusejevents.physicalevents.WiimoteButtonsEvent;
 import wiiusej.wiiusejevents.utils.WiimoteListener;
+import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.GuitarHeroInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.GuitarHeroRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
@@ -195,6 +199,24 @@ public abstract class AccelerationPanel extends javax.swing.JPanel implements
 	}
 
 	public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
+		// nothing
+	}
+	
+	public void onGuitarHeroInsertedEvent(GuitarHeroInsertedEvent arg0) {
+		// nothing
+	}
+
+	public void onGuitarHeroRemovedEvent(GuitarHeroRemovedEvent arg0) {
+		// nothing
+	}
+
+	public void onClassicControllerInsertedEvent(
+			ClassicControllerInsertedEvent arg0) {
+		// nothing
+	}
+
+	public void onClassicControllerRemovedEvent(
+			ClassicControllerRemovedEvent arg0) {
 		// nothing
 	}
 
