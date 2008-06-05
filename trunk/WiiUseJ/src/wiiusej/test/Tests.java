@@ -229,6 +229,7 @@ public class Tests implements WiimoteListener {
 			if (e.isButtonHomeJustPressed()) {
 				System.out.println("LEAVING TEST");
 				wiimote.disconnect();
+				WiiUseApiManager.definitiveShutdown();
 			}
 
 		} else if (dump == DUMP) {
