@@ -16,7 +16,13 @@
  */
 package wiiusej.wiiusejevents.utils;
 
+import wiiusej.wiiusejevents.physicalevents.ClassicControllerEvent;
+import wiiusej.wiiusejevents.physicalevents.GuitarHeroEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.GuitarHeroInsertedEvent;
+import wiiusej.wiiusejevents.wiiuseapievents.GuitarHeroRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.NunchukInsertedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.NunchukRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
@@ -182,7 +188,7 @@ public class EventsGatherer {
 	}
 
 	/**
-	 * Set a NunchukEvent to the prepared .
+	 * Set a NunchukEvent to the prepared WiimoteEvent.
 	 * 
 	 * @param buttonsJustPressed
 	 *            buttons just pressed.
@@ -253,6 +259,108 @@ public class EventsGatherer {
 					accelerationThreshold, smoothingState, alphaSmooth, r, p,
 					ya, ar, ap, x, y, z, xx, yy, zz, angle, magnitude, max1,
 					max2, min1, min2, center1, center2);
+		}
+	}
+
+	/**
+	 * Set a GuitarHeroEvent to the prepared WiimoteEvent.
+	 * 
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
+	 * @param whammyBar
+	 *            whammy bar (range 0-1).
+	 * @param angle
+	 *            angle the joystick is being held.
+	 * @param magnitude
+	 *            magnitude of the joystick (range 0-1).
+	 * @param max1
+	 *            maximum joystick value 1.
+	 * @param max2
+	 *            maximum joystick value 2.
+	 * @param min1
+	 *            minimum joystick value 1.
+	 * @param min2
+	 *            minimum joystick value 2.
+	 * @param center1
+	 *            center joystick value 1.
+	 * @param center2
+	 *            center joystick value 2.
+	 */
+	public void addGuitarHeroEventToPreparedWiimoteEvent(
+			short buttonsJustPressed, short buttonsJustReleased,
+			short buttonsHeld, float whammyBar, float angle, float magnitude,
+			short max1, short max2, short min1, short min2, short center1,
+			short center2) {
+		if (genericEvent != null) {
+			genericEvent.setGuitarHeroEvent(buttonsJustPressed,
+					buttonsJustReleased, buttonsHeld, whammyBar, angle,
+					magnitude, max1, max2, min1, min2, center1, center2);
+		}
+	}
+
+	/**
+	 * Set a ClassicControllerEvent to the prepared WiimoteEvent.
+	 * 
+	 * @param buttonsJustPressed
+	 *            buttons just pressed.
+	 * @param buttonsJustReleased
+	 *            buttons just released.
+	 * @param buttonsHeld
+	 *            buttons just pressed.
+	 * @param rightShoulder
+	 *            right shoulder button (range 0-1).
+	 * @param leftShoulder
+	 *            left shoulder button (range 0-1).
+	 * @param langle
+	 *            angle the left joystick is being held.
+	 * @param lmagnitude
+	 *            magnitude of the left joystick (range 0-1).
+	 * @param lmax1
+	 *            maximum left joystick value 1.
+	 * @param lmax2
+	 *            maximum left joystick value 2.
+	 * @param lmin1
+	 *            minimum left joystick value 1.
+	 * @param lmin2
+	 *            minimum left joystick value 2.
+	 * @param lcenter1
+	 *            center left joystick value 1.
+	 * @param lcenter2
+	 *            center left joystick value 2.
+	 * @param rangle
+	 *            angle the right joystick is being held.
+	 * @param rmagnitude
+	 *            magnitude of the right joystick (range 0-1).
+	 * @param rmax1
+	 *            maximum right joystick value 1.
+	 * @param rmax2
+	 *            maximum right joystick value 2.
+	 * @param rmin1
+	 *            minimum right joystick value 1.
+	 * @param rmin2
+	 *            minimum right joystick value 2.
+	 * @param rcenter1
+	 *            center right joystick value 1.
+	 * @param rcenter2
+	 *            center right joystick value 2.
+	 */
+	public void setClassicControllerEvent(short buttonsJustPressed,
+			short buttonsJustReleased, short buttonsHeld, float rightShoulder,
+			float leftShoulder, float langle, float lmagnitude, short lmax1,
+			short lmax2, short lmin1, short lmin2, short lcenter1,
+			short lcenter2, float rangle, float rmagnitude, short rmax1,
+			short rmax2, short rmin1, short rmin2, short rcenter1,
+			short rcenter2) {
+		if (genericEvent != null) {
+			genericEvent.setClassicControllerEvent(buttonsJustPressed,
+					buttonsJustReleased, buttonsHeld, rightShoulder,
+					leftShoulder, langle, lmagnitude, lmax1, lmax2, lmin1,
+					lmin2, lcenter1, lcenter2, rangle, rmagnitude, rmax1,
+					rmax2, rmin1, rmin2, rcenter1, rcenter2);
 		}
 	}
 
@@ -329,6 +437,52 @@ public class EventsGatherer {
 	 */
 	public void addNunchukRemovedEvent(int id) {
 		NunchukRemovedEvent evt = new NunchukRemovedEvent(id);
+		addEvent(evt);
+	}
+
+	/**
+	 * Add a GuitarHeroInsertedEvent to the gatherer.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 */
+	public void addGuitarHeroInsertedEvent(int id) {
+		GuitarHeroInsertedEvent evt = new GuitarHeroInsertedEvent(id);
+		addEvent(evt);
+	}
+
+	/**
+	 * Add a GuitarHeroRemovedEvent to the gatherer.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 */
+	public void addGuitarHeroRemovedEvent(int id) {
+		GuitarHeroRemovedEvent evt = new GuitarHeroRemovedEvent(id);
+		addEvent(evt);
+	}
+
+	/**
+	 * Add a ClassicControllerInsertedEvent to the gatherer.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 */
+	public void addClassicControllerInsertedEvent(int id) {
+		ClassicControllerInsertedEvent evt = new ClassicControllerInsertedEvent(
+				id);
+		addEvent(evt);
+	}
+
+	/**
+	 * Add a ClassicControllerRemovedEvent to the gatherer.
+	 * 
+	 * @param id
+	 *            id of the wiimote.
+	 */
+	public void addClassicControllerRemovedEvent(int id) {
+		ClassicControllerRemovedEvent evt = new ClassicControllerRemovedEvent(
+				id);
 		addEvent(evt);
 	}
 

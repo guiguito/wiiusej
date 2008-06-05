@@ -17,7 +17,7 @@
 package wiiusej.wiiusejevents.wiiuseapievents;
 
 /**
- * Event that represents the connection of a nunchuk to a wiimote.
+ * Event that represents the disconnection of a nunchuk from a wiimote.
  * 
  * @author guiguito
  */
