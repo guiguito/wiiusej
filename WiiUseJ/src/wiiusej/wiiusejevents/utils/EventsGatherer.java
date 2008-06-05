@@ -348,7 +348,7 @@ public class EventsGatherer {
 	 * @param rcenter2
 	 *            center right joystick value 2.
 	 */
-	public void setClassicControllerEvent(short buttonsJustPressed,
+	public void addClassicControllerEventToPreparedWiimoteEvent(short buttonsJustPressed,
 			short buttonsJustReleased, short buttonsHeld, float rightShoulder,
 			float leftShoulder, float langle, float lmagnitude, short lmax1,
 			short lmax2, short lmin1, short lmin2, short lcenter1,
