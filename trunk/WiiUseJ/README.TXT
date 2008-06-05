@@ -38,6 +38,10 @@ Go to : http://wiiusej.googlecode.com/   for further documentations.
 
 CHANGELOG :
 
+wiiusej 0.12a :
+- added guitar hero controller support
+- added classic controller support
+
 wiiusej 0.12 :
 - added nunchuk support.
 - all new stuffs from wiiuse 0.12.
