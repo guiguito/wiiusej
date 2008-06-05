@@ -16,8 +16,6 @@
  */
 package wiiusej.wiiusejevents.utils;
 
-import wiiusej.wiiusejevents.physicalevents.ClassicControllerEvent;
-import wiiusej.wiiusejevents.physicalevents.GuitarHeroEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerInsertedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.ClassicControllerRemovedEvent;
 import wiiusej.wiiusejevents.wiiuseapievents.DisconnectionEvent;
