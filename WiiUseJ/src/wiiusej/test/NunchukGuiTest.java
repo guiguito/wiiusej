@@ -363,18 +363,22 @@ public class NunchukGuiTest extends javax.swing.JFrame implements
 		if (arg0 instanceof NunchukEvent) {
 			NunchukEvent nunchuk = (NunchukEvent) arg0;
 			NunchukButtonsEvent buttons = nunchuk.getButtonsEvent();
+                        
+                        //C button
 			if (buttons.isButtonCJustPressed()) {
 				cButton.setEnabled(false);
-			}
-			if (buttons.isButtonCJustReleased()) {
+			}else if (buttons.isButtonCJustReleased()) {
 				cButton.setEnabled(true);
 			}
-			if (buttons.isButtonZJustPressed()) {
+                        
+                        //Z button
+                        if(buttons.isButtonZJustPressed()) {
 				zButton.setEnabled(false);
-			}
-			if (buttons.isButtonZJustReleased()) {
+			}else if (buttons.isButtonZJustReleased()) {
 				zButton.setEnabled(true);
 			}
+                        
+                        
 			if (isThresholdsRequested) {
 				MotionSensingEvent evt = nunchuk.getNunchukMotionSensingEvent();
 				nunchukAccelerationTextField.setText(evt

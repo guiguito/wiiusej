@@ -55,7 +55,7 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
 	private Color pressedColor = Color.RED;
 	private Color heldColor = Color.ORANGE;
 	private Color releasedColor = Color.YELLOW;
-	private Shape shape;
+	private Shape shape = new java.awt.geom.Ellipse2D.Double(0, 0, 13, 13);
 
 	/**
 	 * Default constructor. Red : button just pressed. Orange : button held.
@@ -66,7 +66,6 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
 		java.net.URL url = ButtonsEventPanel.class
 				.getResource("/img/wiimote.png");
 		wiimoteImage = toolkit.createImage(url);
-		shape = new java.awt.geom.Ellipse2D.Double(0, 0, 13, 13);
 		initComponents();
 	}
 
@@ -89,8 +88,7 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
 		releasedColor = relColor;
 		shape = sh;
 		Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
-		wiimoteImage = toolkit.createImage("img\\wiimote.png");
-		shape = new java.awt.geom.Ellipse2D.Double(0, 0, 13, 13);
+		wiimoteImage = toolkit.createImage("img\\wiimote.png");		
 		initComponents();
 	}
 
@@ -295,8 +293,7 @@ public class ButtonsEventPanel extends javax.swing.JPanel implements
 	}
 
 	public void onDisconnectionEvent(DisconnectionEvent arg0) {
-		buttons = null;
-		repaint();
+            clearView();
 	}
 
 	public void onNunchukInsertedEvent(NunchukInsertedEvent e) {

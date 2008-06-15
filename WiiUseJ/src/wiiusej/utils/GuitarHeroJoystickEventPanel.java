@@ -18,21 +18,22 @@
 package wiiusej.utils;
 
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
+import wiiusej.wiiusejevents.physicalevents.GuitarHeroEvent;
 import wiiusej.wiiusejevents.physicalevents.JoystickEvent;
-import wiiusej.wiiusejevents.physicalevents.NunchukEvent;
 
 /**
- * Panel to display nunchuk joystick events.
+ * Panel to display Guitar Hero 3 controller joystick events.
  * 
  * @author guiguito
  */
-public class NunchukJoystickEventPanel extends JoystickEventPanel {
+public class GuitarHeroJoystickEventPanel extends JoystickEventPanel{
 
-	@Override
-	public JoystickEvent getJoystickEvent(ExpansionEvent e) {
-		if (e instanceof NunchukEvent) {
-			return ((NunchukEvent) e).getNunchukJoystickEvent();
-		}
-		return null;
-	}
+    @Override
+    public JoystickEvent getJoystickEvent(ExpansionEvent e) {
+        if (e instanceof GuitarHeroEvent){
+            return ((GuitarHeroEvent)e).getGuitarHeroJoystickEvent();
+        }
+        return null;
+    }
+
 }
