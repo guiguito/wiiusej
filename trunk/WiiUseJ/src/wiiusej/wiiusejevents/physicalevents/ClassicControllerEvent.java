@@ -164,7 +164,7 @@ public class ClassicControllerEvent extends ExpansionEvent {
 	public String toString() {
 		String out = "";
 		/* Status */
-		out += "/*********** Classis Controller EVENT : WIIMOTE   ID :"
+		out += "/*********** Classic Controller EVENT : WIIMOTE   ID :"
 				+ getWiimoteId() + " ********/\n";
 		out += buttonsEvent;
 		out += "Left shoulder : " + leftShoulder + "\n";

@@ -108,7 +108,7 @@ public class GuitarHeroEvent extends ExpansionEvent{
 	public String toString() {
 		String out = "";
 		/* Status */
-		out += "/*********** Classis Controller EVENT : WIIMOTE   ID :" + getWiimoteId()
+		out += "/*********** Guitar Hero 3 EVENT : WIIMOTE   ID :" + getWiimoteId()
 				+ " ********/\n";
 		out += buttonsEvent;
 		out += "Whammy Bar : "+whammyBar+"\n";

@@ -87,11 +87,13 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 		public void windowActivated(WindowEvent e) {
 			showExpansionWiimoteButton.setEnabled(false);
 			showExpansionWiimoteButton.setText("Hide Nunchuk");
+                        //@TODO adapt to the connected Expansion
 		}
 
 		public void windowDeactivated(WindowEvent e) {
 			showExpansionWiimoteButton.setEnabled(true);
 			showExpansionWiimoteButton.setText("Show Nunchuk");
+                        //@TODO adapt to the connected Expansion
 		}
 	};
 
@@ -235,10 +237,27 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 				showExpansionWiimoteButton.setText("Show Nunchuk");
 				expansionFrame = new NunchukGuiTest(wiimote);
 				expansionFrame
-						.setDefaultCloseOperation(NunchukGuiTest.HIDE_ON_CLOSE);
+						.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				expansionFrame.addWindowListener(buttonSetter);
 				isFirstStatusGot = true;
-			}
+			}else if(arg0.isClassicControllerConnected()){
+                                showExpansionWiimoteButton.setEnabled(true);
+				showExpansionWiimoteButton.setText("Show Classic Controller");
+				expansionFrame = new ClassicControllerGuiTest(wiimote);
+				expansionFrame
+						.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				expansionFrame.addWindowListener(buttonSetter);
+				isFirstStatusGot = true;
+                        }
+                        else if(arg0.isClassicControllerConnected()){
+                                showExpansionWiimoteButton.setEnabled(true);
+				showExpansionWiimoteButton.setText("Show Guitar Hero 3 Controller");
+				expansionFrame = new GuitarHero3GuiTest(wiimote);
+				expansionFrame
+						.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				expansionFrame.addWindowListener(buttonSetter);
+				isFirstStatusGot = true;
+                        }
 		}
 		messageText.setText("Status received !");
 		batteryLevelText.setText(arg0.getBatteryLevel() + " %");
@@ -247,7 +266,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 		led3Button.setEnabled(arg0.isLed3Set());
 		led4Button.setEnabled(arg0.isLed4Set());
 		if (arg0.isNunchukConnected()) {
-			((NunchukGuiTest) expansionFrame).requestThresholdsUpdate();
+                    ((NunchukGuiTest) expansionFrame).requestThresholdsUpdate();
 		}
 		// attachments
 		int eventType = arg0.getEventType();
@@ -279,7 +298,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 		showExpansionWiimoteButton.setEnabled(true);
 		showExpansionWiimoteButton.setText("Show nunchuk");
 		expansionFrame = new NunchukGuiTest(wiimote);
-		expansionFrame.setDefaultCloseOperation(NunchukGuiTest.HIDE_ON_CLOSE);
+		expansionFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		expansionFrame.addWindowListener(buttonSetter);
 	}
 
@@ -299,21 +318,55 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 	}
 
 	public void onGuitarHeroInsertedEvent(GuitarHeroInsertedEvent arg0) {
-		// nothing
+		messageText.setText("Guitar Hero 3 connected !");
+		expansionText.setText("Expansion connected : Guitar Hero 3.");
+		showExpansionWiimoteButton.setEnabled(true);
+		showExpansionWiimoteButton.setText("Show Guitar Hero 3");
+		expansionFrame = new GuitarHero3GuiTest(wiimote);
+		expansionFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		expansionFrame.addWindowListener(buttonSetter);
 	}
 
 	public void onGuitarHeroRemovedEvent(GuitarHeroRemovedEvent arg0) {
-		// nothing
+		messageText.setText("Guitar Hero 3 disconnected !");
+		expansionText.setText("No expansion connected.");
+		showExpansionWiimoteButton.setEnabled(false);
+		showExpansionWiimoteButton.setText("No expansion");
+		if (expansionFrame != null) {
+			if (expansionFrame instanceof GuitarHero3GuiTest) {
+				((GuitarHero3GuiTest) expansionFrame).unRegisterListeners();
+			}
+			expansionFrame.setEnabled(false);
+			expansionFrame.dispose();
+			expansionFrame = null;
+		}
 	}
 
 	public void onClassicControllerInsertedEvent(
 			ClassicControllerInsertedEvent arg0) {
-		// nothing
+                messageText.setText("Nunchuk connected !");
+		expansionText.setText("Expansion connected : Classic Controller.");
+		showExpansionWiimoteButton.setEnabled(true);
+		showExpansionWiimoteButton.setText("Show Classic Controller");
+		expansionFrame = new ClassicControllerGuiTest(wiimote);
+		expansionFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		expansionFrame.addWindowListener(buttonSetter);
 	}
 
 	public void onClassicControllerRemovedEvent(
 			ClassicControllerRemovedEvent arg0) {
-		// nothing
+		messageText.setText("Classic controller disconnected !");
+		expansionText.setText("No expansion connected.");
+		showExpansionWiimoteButton.setEnabled(false);
+		showExpansionWiimoteButton.setText("No expansion");
+		if (expansionFrame != null) {
+			if (expansionFrame instanceof ClassicControllerGuiTest) {
+				((ClassicControllerGuiTest) expansionFrame).unRegisterListeners();
+			}
+			expansionFrame.setEnabled(false);
+			expansionFrame.dispose();
+			expansionFrame = null;
+		}
 	}
 
 	/**
@@ -1222,6 +1275,8 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 		if (expansionFrame != null) {
 			if (expansionFrame instanceof NunchukGuiTest) {
 				((NunchukGuiTest) expansionFrame).unRegisterListeners();
+			}else if (expansionFrame instanceof ClassicControllerGuiTest) {
+				((ClassicControllerGuiTest) expansionFrame).unRegisterListeners();
 			}
 			expansionFrame.setEnabled(false);
 			expansionFrame.dispose();

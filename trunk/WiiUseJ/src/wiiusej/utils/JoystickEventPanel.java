@@ -155,7 +155,7 @@ public abstract class JoystickEventPanel extends javax.swing.JPanel implements
 	}
 
 	public void onExpansionEvent(ExpansionEvent arg0) {
-		JoystickEvent joy = getJoystikEvent(arg0);
+		JoystickEvent joy = getJoystickEvent(arg0);
 		if (joy != null) {
 			lastJoystickEvent = joy;
 		}
@@ -228,7 +228,7 @@ public abstract class JoystickEventPanel extends javax.swing.JPanel implements
 		this.shape = shape;
 	}
 
-	public abstract JoystickEvent getJoystikEvent(ExpansionEvent e);
+	public abstract JoystickEvent getJoystickEvent(ExpansionEvent e);
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
