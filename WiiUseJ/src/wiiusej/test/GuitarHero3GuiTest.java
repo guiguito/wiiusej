@@ -6,10 +6,7 @@
 package wiiusej.test;
 
 import wiiusej.Wiimote;
-import wiiusej.utils.GuitarHero3ButtonsEventPanel;
-import wiiusej.utils.GuitarHeroJoystickEventPanel;
 import wiiusej.wiiusejevents.physicalevents.ExpansionEvent;
-import wiiusej.wiiusejevents.physicalevents.GuitarHeroButtonsEvent;
 import wiiusej.wiiusejevents.physicalevents.GuitarHeroEvent;
 import wiiusej.wiiusejevents.physicalevents.IREvent;
 import wiiusej.wiiusejevents.physicalevents.MotionSensingEvent;
@@ -69,7 +66,6 @@ public class GuitarHero3GuiTest extends javax.swing.JFrame implements WiimoteLis
         guitarHero3JoystickPanel = new wiiusej.utils.GuitarHeroJoystickEventPanel();
         whammyProgressBar = new javax.swing.JProgressBar();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WiiuseJ Guitar Hero 3 Test GUI");
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
@@ -79,7 +75,7 @@ public class GuitarHero3GuiTest extends javax.swing.JFrame implements WiimoteLis
         buttonsEventPanel.setLayout(buttonsEventPanelLayout);
         buttonsEventPanelLayout.setHorizontalGroup(
             buttonsEventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 448, Short.MAX_VALUE)
+            .addGap(0, 526, Short.MAX_VALUE)
             .addGroup(buttonsEventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(buttonsEventPanelLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -88,7 +84,7 @@ public class GuitarHero3GuiTest extends javax.swing.JFrame implements WiimoteLis
         );
         buttonsEventPanelLayout.setVerticalGroup(
             buttonsEventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 111, Short.MAX_VALUE)
+            .addGap(0, 96, Short.MAX_VALUE)
             .addGroup(buttonsEventPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(buttonsEventPanelLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)

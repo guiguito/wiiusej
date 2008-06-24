@@ -249,7 +249,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 				expansionFrame.addWindowListener(buttonSetter);
 				isFirstStatusGot = true;
                         }
-                        else if(arg0.isClassicControllerConnected()){
+                        else if(arg0.isGuitarHeroConnected()){
                                 showExpansionWiimoteButton.setEnabled(true);
 				showExpansionWiimoteButton.setText("Show Guitar Hero 3 Controller");
 				expansionFrame = new GuitarHero3GuiTest(wiimote);
@@ -344,7 +344,7 @@ public class WiiuseJGuiTest extends javax.swing.JFrame implements
 
 	public void onClassicControllerInsertedEvent(
 			ClassicControllerInsertedEvent arg0) {
-                messageText.setText("Nunchuk connected !");
+                messageText.setText("Classic controller connected !");
 		expansionText.setText("Expansion connected : Classic Controller.");
 		showExpansionWiimoteButton.setEnabled(true);
 		showExpansionWiimoteButton.setText("Show Classic Controller");

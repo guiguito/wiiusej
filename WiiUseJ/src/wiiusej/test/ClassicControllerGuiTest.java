@@ -16,6 +16,7 @@
  */
 package wiiusej.test;
 
+import wiiusej.WiiUseApiManager;
 import wiiusej.Wiimote;
 import wiiusej.utils.ClassicControllerButtonsEventPanel;
 import wiiusej.wiiusejevents.physicalevents.ClassicControllerEvent;
@@ -38,7 +39,7 @@ import wiiusej.wiiusejevents.wiiuseapievents.StatusEvent;
  * 
  * @author guiguito
  */
-public class ClassicControllerGuiTest extends javax.swing.JFrame implements WiimoteListener{
+public class ClassicControllerGuiTest extends javax.swing.JFrame implements WiimoteListener {
 
     private Wiimote wiimote;
     private static int MAX_SHOULDER = 100;
@@ -54,12 +55,12 @@ public class ClassicControllerGuiTest extends javax.swing.JFrame implements Wiim
 
     private void registerListeners() {
         wiimote.addWiiMoteEventListeners(this);
-        wiimote.addWiiMoteEventListeners((ClassicControllerButtonsEventPanel)classicControllerPanel);
+        wiimote.addWiiMoteEventListeners((ClassicControllerButtonsEventPanel) classicControllerPanel);
     }
-    
+
     public void unRegisterListeners() {
         wiimote.removeWiiMoteEventListeners(this);
-        wiimote.removeWiiMoteEventListeners((ClassicControllerButtonsEventPanel)classicControllerPanel);
+        wiimote.removeWiiMoteEventListeners((ClassicControllerButtonsEventPanel) classicControllerPanel);
     }
 
     /** This method is called from within the constructor to
@@ -75,87 +76,100 @@ public class ClassicControllerGuiTest extends javax.swing.JFrame implements Wiim
         rightShoulderBar = new javax.swing.JProgressBar();
         classicControllerPanel = new wiiusej.utils.ClassicControllerButtonsEventPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WiiuseJ Classic Controller Test GUI");
         setResizable(false);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
+        shouldersPanel.setMaximumSize(new java.awt.Dimension(350, 16));
+        shouldersPanel.setMinimumSize(new java.awt.Dimension(350, 16));
+        shouldersPanel.setPreferredSize(new java.awt.Dimension(350, 16));
         shouldersPanel.setLayout(new javax.swing.BoxLayout(shouldersPanel, javax.swing.BoxLayout.LINE_AXIS));
         shouldersPanel.add(leftShoulderBar);
         shouldersPanel.add(rightShoulderBar);
 
         getContentPane().add(shouldersPanel);
 
+        classicControllerPanel.setMaximumSize(new java.awt.Dimension(350, 182));
+        classicControllerPanel.setMinimumSize(new java.awt.Dimension(350, 182));
+
         javax.swing.GroupLayout classicControllerPanelLayout = new javax.swing.GroupLayout(classicControllerPanel);
         classicControllerPanel.setLayout(classicControllerPanelLayout);
         classicControllerPanelLayout.setHorizontalGroup(
             classicControllerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 350, Short.MAX_VALUE)
         );
         classicControllerPanelLayout.setVerticalGroup(
             classicControllerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 182, Short.MAX_VALUE)
         );
 
         getContentPane().add(classicControllerPanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     public void onButtonsEvent(WiimoteButtonsEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onIrEvent(IREvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onMotionSensingEvent(MotionSensingEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onExpansionEvent(ExpansionEvent arg0) {
-        if (arg0 instanceof ClassicControllerEvent){
-            ClassicControllerEvent classicController = (ClassicControllerEvent)arg0;
+        if (arg0 instanceof ClassicControllerEvent) {
+            ClassicControllerEvent classicController = (ClassicControllerEvent) arg0;
             float leftShoulder = classicController.getLeftShoulder();
             float rightShoulder = classicController.getRightShoulder();
-            leftShoulderBar.setValue(Math.round(leftShoulder*MAX_SHOULDER));
-            rightShoulderBar.setValue(Math.round(rightShoulder*MAX_SHOULDER));
+            leftShoulderBar.setValue(Math.round(leftShoulder * MAX_SHOULDER));
+            rightShoulderBar.setValue(Math.round(rightShoulder * MAX_SHOULDER));
         }
-            
     }
 
     public void onStatusEvent(StatusEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onDisconnectionEvent(DisconnectionEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onNunchukInsertedEvent(NunchukInsertedEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onNunchukRemovedEvent(NunchukRemovedEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onGuitarHeroInsertedEvent(GuitarHeroInsertedEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onGuitarHeroRemovedEvent(GuitarHeroRemovedEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onClassicControllerInsertedEvent(ClassicControllerInsertedEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
 
     public void onClassicControllerRemovedEvent(ClassicControllerRemovedEvent arg0) {
-        // nothing to do
+    // nothing to do
     }
+
+//    public static void main(String[] args) {
+//        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
+//        ClassicControllerGuiTest gui = null;
+//        if (wiimotes.length > 0) {
+//            gui = new ClassicControllerGuiTest(wiimotes[0]);
+//        }
+//        gui.setDefaultCloseOperation(WiiuseJGuiTest.EXIT_ON_CLOSE);
+//        gui.setVisible(true);
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel classicControllerPanel;
     private javax.swing.JProgressBar leftShoulderBar;

@@ -57,8 +57,10 @@ public class ClassicControllerButtonsEventPanel extends javax.swing.JPanel imple
     private Color releasedColor = Color.YELLOW;
     private Color joystickColor = Color.PINK;
     private Color shoulderColor = Color.BLUE;
-    private Shape shapeJoystick = new java.awt.geom.Ellipse2D.Double(0, 0, 13, 13);
+    private Shape shapeJoystick = new java.awt.geom.Ellipse2D.Double(0, 0, 15, 15);
     private Shape shapeButton = new java.awt.geom.Ellipse2D.Double(0, 0, 20, 20);
+    private static int xAmplitude = 20;
+    private static int yAmplitude = 20;
 
     /**
      * Default constructor. Red : button just pressed. Orange : button held.
@@ -144,24 +146,24 @@ public class ClassicControllerButtonsEventPanel extends javax.swing.JPanel imple
 
             /* button A */
             if (buttons.isButtonAJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 304, 76, shapeButton);
             }
             if (buttons.isButtonAHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 304, 76, shapeButton);
             }
             if (buttons.isButtonAJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 304, 76, shapeButton);
             }
 
             /* button B */
             if (buttons.isButtonBJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 269, 98, shapeButton);
             }
             if (buttons.isButtonBHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 269, 98, shapeButton);
             }
             if (buttons.isButtonBJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 269, 98, shapeButton);
             }
 
             /* button Down */
@@ -177,188 +179,169 @@ public class ClassicControllerButtonsEventPanel extends javax.swing.JPanel imple
 
             /* button FullLeft */
             if (buttons.isButtonFullLeftJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 55, 4, shapeButton);
             }
             if (buttons.isButtonFullLeftHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 55, 4, shapeButton);
             }
             if (buttons.isButtonFullLeftJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 55, 4, shapeButton);
             }
 
             /* button FullRight */
             if (buttons.isButtonFullRightJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 276, 4, shapeButton);
             }
             if (buttons.isButtonFullRightHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 276, 4, shapeButton);
             }
             if (buttons.isButtonFullRightJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 276, 4, shapeButton);
             }
 
             /* button Home */
             if (buttons.isButtonHomeJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 166, 76, shapeButton);
             }
             if (buttons.isButtonHomeHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 166, 76, shapeButton);
             }
             if (buttons.isButtonHomeJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 166, 76, shapeButton);
             }
 
             /* button Left */
             if (buttons.isButtonLeftJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 34, 75, shapeButton);
             }
             if (buttons.isButtonLeftHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 34, 75, shapeButton);
             }
             if (buttons.isButtonLeftJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 34, 75, shapeButton);
             }
 
             /* button Minus */
             if (buttons.isButtonMinusJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 140, 76, shapeButton);
             }
             if (buttons.isButtonMinusHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 140, 76, shapeButton);
             }
             if (buttons.isButtonMinusJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 140, 76, shapeButton);
             }
 
             /* button Plus */
             if (buttons.isButtonPlusJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 191, 76, shapeButton);
             }
             if (buttons.isButtonPlusHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 191, 76, shapeButton);
             }
             if (buttons.isButtonPlusJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 191, 76, shapeButton);
             }
 
             /* button Right */
             if (buttons.isButtonRightJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 86, 75, shapeButton);
             }
             if (buttons.isButtonRightHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 86, 75, shapeButton);
             }
             if (buttons.isButtonRightJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 86, 353, shapeButton);
             }
 
             /* button Up */
             if (buttons.isButtonUpJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 59, 50, shapeButton);
             }
             if (buttons.isButtonUpHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 59, 50, shapeButton);
             }
             if (buttons.isButtonUpJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 59, 50, shapeButton);
             }
 
             /* button X */
             if (buttons.isButtonXJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 271, 53, shapeButton);
             }
             if (buttons.isButtonXHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 271, 53, shapeButton);
             }
             if (buttons.isButtonXJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 271, 53, shapeButton);
             }
 
             /* button Y */
             if (buttons.isButtonYJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 237, 76, shapeButton);
             }
             if (buttons.isButtonYHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 237, 76, shapeButton);
             }
             if (buttons.isButtonYJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 237, 76, shapeButton);
             }
 
             /* button ZL */
             if (buttons.isButtonZLJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 123, 4, shapeButton);
             }
             if (buttons.isButtonZLHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 123, 4, shapeButton);
             }
             if (buttons.isButtonZLJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 123, 4, shapeButton);
             }
 
             /* button ZR */
             if (buttons.isButtonZRJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 208, 4, shapeButton);
             }
             if (buttons.isButtonZRHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 208, 4, shapeButton);
             }
             if (buttons.isButtonZRJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 208, 4, shapeButton);
             }
+
+            //joysticks
+            int halfWidth = (int) Math.round(shapeJoystick.getBounds().getWidth() / 2);
+            int halfHeight = (int) Math.round(shapeJoystick.getBounds().getHeight() / 2);
 
             // left joystick
             JoystickEvent jl = event.getClassicControllerLeftJoystickEvent();
-            int xCenter1 = 50;
-            int yCenter1 = 50;
+            int xCenter1 = 121;
+            int yCenter1 = 125;
 
             double xAng1 = Math.sin(jl.getAngle() * Math.PI / 180.0) * jl.getMagnitude();
             double yAng1 = Math.cos(jl.getAngle() * Math.PI / 180.0) * jl.getMagnitude();
-            int dx1 = (int) Math.round(shapeJoystick.getBounds().getWidth() / 2);
-            int dy1 = (int) Math.round(shapeJoystick.getBounds().getHeight() / 2);
-            double xTemp1 = xAng1 * (xCenter1 - dx1 * 2);
-            double yTemp1 = yAng1 * (yCenter1 - dy1 * 2);
-            int x1 = xCenter1 - dx1 + (int) xTemp1;
-            int y1 = yCenter1 - dy1 - (int) yTemp1;
-            // shape
-            g2.translate(x1, y1);
-            g2.setPaint(joystickColor);
-            g2.draw(shapeJoystick);
-            g2.setPaint(joystickColor);
-            g2.fill(shapeJoystick);
-            g2.setTransform(new AffineTransform());
+
+            int xShift1 = (int) Math.round(xAng1 * xAmplitude);
+            int yShift1 = (int) Math.round(yAng1 * yAmplitude);
+            int x1 = xCenter1 + xShift1 - halfWidth;
+            int y1 = yCenter1 - yShift1 - halfHeight;
+            // draw shape
+            drawFunction(g2, joystickColor, x1, y1, shapeJoystick);
 
             //Right joystick
             JoystickEvent jr = event.getClassicControllerRightJoystickEvent();
-            int xCenter2 = 50;
-            int yCenter2 = 50;
+            int xCenter2 = 213;
+            int yCenter2 = 125;
 
-            double xAng2 = Math.sin(jl.getAngle() * Math.PI / 180.0) * jl.getMagnitude();
-            double yAng2 = Math.cos(jl.getAngle() * Math.PI / 180.0) * jl.getMagnitude();
-            int dx2 = (int) Math.round(shapeJoystick.getBounds().getWidth() / 2);
-            int dy2 = (int) Math.round(shapeJoystick.getBounds().getHeight() / 2);
-            double xTemp2 = xAng2 * (xCenter2 - dx2 * 2);
-            double yTemp2 = yAng2 * (yCenter2 - dy2 * 2);
-            int x2 = xCenter2 - dx2 + (int) xTemp2;
-            int y2 = yCenter2 - dy2 - (int) yTemp2;
-            // shape
-            g2.translate(x2, y2);
-            g2.setPaint(joystickColor);
-            g2.draw(shapeJoystick);
-            g2.setPaint(joystickColor);
-            g2.fill(shapeJoystick);
-            g2.setTransform(new AffineTransform());
+            double xAng2 = Math.sin(jr.getAngle() * Math.PI / 180.0) * jr.getMagnitude();
+            double yAng2 = Math.cos(jr.getAngle() * Math.PI / 180.0) * jr.getMagnitude();
 
-            // draw shoulders
-            float leftShoulder = event.getLeftShoulder();
-            g2.setPaint(shoulderColor);
-            g2.drawRect(10, 10, 10 + Math.round(leftShoulder * 70), 10 + 20);
-            g2.setTransform(new AffineTransform());
-
-            float rightShoulder = event.getRightShoulder();
-            g2.setPaint(shoulderColor);
-            g2.drawRect(10, 10, 10 + Math.round(leftShoulder * 70), 10 + 20);
-            g2.setTransform(new AffineTransform());
+            int xShift2 = (int) Math.round(xAng2 * xAmplitude);
+            int yShift2 = (int) Math.round(yAng2 * yAmplitude);
+            int x2 = xCenter2 + xShift2 - halfWidth;
+            int y2 = yCenter2 - yShift2 - halfHeight;
+            // draw shape
+            drawFunction(g2, joystickColor, x2, y2, shapeJoystick);
 
             event = null;
         }
@@ -417,6 +400,7 @@ public class ClassicControllerButtonsEventPanel extends javax.swing.JPanel imple
         if (arg0 instanceof ClassicControllerEvent) {
             event = (ClassicControllerEvent) arg0;
         }
+        repaint();
     }
 
     public void onStatusEvent(StatusEvent arg0) {

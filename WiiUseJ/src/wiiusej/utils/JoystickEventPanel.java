@@ -99,25 +99,20 @@ public abstract class JoystickEventPanel extends javax.swing.JPanel implements
 
 		// compute coordinates
 		if (lastJoystickEvent != null) {
-			double xAng = Math.sin(lastJoystickEvent.getAngle() * Math.PI
+                        double xAng = Math.sin(lastJoystickEvent.getAngle() * Math.PI
 					/ 180.0)
 					* lastJoystickEvent.getMagnitude();
 			double yAng = Math.cos(lastJoystickEvent.getAngle() * Math.PI
 					/ 180.0)
 					* lastJoystickEvent.getMagnitude();
-			int dx = (int) Math.round(shape.getBounds().getWidth() / 2);
-			int dy = (int) Math.round(shape.getBounds().getHeight() / 2);
-			double xTemp = xAng * (xCenter - dx * 2);
-			double yTemp = yAng * (yCenter - dy * 2);
-			int x = xCenter - dx + (int) xTemp;
-			int y = yCenter - dy - (int) yTemp;
-			// System.out.println("--------------------------------------------------------------------");
-			// System.out.println(lastJoystickEvent);
-			// System.out.println("xCenter ,yCenter : "+xCenter+" , "+yCenter);
-			// System.out.println("xAng, yAng : "+xAng+" , "+yAng);
-			// System.out.println("dx, dy : "+dx+" , "+dy);
-			// System.out.println("xTemp, yTemp : "+xTemp+" , "+yTemp);
-			// System.out.println("x, y : "+x+" , "+y);
+			int halfWidth = (int) Math.round(shape.getBounds().getWidth() / 2);
+			int halHeight = (int) Math.round(shape.getBounds().getHeight() / 2);
+                        int xAmplitude = (int)Math.round(xCenter-shape.getBounds().getWidth());
+                        int yAmplitude = (int)Math.round(xCenter-shape.getBounds().getHeight());
+			int xShift = (int)Math.round(xAng * xAmplitude);
+			int yShift = (int)Math.round(yAng * yAmplitude);
+			int x = xCenter  +  xShift - halfWidth;
+			int y = yCenter  -  yShift - halHeight;
 			// shape
 			g2.translate(x, y);
 			g2.setPaint(borderColor);
