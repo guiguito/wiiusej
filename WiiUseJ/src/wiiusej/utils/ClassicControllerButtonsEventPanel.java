@@ -165,16 +165,16 @@ public class ClassicControllerButtonsEventPanel extends javax.swing.JPanel imple
             if (buttons.isButtonBJustReleased()) {
                 drawFunction(g2, releasedColor, 269, 98, shapeButton);
             }
-
+                             
             /* button Down */
             if (buttons.isButtonDownJustPressed()) {
-                drawFunction(g2, pressedColor, 53, 353, shapeButton);
+                drawFunction(g2, pressedColor, 60, 97, shapeButton);
             }
             if (buttons.isButtonDownHeld()) {
-                drawFunction(g2, heldColor, 53, 353, shapeButton);
+                drawFunction(g2, heldColor, 60, 97, shapeButton);
             }
             if (buttons.isButtonDownJustReleased()) {
-                drawFunction(g2, releasedColor, 53, 353, shapeButton);
+                drawFunction(g2, releasedColor, 60, 97, shapeButton);
             }
 
             /* button FullLeft */
@@ -256,13 +256,13 @@ public class ClassicControllerButtonsEventPanel extends javax.swing.JPanel imple
 
             /* button Up */
             if (buttons.isButtonUpJustPressed()) {
-                drawFunction(g2, pressedColor, 59, 50, shapeButton);
+                drawFunction(g2, pressedColor, 60, 50, shapeButton);
             }
             if (buttons.isButtonUpHeld()) {
-                drawFunction(g2, heldColor, 59, 50, shapeButton);
+                drawFunction(g2, heldColor, 60, 50, shapeButton);
             }
             if (buttons.isButtonUpJustReleased()) {
-                drawFunction(g2, releasedColor, 59, 50, shapeButton);
+                drawFunction(g2, releasedColor, 60, 50, shapeButton);
             }
 
             /* button X */
