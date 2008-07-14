@@ -161,15 +161,15 @@ public class ClassicControllerGuiTest extends javax.swing.JFrame implements Wiim
     // nothing to do
     }
 
-//    public static void main(String[] args) {
-//        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
-//        ClassicControllerGuiTest gui = null;
-//        if (wiimotes.length > 0) {
-//            gui = new ClassicControllerGuiTest(wiimotes[0]);
-//        }
-//        gui.setDefaultCloseOperation(WiiuseJGuiTest.EXIT_ON_CLOSE);
-//        gui.setVisible(true);
-//    }
+    public static void main(String[] args) {
+        Wiimote[] wiimotes = WiiUseApiManager.getWiimotes(1, true);
+        ClassicControllerGuiTest gui = null;
+        if (wiimotes.length > 0) {
+            gui = new ClassicControllerGuiTest(wiimotes[0]);
+        }
+        gui.setDefaultCloseOperation(WiiuseJGuiTest.EXIT_ON_CLOSE);
+        gui.setVisible(true);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel classicControllerPanel;
     private javax.swing.JProgressBar leftShoulderBar;
