@@ -539,7 +539,7 @@ JNIEXPORT void JNICALL Java_wiiusej_WiiUseApi_specialPoll
 								/* buttons */
 								cl->btns,cl->btns_released,cl->btns_held,
 								/* shoulder buttons */
-								cl->l_shoulder,cl->r_shoulder,
+								cl->r_shoulder,cl->l_shoulder,
 								/* joystick left*/
 								cl->ljs.ang,cl->ljs.mag,
 								cl->ljs.max.x,cl->ljs.max.y,
