@@ -162,10 +162,10 @@ public class GuitarHero3ButtonsEventPanel extends javax.swing.JPanel implements 
             //blue button
             if (buttons.isButtonBlueJustPressed()) {
                 blueButton.setSelected(true);
-                orangeButton.setText("X");
+                blueButton.setText("X");
             } else if (buttons.isButtonBlueJustReleased()) {
                 blueButton.setSelected(false);
-                orangeButton.setText("O");
+                blueButton.setText("O");
             }
 
             //Yellow button
