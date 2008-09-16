@@ -52,7 +52,7 @@ public class WiiUseApiManager extends Thread {
 	public static int WIIUSE_STACK_MS = 1;
 	public static int WIIUSE_STACK_BLUESOLEIL = 2;
 
-	private static WiiUseApiManager getInstance() {
+	public static WiiUseApiManager getInstance() {
 		return instance;
 	}
 
@@ -211,7 +211,7 @@ public class WiiUseApiManager extends Thread {
 		int index = 0;
 		boolean found = false;
 		while (index < wiimotes.length && !found) {
-			if (wiimotes[index].getId() == id) {// we have a wiimote with this
+			if (wiimotes[index]!=null && wiimotes[index].getId() == id) {// we have a wiimote with this
 				// id
 				// remove the wiimote
 				removeWiiUseApiListener(wiimotes[index]);
