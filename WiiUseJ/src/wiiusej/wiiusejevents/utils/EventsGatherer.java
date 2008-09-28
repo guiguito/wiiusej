@@ -490,7 +490,9 @@ public class EventsGatherer {
 	 * @return events received.
 	 */
 	public WiiUseApiEvent[] getEvents() {
-		return java.util.Arrays.copyOfRange(events, 0, index);
+		WiiUseApiEvent[] ev = new WiiUseApiEvent[index];
+        System.arraycopy(events, 0, ev, 0, index);
+        return ev;
 	}
 
 	/**

@@ -38,9 +38,13 @@ Go to : http://wiiusej.googlecode.com/   for further documentations.
 
 CHANGELOG :
 
+wiiusej 0.12b :
+- make wiiusej compatible with java 1.5.
+- fixed a bug that made Null pointer exception happen when disconnecting several wiimotes.
+
 wiiusej 0.12a :
-- added guitar hero controller support
-- added classic controller support
+- added guitar hero controller support.
+- added classic controller support.
 
 wiiusej 0.12 :
 - added nunchuk support.
