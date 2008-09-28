@@ -108,7 +108,9 @@ public class IREvent extends GenericEvent {
 	 * @return the list of 2D points
 	 */
 	public IRSource[] getIRPoints() {
-		return java.util.Arrays.copyOfRange(IRPoints, 0, indexPoints);
+		IRSource[] ir = new IRSource[indexPoints];
+        System.arraycopy(IRPoints, 0, ir, 0, indexPoints);
+        return ir;
 	}
 
 	/**

@@ -227,7 +227,6 @@ public class WiiUseApiManager extends Thread {
 			}
 			index++;
 		}
-
 	}
 
 	/**
